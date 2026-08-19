@@ -1518,6 +1518,12 @@ function renderHeatmap(){
   }
   const numWeeks = 8;
   const weeks = computeHeatmapWeeks(merged, numWeeks);
+  if(!weeks){
+    el.innerHTML = '';
+    if(badge) badge.textContent = 'Loading…';
+    if(note) note.textContent = 'Waiting for reports to finish loading…';
+    return;
+  }
   const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const fmtShort = iso => { const [y,m,d]=iso.split('-'); return `${d}/${m}`; };
   const allCounts = weeks.flat().map(c => c.count);
