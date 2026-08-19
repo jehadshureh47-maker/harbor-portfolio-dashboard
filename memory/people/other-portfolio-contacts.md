@@ -1,0 +1,17 @@
+# Other Portfolio Contacts
+
+**Preethi** — Dubai Court contact. Interested in the dashboard; waiting on her to send reports before Jehad builds their version. Proposal doc already drafted.
+
+**Lorie Ann Torio** — National Bonds contact. (Her portfolio was initially mislabeled and corrected to National Bonds.) Outreach drafted (proposal + email).
+
+**Ahmed Bassyoni** and **Jona De Leon** — VIP portfolio contacts. Outreach drafted (proposal + email).
+
+**Ibrahim Sijer Daghman** — RTA (Roads and Transport Authority, Dubai) contact. Outreach drafted (proposal + email).
+
+**Rahul Kizhakku Veettil** (rahul@harbordubai.com) — Harbor's IT Executive. This is who Diaa meant when he mentioned discussing the same dashboard plan with "Rahul" — Rahul is the IT lead coordinating the dashboard's infrastructure/rollout, not a separate portfolio contact. Already looped in by Haider before 8/10. Gave feedback on scaling the dashboard: add a portfolio → month → report selector (done in v2 already), and he'll set up per-portfolio folders on a shared drive and host it as a pilot "home page," with logins/access rights per portfolio added once tested. Jehad proposed folder structure: one folder per portfolio, then a year-month subfolder (e.g. "2026-07"), reports inside. Jehad also flagged clearly that the current dashboard logic is tuned to this one dataset's format and isn't yet flexible for other portfolios' different layouts — making it genuinely flexible means either standardizing export formats across portfolios or rebuilding the data-reading logic to be dynamic; agreed this is real additional work, not a quick change. Agreed on a step-by-step approach: get the folder structure + one more portfolio's reports in place first as the real test. **Rahul is on leave from 10 Aug to 4 Sept 2026, back in office 7 Sept** — this whole thread picks back up then.
+
+**Yousef Khaleel Mohammad Yousef Tamemi** (tamimi@harbordubai.com) — Al Naser Club contact. Supportive of the dashboard; provided the reports/files used to build the first Al Naser Club draft and gave positive feedback on it, though some data-related points still need clarifying. Also received an issues summary about dashboard data-quality findings for his team. Separately mentioned another internal project Jehad could help with, but on review it was mostly a maintenance study with limited relevance to what Jehad's trying to gain experience in, so he passed — Yousef said he'd flag a better-fit opportunity if one comes up.
+
+**Abdul Rahman** (abdelrahman@harbordubai.com) — Needs to approve the LinkedIn post about the dashboard project before publishing. Was cc'd on Jehad's 8/14 update-and-guidance email to Haider.
+
+**Important open item — outreach visibility:** In the 8/14 email to Haider, Jehad noted that Diaa hadn't actually known who Jehad was or what the proposal email was about — it came from Jehad's personal Gmail with no prior introduction and had simply been overlooked, which is why an in-person meeting/call was needed to actually get the conversation going. Jehad flagged to Haider that the outreach emails sent to the *other* portfolios (RTA/Ibrahim, National Bonds/Lorie Ann, VIP/Ahmed & Jona, Dubai Court/Preethi) may have the same problem, and asked for Haider's guidance on whether a different approach/introduction is needed. **As of 8/14, no reply from Haider on this in the inbox** — worth checking if he responded elsewhere, since it affects whether those four outreach threads need to be redone rather than just "waited on."

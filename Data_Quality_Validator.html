@@ -1,0 +1,1119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Data Quality Validator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --bg:#0f1420; --card:#161d2e; --card2:#1b2338; --border:#293049;
+    --text:#eef1f8; --sub:#93a0bd; --accent:#5b8cff; --accent2:#38d9c9;
+    --bad:#ef6a8b; --warn:#f5a623; --good:#4fd07a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 10% -10%, #1a2338 0%, var(--bg) 60%);
+    color:var(--text); padding:22px 26px 60px;
+  }
+  h1{font-size:22px; margin:0 0 2px;}
+  .sub{color:var(--sub); font-size:13px; margin-bottom:18px;}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:16px;}
+  .card h2{font-size:14px; margin:0 0 10px; color:var(--text);}
+  .card .desc{color:var(--sub); font-size:12.5px; margin-bottom:12px; line-height:1.5;}
+  .row{display:flex; gap:12px; align-items:center; flex-wrap:wrap;}
+  label{font-size:12px; color:var(--sub); display:block; margin-bottom:4px;}
+  select, input[type=file]{background:var(--card2); border:1px solid var(--border); color:var(--text); padding:7px 10px; border-radius:8px; font-size:13px;}
+  .btn{background:var(--accent); color:#fff; border:none; padding:9px 16px; border-radius:8px; font-size:13px; cursor:pointer; font-weight:600;}
+  .btn:hover{opacity:.9;}
+  .btn.secondary{background:var(--card2); border:1px solid var(--border); color:var(--text);}
+  textarea{width:100%; min-height:170px; background:var(--card2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:10px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; resize:vertical;}
+  .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:16px;}
+  .kpi{background:linear-gradient(180deg,var(--card2),var(--card)); border:1px solid var(--border); border-radius:14px; padding:12px 14px;}
+  .kpi .label{color:var(--sub); font-size:11px; text-transform:uppercase; letter-spacing:.6px;}
+  .kpi .value{font-size:24px; font-weight:700; margin-top:4px;}
+  .kpi.bad .value{color:var(--bad);}
+  .kpi.warn .value{color:var(--warn);}
+  .kpi.good .value{color:var(--good);}
+  table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  th,td{padding:8px 10px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top;}
+  th{color:var(--sub); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.4px;}
+  tr:hover td{background:var(--card2);}
+  .tag{display:inline-block; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap;}
+  .tag.pm{background:rgba(245,166,35,.15); color:var(--warn);}
+  .tag.type{background:rgba(239,106,139,.15); color:var(--bad);}
+  .tag.status{background:rgba(56,217,201,.15); color:var(--accent2);}
+  .tag.dup{background:rgba(91,140,255,.15); color:var(--accent);}
+  .tag.missing{background:rgba(147,160,189,.15); color:var(--sub);}
+  .tag.date{background:rgba(245,166,35,.15); color:var(--warn);}
+  .tag.building{background:rgba(56,217,201,.15); color:var(--accent2);}
+  .tag.occupancy{background:rgba(91,140,255,.15); color:var(--accent);}
+  .empty-note{color:var(--sub); font-size:13px; padding:20px; text-align:center;}
+  .status-msg{font-size:13px; color:var(--sub); margin-top:8px;}
+  .status-msg.error{color:var(--bad);}
+  .status-msg.ok{color:var(--good);}
+  .filter-tabs{display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
+  .filter-tab{background:var(--card2); border:1px solid var(--border); color:var(--sub); padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer;}
+  .filter-tab.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .not-applicable{opacity:.4;}
+  code{background:var(--card2); padding:1px 5px; border-radius:4px; font-size:11.5px;}
+</style>
+</head>
+<body>
+
+<h1>Data Quality Validator</h1>
+<div class="sub">Standalone tool &middot; flags likely data-entry issues before a report reaches the dashboard &middot; does not modify the Mother Dashboard or any existing files</div>
+
+<div class="card">
+  <h2>1. Choose portfolio &amp; report type</h2>
+  <div class="desc">Pick the portfolio first, same as the Mother Dashboard, the report type dropdown then only shows that portfolio's reports. Each report type has a different column layout and different checks that make sense for it. Uploading a file in step 2 auto-detects both from its filename and columns, you only need to touch these if you want to look at a config before uploading, or if the auto-detect gets it wrong.</div>
+  <div class="row">
+    <div>
+      <label>Portfolio</label>
+      <select id="portfolioSelect">
+        <option value="al-naser">Al Naser Club</option>
+        <option value="awqaf">Awqaf</option>
+        <option value="other">Other / new report type</option>
+      </select>
+    </div>
+    <div>
+      <label>Report type</label>
+      <select id="configSelect"></select>
+    </div>
+    <div>
+      <label>&nbsp;</label>
+      <button class="btn secondary" id="showConfigBtn">View / edit config JSON</button>
+    </div>
+  </div>
+  <div id="configEditorWrap" style="display:none; margin-top:12px;">
+    <textarea id="configEditor" spellcheck="false"></textarea>
+    <div class="status-msg" id="configStatus"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>2. Upload a report to check</h2>
+  <div class="desc" id="uploadDesc">Reads the "Details" sheet if present, otherwise the first sheet. If this is the full monthly Al Naser workbook (several report sheets in one file), pick the report type in step 1 first so the right sheet gets read.</div>
+  <div class="row">
+    <input type="file" id="fileInput" accept=".xlsx,.xls">
+    <button class="btn" id="runBtn">Run validation</button>
+  </div>
+  <div class="status-msg" id="fileStatus"></div>
+</div>
+
+<div id="results" style="display:none;">
+  <div class="kpis" id="kpisContainer"></div>
+
+  <div class="card">
+    <h2>Flagged rows</h2>
+    <div class="filter-tabs" id="filterTabs"></div>
+    <div id="flagsTableWrap"></div>
+  </div>
+</div>
+
+<script>
+// Each report type declares only the fields it actually has, and which checks
+// make sense for it. A field/check that isn't declared is simply never run,
+// rather than forced through logic built for a different report's shape.
+const DEFAULT_CONFIGS = {
+  al_bounced: {
+    label: "Bounced Cheque List (Al Naser)",
+    sheet_hints: ["bounced", "bounce"],
+    skip_totals_rows: false,
+    field_aliases: {
+      srNo: ["sr.no", "sr no", "srno"],
+      building: ["building"],
+      unit: ["unit"],
+      tenant: ["tenant"],
+      date: ["chq date", "cheque date"],
+      chequeNo: ["cheque no", "cheque number"],
+      amount: ["amount"],
+      openAmount: ["open amount"],
+      remarks: ["remarks"]
+    },
+    no_fuzzy_fields: [],
+    checks: {
+      pm_user: { enabled: false },
+      type_consistency: { enabled: false },
+      status: { enabled: false },
+      duplicates: { enabled: true, key_fields: ["srNo"] },
+      missing_date: { enabled: true },
+      building_norm: { enabled: true }
+    }
+  },
+  al_clearance: {
+    label: "Cheque Clearance (Al Naser)",
+    sheet_hints: ["clearance"],
+    skip_totals_rows: true,
+    field_aliases: {
+      building: ["building"],
+      unit: ["unit#", "unit"],
+      tenant: ["tenant"],
+      chequeNo: ["chq #", "cheque #", "chq no", "cheque no"],
+      date: ["chq date", "cheque date"],
+      amount: ["amount"],
+      bank: ["bank"],
+      deposited: ["deposited"],
+      clearedRaw: ["cleared"],
+      remarks: ["remarks"]
+    },
+    no_fuzzy_fields: [],
+    // The CLEARED column holds a real date when a cheque cleared normally, the text
+    // BOUNCED/SETTLED when it didn't, or is blank while still pending, there's no
+    // separate "status" header at all, so status has to be read off that column
+    // instead of matched against one.
+    derive: {
+      status: { from: "clearedRaw", using: "clearedStatus" }
+    },
+    // The real export reuses "BANK" as the header for two different columns — the
+    // actual bank name, and what's really a remarks/notes field. Without this, the
+    // second column would show up every time as "could not detect remarks", a false
+    // alarm for a known, harmless quirk of the source file.
+    duplicate_header_fallback: { field: "remarks", among_duplicates_of: "bank" },
+    checks: {
+      pm_user: { enabled: false },
+      type_consistency: { enabled: false },
+      status: { enabled: true, valid_values: ["Pending", "Cleared", "Bounced", "Settled"] },
+      duplicates: { enabled: true, key_fields: ["tenant", "chequeNo", "amount"] },
+      missing_date: { enabled: true },
+      building_norm: { enabled: true }
+    }
+  },
+  al_collections: {
+    label: "Collections Detail (Al Naser)",
+    sheet_hints: ["collections in detail", "collections detail", "collections in detai", "collection"],
+    skip_totals_rows: true,
+    field_aliases: {
+      type: ["type"],
+      building: ["building"],
+      unit: ["unit#", "unit"],
+      tenant: ["tenant"],
+      chequeNo: ["chq#", "chq #", "cheque no"],
+      date: ["chq date", "cheque date"],
+      amount: ["amount"],
+      bank: ["bank"],
+      remarks: ["remarks"]
+      // No "description" field on purpose: this sheet has none, so the type-consistency
+      // check below only ever flags a genuinely blank Type, it never tries (and fails) to
+      // compare types across rows the way the Awqaf reports do.
+    },
+    no_fuzzy_fields: [],
+    checks: {
+      pm_user: { enabled: false },
+      type_consistency: { enabled: true, min_group_size: 2 },
+      status: { enabled: false },
+      duplicates: { enabled: true, key_fields: ["tenant", "chequeNo", "amount", "date"] },
+      missing_date: { enabled: true },
+      building_norm: { enabled: true }
+    }
+  },
+  al_occupancy: {
+    label: "Occupancy (Al Naser)",
+    parse_mode: "occupancy",
+    sheet_hints: ["occupancy"]
+    // Not a flat table at all: a small unit-type summary block followed by one
+    // property-by-property block per period, ending in its own GRAND TOTAL row.
+    // Handled by a dedicated parser/checker instead of field_aliases + checks.
+  },
+  request_count: {
+    label: "Request Count (Awqaf)",
+    field_aliases: {
+      contract: ["contract number"],
+      receipt: ["receipt number"],
+      chequeNo: ["cheque no.", "cheque no", "cheque number"],
+      date: ["date"],
+      amount: ["amount"],
+      type: ["type", "type of lease"],
+      pmUser: ["pm user", "pmuser", "pm_user"],
+      description: ["description"]
+    },
+    no_fuzzy_fields: ["type"],
+    checks: {
+      pm_user: { enabled: true, valid_values: ["Abdul Haleem", "Bismi", "Joan", "Mubina", "Ola Kreaa", "Van Gabriel"] },
+      type_consistency: { enabled: true, min_group_size: 2 },
+      status: { enabled: false },
+      duplicates: { enabled: true, key_fields: ["contract", "receipt", "chequeNo", "amount", "description"] }
+    }
+  },
+  new_lease: {
+    label: "New Lease (Awqaf)",
+    field_aliases: {
+      contract: ["contract number"],
+      receipt: ["receipt number"],
+      chequeNo: ["cheque no.", "cheque no", "cheque number"],
+      date: ["date"],
+      amount: ["amount"],
+      type: ["type of lease", "type"],
+      description: ["description"]
+      // No pmUser here on purpose: New Lease's Details sheet has no PM User column at all,
+      // so that check would just flag every row for a field that was never meant to be filled in.
+    },
+    no_fuzzy_fields: ["type"],
+    checks: {
+      pm_user: { enabled: false },
+      type_consistency: { enabled: true, min_group_size: 2 },
+      status: { enabled: false },
+      duplicates: { enabled: true, key_fields: ["contract", "receipt", "chequeNo", "amount", "description"] }
+    }
+  },
+  cheque_count: {
+    label: "Cheque Count (Awqaf)",
+    field_aliases: {
+      contract: ["contract number"],
+      receipt: ["receipt number"],
+      chequeNo: ["cheque no.", "cheque no", "cheque number"],
+      date: ["date"],
+      amount: ["amount"],
+      type: ["type of lease", "type"],
+      description: ["description"]
+      // PM User exists as a column here but is blank for every row in this report by design,
+      // it isn't tracked at this level, so the check is off rather than flagging 100% of rows.
+    },
+    no_fuzzy_fields: ["type"],
+    checks: {
+      pm_user: { enabled: false },
+      type_consistency: { enabled: true, min_group_size: 2 },
+      status: { enabled: false },
+      duplicates: { enabled: true, key_fields: ["contract", "receipt", "chequeNo", "amount", "description"] }
+    }
+  },
+  bounce_cheque: {
+    label: "Bounce Cheque (Awqaf)",
+    field_aliases: {
+      contract: ["contract number"],
+      chequeNo: ["cheque number"],
+      date: ["cheque date"],
+      amount: ["cheque amount"],
+      status: ["status"],
+      tenant: ["tenant name"]
+      // No Type, PM User, Receipt Number, or Description here, this report simply
+      // doesn't have those columns, it tracks Status instead.
+    },
+    no_fuzzy_fields: [],
+    checks: {
+      pm_user: { enabled: false },
+      type_consistency: { enabled: false },
+      status: { enabled: true, valid_values: ["PAID", "Under Legal Action", "Under Process"] },
+      duplicates: { enabled: true, key_fields: ["contract", "chequeNo", "amount"] }
+    }
+  },
+  blank: {
+    label: "New report type",
+    field_aliases: {
+      contract: ["contract number"],
+      receipt: ["receipt number"],
+      chequeNo: ["cheque no.", "cheque no", "cheque number"],
+      date: ["date"],
+      amount: ["amount"],
+      type: ["type", "type of lease"],
+      pmUser: ["pm user", "pmuser", "pm_user"],
+      description: ["description"],
+      status: ["status"]
+    },
+    no_fuzzy_fields: ["type"],
+    checks: {
+      pm_user: { enabled: false, valid_values: [] },
+      type_consistency: { enabled: true, min_group_size: 2 },
+      status: { enabled: false, valid_values: [] },
+      duplicates: { enabled: true, key_fields: ["contract", "receipt", "chequeNo", "amount", "description"] }
+    }
+  }
+};
+
+// Same grouping as the Mother Dashboard's portfolio selector, so the report-type
+// dropdown only ever shows the handful of reports that actually belong to whichever
+// portfolio is picked, instead of one flat list of every report type at once.
+const PORTFOLIOS = {
+  'al-naser': { label: 'Al Naser Club', types: ['al_bounced', 'al_clearance', 'al_collections', 'al_occupancy'] },
+  'awqaf': { label: 'Awqaf', types: ['request_count', 'new_lease', 'cheque_count', 'bounce_cheque'] },
+  'other': { label: 'Other / new report type', types: ['blank'] }
+};
+
+function portfolioForType(type){
+  for(const [key, p] of Object.entries(PORTFOLIOS)){
+    if(p.types.includes(type)) return key;
+  }
+  return 'other';
+}
+
+let activeConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIGS.al_bounced));
+let allFlags = [];
+let userManuallySelectedConfig = false;
+
+const portfolioSelect = document.getElementById('portfolioSelect');
+const configSelect = document.getElementById('configSelect');
+const showConfigBtn = document.getElementById('showConfigBtn');
+const configEditorWrap = document.getElementById('configEditorWrap');
+const configEditor = document.getElementById('configEditor');
+const configStatus = document.getElementById('configStatus');
+const uploadDesc = document.getElementById('uploadDesc');
+
+function populateReportTypeOptions(portfolioKey, preferType){
+  const types = PORTFOLIOS[portfolioKey].types;
+  configSelect.innerHTML = types.map(t => `<option value="${t}">${DEFAULT_CONFIGS[t].label}</option>`).join('');
+  configSelect.value = (preferType && types.includes(preferType)) ? preferType : types[0];
+}
+
+// Central place any code path (manual dropdown, auto-detect from a file) goes through
+// to change the active report type — keeps the portfolio dropdown, the report-type
+// dropdown, and the loaded config in sync no matter which one triggered the change.
+function selectReportType(type){
+  const portfolio = portfolioForType(type);
+  if(portfolioSelect.value !== portfolio){
+    portfolioSelect.value = portfolio;
+    populateReportTypeOptions(portfolio, type);
+  } else if(configSelect.value !== type){
+    configSelect.value = type;
+  }
+  activeConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIGS[type]));
+  refreshEditorFromActive();
+}
+
+function refreshEditorFromActive(){
+  configEditor.value = JSON.stringify(activeConfig, null, 2);
+  configStatus.textContent = '';
+  configStatus.className = 'status-msg';
+  if(activeConfig.parse_mode === 'occupancy'){
+    uploadDesc.textContent = 'Reads the sheet with "Occupancy" in its name (or the first sheet). Not a flat table — this scans for the per-property blocks and checks the property totals against the sheet\'s own Grand Total row.';
+  } else {
+    const fields = Object.keys(activeConfig.field_aliases || {});
+    const sheetNote = (activeConfig.sheet_hints && activeConfig.sheet_hints.length)
+      ? `Reads the sheet matching "${activeConfig.sheet_hints[0]}" if this workbook has multiple sheets, otherwise the "Details" sheet or the first sheet.`
+      : 'Reads the "Details" sheet if present, otherwise the first sheet.';
+    uploadDesc.textContent = `${sheetNote} Expects columns for: ${fields.join(', ')}.`;
+  }
+}
+
+portfolioSelect.addEventListener('change', () => {
+  userManuallySelectedConfig = true;
+  populateReportTypeOptions(portfolioSelect.value);
+  activeConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIGS[configSelect.value] || DEFAULT_CONFIGS.blank));
+  refreshEditorFromActive();
+  // A file's already loaded — re-read the sheet this newly picked report type actually
+  // needs from it, rather than leaving stale data from whichever type was active before,
+  // or requiring the person to re-upload the exact same file just to switch reports.
+  if(loadedWorkbook) loadSheetForConfig(configSelect.value);
+});
+
+configSelect.addEventListener('change', () => {
+  userManuallySelectedConfig = true;
+  activeConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIGS[configSelect.value] || DEFAULT_CONFIGS.blank));
+  refreshEditorFromActive();
+  if(loadedWorkbook) loadSheetForConfig(configSelect.value);
+});
+
+populateReportTypeOptions(portfolioSelect.value, 'al_bounced');
+
+showConfigBtn.addEventListener('click', () => {
+  const showing = configEditorWrap.style.display !== 'none';
+  configEditorWrap.style.display = showing ? 'none' : 'block';
+  if(!showing) refreshEditorFromActive();
+});
+
+configEditor.addEventListener('input', () => {
+  try{
+    activeConfig = JSON.parse(configEditor.value);
+    configStatus.textContent = 'Config looks valid.';
+    configStatus.className = 'status-msg ok';
+  }catch(e){
+    configStatus.textContent = 'Invalid JSON: ' + e.message;
+    configStatus.className = 'status-msg error';
+  }
+});
+
+refreshEditorFromActive();
+
+// ---- Column detection ----
+function normHeader(h){ return (h===null||h===undefined) ? '' : String(h).trim().toLowerCase(); }
+
+function detectColumnMapping(headerRow, fieldAliases, noFuzzyFields){
+  const normed = headerRow.map(normHeader);
+  const noFuzzy = new Set(noFuzzyFields || []);
+  const map = {};
+  Object.keys(fieldAliases).forEach(field => {
+    const aliases = fieldAliases[field];
+    let found = -1;
+    // Pass 1: exact header match (safe regardless of collisions, e.g. "Type" vs "Unit Type").
+    for(const alias of aliases){ const idx = normed.indexOf(alias); if(idx !== -1){ found = idx; break; } }
+    // Pass 2: substring fallback, skipped for fields prone to collision, guessing wrong
+    // there is worse than leaving it unmapped and flagging it clearly.
+    if(found === -1 && !noFuzzy.has(field)){
+      for(const alias of aliases){ const idx = normed.findIndex(h => h.includes(alias)); if(idx !== -1){ found = idx; break; } }
+    }
+    map[field] = found;
+  });
+  return map;
+}
+
+let workbookRows = null;
+let workbookHeaders = null;
+let occupancyParsed = null;
+let loadedWorkbook = null; // the in-memory parsed workbook, kept around so switching the
+                            // report-type dropdown after a file is loaded re-reads the right
+                            // sheet from it directly rather than requiring a fresh re-upload.
+
+// Given a report type and the workbook already sitting in memory, (re)read whichever
+// sheet that type's config points at and populate the right state for it (flat table vs
+// occupancy). Used both by the initial upload and by switching the dropdown afterward.
+function loadSheetForConfig(type){
+  if(!loadedWorkbook || !type || !DEFAULT_CONFIGS[type]) return;
+  const cfg = DEFAULT_CONFIGS[type];
+  const status = document.getElementById('fileStatus');
+  const sheetName = pickSheetByHints(loadedWorkbook, cfg.sheet_hints) ||
+                     (loadedWorkbook.SheetNames.includes('Details') ? 'Details' : loadedWorkbook.SheetNames[0]);
+  const rawRows = XLSX.utils.sheet_to_json(loadedWorkbook.Sheets[sheetName], {header:1, raw:true, defval:null});
+  if(cfg.parse_mode === 'occupancy'){
+    occupancyParsed = parseOccupancySheet(rawRows);
+    workbookRows = null; workbookHeaders = null;
+    status.textContent = `Loaded "${sheetName}" as an occupancy structure · ${occupancyParsed.periods.length} period block(s) found.`;
+  } else {
+    occupancyParsed = null;
+    workbookHeaders = rawRows[0] || [];
+    workbookRows = rawRows.slice(1).filter(r => r && r.some(v => v !== null && v !== ''));
+    status.textContent = `Loaded "${sheetName}" · ${workbookRows.length} data rows · ${workbookHeaders.length} columns.`;
+  }
+  status.className = 'status-msg ok';
+  document.getElementById('results').style.display = 'none';
+  return sheetName;
+}
+
+// ---- Shared helpers reused from the live Al Naser dashboard templates, kept in sync
+// with those files so a row this tool calls "fine" is actually fine on the dashboard. ----
+function looksLikeDate(v){
+  if(v === null || v === undefined || v === '') return false;
+  if(v instanceof Date) return !isNaN(v.getTime());
+  if(typeof v === 'number'){
+    try{ return !!XLSX.SSF.parse_date_code(v); }catch(e){ return false; }
+  }
+  if(typeof v === 'string'){
+    if(/^\d{4}-\d{2}-\d{2}/.test(v)) return true;
+    const parsed = new Date(v);
+    return !isNaN(parsed.getTime());
+  }
+  return false;
+}
+
+function normalizeBuilding(v){
+  if(v===null||v===undefined||String(v).trim()==='') return 'Unknown';
+  let s = String(v).trim().replace(/\s+/g,' ');
+  s = s.replace(/^AL\b/, 'Al');
+  s = s.replace(/\s*-\s*/g, ' ');
+  s = s.replace(/\s+/g,' ').trim();
+  return s;
+}
+
+// Mirrors classifyStatus() in Al_Naser_Cheque_Clearance_LIVE.html, with one deliberate
+// difference: instead of silently falling back to "Pending" for text that isn't a date,
+// BOUNCED, or SETTLED, this returns the raw text as-is so the status check below can
+// flag it as unrecognized — the dashboard optimizes for always showing something, this
+// tool optimizes for catching the input that produced it.
+function deriveClearedStatus(raw){
+  if(raw===null||raw===undefined||String(raw).trim()==='') return 'Pending';
+  if(looksLikeDate(raw)) return 'Cleared';
+  const s = String(raw).trim().toUpperCase();
+  if(s.includes('BOUNCE')) return 'Bounced';
+  if(s.includes('SETTLE')) return 'Settled';
+  return String(raw).trim();
+}
+
+function pickSheetByHints(wb, hints){
+  if(!hints || !hints.length) return null;
+  const lower = wb.SheetNames.map(n => n.trim().toLowerCase());
+  for(const hint of hints){
+    const idx = lower.findIndex(n => n.includes(hint));
+    if(idx !== -1) return wb.SheetNames[idx];
+  }
+  return null;
+}
+
+// ---- Occupancy: not a flat table, ported directly from
+// Al_Naser_Occupancy_LIVE.html's parseOccupancySheet/computeDataIssues so the same
+// sheet reads the same way in both places. ----
+function titleCaseProperty(s){
+  return String(s).toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function parseOccupancySheet(rows){
+  const result = { topTable: null, periods: [] };
+  for(let i=0; i<rows.length; i++){
+    const row = rows[i] || [];
+    const normed = row.map(normHeader);
+    if(normed[0] === 'unit type' && !result.topTable){
+      const dataRows = [];
+      let j = i+1;
+      while(j < rows.length && rows[j] && rows[j][0] !== null && rows[j][0] !== undefined && String(rows[j][0]).trim() !== ''){
+        dataRows.push(rows[j]);
+        j++;
+      }
+      result.topTable = { header: row, rows: dataRows };
+    }
+    if(normed[0] === 'property'){
+      const occCols = [];
+      row.forEach((h, idx) => {
+        const nh = normHeader(h);
+        if(nh.startsWith('occupancy analysis')){
+          const label = String(h).replace(/occupancy analysis/i,'').trim();
+          occCols.push({idx, label});
+        }
+      });
+      const vacantColIdx = normed.findIndex(h => h === 'vacant');
+      const dataStart = i+3;
+      const properties = [];
+      let grandTotal = null;
+      let k = dataStart;
+      while(k < rows.length && rows[k] && rows[k][0] !== null && rows[k][0] !== undefined && String(rows[k][0]).trim() !== ''){
+        const r = rows[k];
+        const name = String(r[0]).trim().replace(/\s+/g,' ');
+        const entry = {
+          name,
+          resUnits: r[1]||0, comUnits: r[2]||0, totalUnits: r[3]||0,
+          vacantRes: r[4]||0, vacantCom: r[5]||0,
+          occ: occCols.map(c => ({label:c.label, value: r[c.idx]})),
+          vacantList: vacantColIdx>=0 ? r[vacantColIdx] : null,
+        };
+        k++;
+        if(name.toUpperCase() === 'GRAND TOTAL'){ grandTotal = entry; break; }
+        properties.push(entry);
+      }
+      result.periods.push({ occCols, properties, grandTotal });
+    }
+  }
+  return result;
+}
+
+function computeOccupancyIssues(parsed){
+  const issues = [];
+  if(!parsed.periods.length){
+    issues.push({ message: 'Could not find a per-property occupancy table on this sheet — expected a row starting with "PROPERTY".' });
+    return issues;
+  }
+  const current = parsed.periods[0];
+  if(!current.grandTotal){
+    issues.push({ message: 'No "GRAND TOTAL" row found under the current period\'s property table — portfolio-wide figures may be incomplete.' });
+  } else {
+    const sumRes = current.properties.reduce((s,p)=>s+(p.resUnits||0),0);
+    const sumCom = current.properties.reduce((s,p)=>s+(p.comUnits||0),0);
+    if(sumRes !== current.grandTotal.resUnits){
+      issues.push({ message: `Residential units across all properties add up to ${sumRes}, but the sheet's own Grand Total row says ${current.grandTotal.resUnits}.` });
+    }
+    if(sumCom !== current.grandTotal.comUnits){
+      issues.push({ message: `Commercial units across all properties add up to ${sumCom}, but the sheet's own Grand Total row says ${current.grandTotal.comUnits}.` });
+    }
+  }
+  current.properties.filter(p => !p.occ[0] || p.occ[0].value===null || p.occ[0].value===undefined).forEach(p => {
+    issues.push({ property: titleCaseProperty(p.name), message: 'Missing a current-month occupancy figure.' });
+  });
+  if(parsed.periods.length < 2){
+    issues.push({ message: 'Only one period was found on this sheet, so no month-over-month or year-over-year comparison is available yet.' });
+  }
+  return issues;
+}
+
+function runOccupancyValidation(){
+  const status = document.getElementById('fileStatus');
+  if(!occupancyParsed){
+    status.textContent = 'Upload a file first.';
+    status.className = 'status-msg error';
+    return;
+  }
+  allFlags = [];
+  computeOccupancyIssues(occupancyParsed).forEach(iss => {
+    allFlags.push({ row: iss.property || 'Sheet', category: 'occupancy', detail: iss.message });
+  });
+  const totalProps = (occupancyParsed.periods[0] && occupancyParsed.periods[0].properties.length) || 0;
+  status.textContent = `Checked ${totalProps} propert${totalProps===1?'y':'ies'} across ${occupancyParsed.periods.length} period block(s).`;
+  status.className = 'status-msg ok';
+  renderResults(totalProps, { occupancyMode: true }, { totalLabel: 'Properties checked' });
+}
+
+// ---- Report-type auto-detection ----
+// The monthly exports keep consistent file names (Request Count / New Lease /
+// Cheque Count / Bounce Cheque), so the filename is one signal. The actual
+// columns present are a second, independent signal. Cross-checking both
+// catches the failure mode this was built to avoid: someone uploads the wrong
+// report and gets readings that look plausible but are checked against the
+// wrong rules. "bounce" and "new lease" are checked before the plainer
+// "cheque"/"request" keywords since Bounce Cheque and New Lease filenames
+// would otherwise also match those.
+const FILENAME_HINTS = [
+  { type: 'al_bounced', patterns: ['bounced cheque', 'bounced chq', 'bounce cheque list'] },
+  { type: 'al_clearance', patterns: ['clearance'] },
+  { type: 'al_collections', patterns: ['collections in detail', 'collections detail', 'collections in detai', 'collection'] },
+  { type: 'al_occupancy', patterns: ['occupancy'] },
+  { type: 'bounce_cheque', patterns: ['bounce'] },
+  { type: 'new_lease', patterns: ['new lease', 'newlease', 'lease'] },
+  { type: 'cheque_count', patterns: ['cheque count', 'chequecount'] },
+  { type: 'request_count', patterns: ['request count', 'requestcount', 'request'] },
+];
+
+function detectTypeFromFilename(filename){
+  const lower = (filename || '').toLowerCase();
+  for(const hint of FILENAME_HINTS){
+    if(hint.patterns.some(p => lower.includes(p))) return hint.type;
+  }
+  return null;
+}
+
+// Request Count, New Lease, and Cheque Count share almost the same column
+// layout (same Contract/Receipt/Cheque No./Amount/Type of lease/Description
+// fields), so scoring column overlap can't safely tell those three apart on
+// its own, guessing wrong there would be worse than not guessing. What
+// columns CAN reliably tell us: whether a file is Bounce-Cheque-shaped
+// (Status field, no Description or Receipt Number at all) versus the other
+// family, and whether a PM User column exists, which is New Lease's one real
+// distinguishing trait (its Details sheet never has that column, the other
+// two always do). That's used to sanity-check the filename guess rather
+// than to pick between Request Count and Cheque Count outright.
+function columnShape(headerRow){
+  const normed = headerRow.map(normHeader);
+  const has = (aliases) => aliases.some(a => normed.includes(a) || normed.some(h => h.includes(a)));
+  const hasStatus = has(['status']);
+  const hasDescription = has(['description']);
+  const hasReceipt = has(['receipt number']);
+  const hasPmUser = has(['pm user', 'pmuser', 'pm_user']);
+  const hasSrNo = has(['sr.no', 'sr no', 'srno']);
+  const hasCleared = has(['cleared']);
+  const hasRent = has(['rent']);
+  const hasContract = has(['contract number']);
+  let guess = null;
+  if(hasSrNo && !hasContract) guess = 'al_bounced';
+  else if(hasCleared && !hasContract) guess = 'al_clearance';
+  else if(hasRent && !hasContract) guess = 'al_collections';
+  else if(hasStatus && !hasDescription && !hasReceipt) guess = 'bounce_cheque';
+  else if((hasDescription || hasReceipt) && !hasPmUser) guess = 'new_lease';
+  return { guess, hasStatus, hasPmUser };
+}
+
+document.getElementById('fileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const status = document.getElementById('fileStatus');
+  status.textContent = 'Reading ' + file.name + '...';
+  status.className = 'status-msg';
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try{
+      const wb = XLSX.read(ev.target.result, {type:'array', cellDates:true});
+      loadedWorkbook = wb;
+
+      const filenameGuess = detectTypeFromFilename(file.name);
+      // If the filename doesn't say (the real Al Naser export is one workbook with
+      // several report sheets in it, so the filename alone often can't), the report
+      // type already picked in step 1 is the next best signal for which sheet to read —
+      // but only if the person actually chose it, not the tool's own leftover default.
+      const preselected = userManuallySelectedConfig ? configSelect.value : null;
+      const typeForSheetPick = filenameGuess || preselected;
+      const cfgForSheetPick = typeForSheetPick ? DEFAULT_CONFIGS[typeForSheetPick] : null;
+
+      let sheetName = (cfgForSheetPick && pickSheetByHints(wb, cfgForSheetPick.sheet_hints)) ||
+                       (wb.SheetNames.includes('Details') ? 'Details' : wb.SheetNames[0]);
+
+      // Occupancy isn't a flat table, branch off entirely once we're confident that's
+      // what this sheet is (either the type was already pinned down, or the sheet name
+      // itself makes it obvious).
+      const looksLikeOccupancySheet = sheetName.trim().toLowerCase().includes('occupancy');
+      if((cfgForSheetPick && cfgForSheetPick.parse_mode === 'occupancy') || (!cfgForSheetPick && looksLikeOccupancySheet)){
+        const type = (cfgForSheetPick && cfgForSheetPick.parse_mode === 'occupancy') ? typeForSheetPick : 'al_occupancy';
+        if(configSelect.value !== type) selectReportType(type);
+        loadSheetForConfig(type);
+        status.textContent += ` Detected report type: ${DEFAULT_CONFIGS[type].label}.`;
+        return;
+      }
+
+      const rawRows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], {header:1, raw:true, defval:null});
+      const headers = rawRows[0] || [];
+      const shape = columnShape(headers);
+      let finalGuess = typeForSheetPick || shape.guess;
+
+      let extra = '';
+      let warn = false;
+
+      if(finalGuess && DEFAULT_CONFIGS[finalGuess]){
+        if(configSelect.value !== finalGuess){
+          selectReportType(finalGuess);
+        }
+        loadSheetForConfig(finalGuess);
+        extra = ` Detected report type: ${DEFAULT_CONFIGS[finalGuess].label}.`;
+
+        // Cross-check the filename guess against what the columns actually look like.
+        if(filenameGuess === 'bounce_cheque' && !shape.hasStatus){
+          extra += ` Note: the filename looks like Bounce Cheque, but this file has no Status column, worth checking it's the right file.`;
+          warn = true;
+        } else if(filenameGuess && filenameGuess !== 'bounce_cheque' && shape.guess === 'bounce_cheque'){
+          extra += ` Note: the columns look like a Bounce Cheque report even though the filename doesn't, worth checking it's the right file.`;
+          warn = true;
+        } else if(filenameGuess === 'new_lease' && shape.hasPmUser){
+          extra += ` Note: this file has a PM User column, New Lease reports normally don't, worth checking this isn't actually Request Count or Cheque Count.`;
+          warn = true;
+        } else if((filenameGuess === 'request_count' || filenameGuess === 'cheque_count') && !shape.hasPmUser && shape.guess !== 'bounce_cheque'){
+          extra += ` Note: this file has no PM User column, which is unusual for ${DEFAULT_CONFIGS[filenameGuess].label}, worth checking this isn't actually New Lease.`;
+          warn = true;
+        } else if(!typeForSheetPick){
+          extra += ` (Guessed from columns only, worth a quick check that the dropdown in step 1 matches.)`;
+          warn = true;
+        }
+      } else {
+        // Nothing confidently detected — still load whatever the dropdown is currently
+        // set to, so a report type picked ahead of time works with no re-upload needed.
+        loadSheetForConfig(configSelect.value);
+        extra = ' Could not confidently detect the report type from the filename or columns, please check the dropdown in step 1 is set correctly.';
+        warn = true;
+      }
+      status.textContent += extra;
+      status.className = warn ? 'status-msg' : 'status-msg ok';
+    }catch(err){
+      status.textContent = 'Could not read file: ' + err.message;
+      status.className = 'status-msg error';
+    }
+  };
+  reader.readAsArrayBuffer(file);
+});
+
+function get(row, colMap, field){
+  const idx = colMap[field];
+  if(idx === undefined || idx === -1) return null;
+  return row[idx];
+}
+
+function matchAgainstList(value, validList){
+  // Returns {status: 'ok'|'fix'|'unknown', suggestion} for a value against a known list,
+  // catching exact matches, then case/spacing mismatches, then genuinely unrecognized values.
+  if(validList.includes(value)) return {status: 'ok'};
+  const lower = value.toLowerCase();
+  const idx = validList.findIndex(v => v.toLowerCase() === lower);
+  if(idx !== -1) return {status: 'fix', suggestion: validList[idx]};
+  return {status: 'unknown'};
+}
+
+function runValidation(){
+  const status = document.getElementById('fileStatus');
+
+  let cfg;
+  try{ cfg = JSON.parse(configEditor.value); }
+  catch(e){ status.textContent = 'Fix the config JSON before running.'; status.className = 'status-msg error'; return; }
+
+  if(cfg.parse_mode === 'occupancy'){
+    runOccupancyValidation();
+    return;
+  }
+
+  if(!workbookRows){
+    status.textContent = 'Upload a file first.';
+    status.className = 'status-msg error';
+    return;
+  }
+
+  const colMap = detectColumnMapping(workbookHeaders, cfg.field_aliases, cfg.no_fuzzy_fields);
+
+  // Some reports reuse the same header text for two different columns (Cheque
+  // Clearance's export has "BANK" twice — the real bank name, and what's actually a
+  // remarks field). When that's declared for this report and normal detection came up
+  // empty, fall back to whichever duplicate column normal detection didn't already
+  // claim, rather than flagging a known layout quirk as a missing column.
+  let duplicateHeaderNote = '';
+  if(cfg.duplicate_header_fallback){
+    const fb = cfg.duplicate_header_fallback;
+    if(colMap[fb.field] === -1){
+      const normed = workbookHeaders.map(normHeader);
+      const sourceAliases = (cfg.field_aliases[fb.among_duplicates_of] || []);
+      const matches = normed.map((h,idx) => ({h,idx})).filter(o => sourceAliases.some(a => o.h === a || o.h.includes(a)));
+      if(matches.length >= 2){
+        colMap[fb.field] = matches[matches.length - 1].idx;
+        duplicateHeaderNote = ` This sheet uses "${workbookHeaders[matches[0].idx]}" as the header for two columns, the second one was used as ${fb.field}.`;
+      }
+    }
+  }
+
+  // Only warn about fields the active checks actually depend on, a field this report
+  // genuinely doesn't have (like pmUser on New Lease) isn't in field_aliases at all,
+  // so it won't show up here as a false "couldn't detect" warning.
+  const unmapped = Object.keys(colMap).filter(f => colMap[f] === -1 && f !== '__duplicateHeaderFallbackUsed');
+  if(unmapped.length){
+    status.textContent = `Warning: could not confidently detect column(s) for: ${unmapped.join(', ')}. Checks depending on those columns will be skipped.${duplicateHeaderNote}`;
+    status.className = 'status-msg error';
+  } else {
+    status.textContent = `Validated against columns: ` + Object.entries(colMap).map(([f,i]) => `${f}=${workbookHeaders[i]}`).join(', ') + duplicateHeaderNote;
+    status.className = 'status-msg ok';
+  }
+
+  const checks = cfg.checks || {};
+  const pmCheck = checks.pm_user || {enabled:false};
+  const typeCheck = checks.type_consistency || {enabled:false};
+  const statusCheck = checks.status || {enabled:false};
+  const dupCheck = checks.duplicates || {enabled:false};
+  const dateCheck = checks.missing_date || {enabled:false};
+  const buildingCheck = checks.building_norm || {enabled:false};
+  const deriveStatusCfg = (cfg.derive && cfg.derive.status) || null;
+  const skipTotals = !!cfg.skip_totals_rows;
+
+  const validPmLower = (pmCheck.valid_values || []).map(n => n.toLowerCase());
+  const seenKeys = {};
+  const descGroups = {};
+  const contractGroups = {};
+  allFlags = [];
+
+  workbookRows.forEach((row, i) => {
+    const rowNum = i + 2; // account for header row, 1-indexed sheet rows
+    const pmUser = (get(row, colMap, 'pmUser') || '').toString().trim();
+    const type = (get(row, colMap, 'type') || '').toString().trim();
+    const desc = (get(row, colMap, 'description') || '').toString().trim();
+    let statusVal = (get(row, colMap, 'status') || '').toString().trim();
+    const contract = (get(row, colMap, 'contract') || '').toString().trim();
+    const receipt = (get(row, colMap, 'receipt') || '').toString().trim();
+    const chequeNo = (get(row, colMap, 'chequeNo') || '').toString().trim();
+    const amount = get(row, colMap, 'amount');
+    const tenant = (get(row, colMap, 'tenant') || '').toString().trim();
+    const building = (get(row, colMap, 'building') || '').toString().trim();
+    const unit = (get(row, colMap, 'unit') || '').toString().trim();
+    const srNo = (get(row, colMap, 'srNo') || '').toString().trim();
+    const dateRaw = get(row, colMap, 'date');
+
+    // Sheet-level totals/footer row (blank tenant, building, and unit — just a count
+    // and a sum). Not a real transaction, so skip every check for it rather than
+    // flagging it as one with a missing date or anything else.
+    if(skipTotals && !tenant && !building && !unit) return;
+
+    if(deriveStatusCfg){
+      const rawDerivedSrc = get(row, colMap, deriveStatusCfg.from);
+      statusVal = deriveClearedStatus(rawDerivedSrc);
+    }
+
+    // PM-user check
+    if(pmCheck.enabled && colMap.pmUser !== undefined && colMap.pmUser !== -1 && pmCheck.valid_values && pmCheck.valid_values.length){
+      if(!pmUser){
+        allFlags.push({row: rowNum, category: 'pm', detail: 'PM user is blank.'});
+      } else if(!pmCheck.valid_values.includes(pmUser)){
+        const idx = validPmLower.indexOf(pmUser.toLowerCase());
+        if(idx !== -1){
+          allFlags.push({row: rowNum, category: 'pm', detail: `"${pmUser}" likely should be "${pmCheck.valid_values[idx]}" (casing/spacing mismatch).`});
+        } else {
+          allFlags.push({row: rowNum, category: 'pm', detail: `"${pmUser}" is not in the known PM list, verify this is correct.`});
+        }
+      }
+    }
+
+    // Missing type
+    if(typeCheck.enabled && colMap.type !== undefined && colMap.type !== -1 && !type){
+      allFlags.push({row: rowNum, category: 'missing', detail: 'Type is blank.'});
+    }
+
+    // Group by exact description text, and separately by contract, for the consistency
+    // check below. Two signals instead of one: a fee description like "Innovation Fee"
+    // legitimately gets used across every lease type, so description alone over-flags it.
+    // A contract's own line items, on the other hand, are reliably all-the-same-type in
+    // practice, so that's used to corroborate before actually flagging anything.
+    if(typeCheck.enabled && colMap.type !== -1 && colMap.description !== undefined && colMap.description !== -1 && desc && type){
+      const key = desc.toLowerCase();
+      if(!descGroups[key]) descGroups[key] = [];
+      descGroups[key].push({rowNum, type, desc});
+    }
+    if(typeCheck.enabled && colMap.type !== -1 && contract && type){
+      if(!contractGroups[contract]) contractGroups[contract] = [];
+      contractGroups[contract].push({rowNum, type});
+    }
+
+    // Status check (e.g. Bounce Cheque: PAID / Under Legal Action / Under Process) —
+    // or, when this report derives status from another column (Cheque Clearance's
+    // CLEARED), only the "doesn't recognize this value" branch applies, blank is a
+    // legitimate "Pending" here rather than an error.
+    if(statusCheck.enabled && statusCheck.valid_values && statusCheck.valid_values.length){
+      if(deriveStatusCfg){
+        const m = matchAgainstList(statusVal, statusCheck.valid_values);
+        if(m.status === 'unknown'){
+          const rawDerivedSrc = get(row, colMap, deriveStatusCfg.from);
+          allFlags.push({row: rowNum, category: 'status', detail: `"${rawDerivedSrc}" in the ${deriveStatusCfg.from} column doesn't look like a date, BOUNCED, or SETTLED — verify this row.`});
+        }
+      } else if(colMap.status !== undefined && colMap.status !== -1){
+        if(!statusVal){
+          allFlags.push({row: rowNum, category: 'missing', detail: 'Status is blank.'});
+        } else {
+          const m = matchAgainstList(statusVal, statusCheck.valid_values);
+          if(m.status === 'fix'){
+            allFlags.push({row: rowNum, category: 'status', detail: `"${statusVal}" likely should be "${m.suggestion}" (casing/spacing mismatch).`});
+          } else if(m.status === 'unknown'){
+            allFlags.push({row: rowNum, category: 'status', detail: `"${statusVal}" is not a recognized status, verify this is correct.`});
+          }
+        }
+      }
+    }
+
+    // Missing/unusable date — the dashboard silently excludes these rows from every
+    // total and chart, so it's worth surfacing here rather than only downstream.
+    if(dateCheck.enabled && colMap.date !== undefined && colMap.date !== -1){
+      if(!looksLikeDate(dateRaw)){
+        allFlags.push({row: rowNum, category: 'date', detail: 'No usable date in this row — would be excluded from every total and chart on the dashboard.'});
+      }
+    }
+
+    // Building name normalization (casing/spacing inconsistencies, e.g. "AL Nasr Palace"
+    // vs "Al Nasr Palace") — flagged per row here rather than just a single aggregate
+    // count, so the exact rows needing a source-file fix are visible.
+    if(buildingCheck.enabled && colMap.building !== undefined && colMap.building !== -1){
+      const rawBuilding = get(row, colMap, 'building');
+      if(rawBuilding !== null && rawBuilding !== undefined && String(rawBuilding).trim() !== ''){
+        const normalized = normalizeBuilding(rawBuilding);
+        if(String(rawBuilding) !== normalized){
+          allFlags.push({row: rowNum, category: 'building', detail: `"${rawBuilding}" has inconsistent spacing/casing — normalizes to "${normalized}".`});
+        }
+      }
+    }
+
+    // Duplicate check, key fields are configurable per report (e.g. Bounce Cheque uses
+    // contract+chequeNo+amount since it has no receipt/description columns; reports with
+    // recurring installments include chequeNo so legitimate repeat payments aren't flagged).
+    if(dupCheck.enabled && dupCheck.key_fields && dupCheck.key_fields.length){
+      const fieldValues = {
+        contract, receipt, chequeNo, amount, description: desc,
+        tenant, building, unit, srNo,
+        date: (dateRaw === null || dateRaw === undefined) ? '' : String(dateRaw)
+      };
+      const keyParts = dupCheck.key_fields.map(f => fieldValues[f] !== undefined ? fieldValues[f] : get(row, colMap, f));
+      const key = keyParts.join('||');
+      if(key.trim().replace(/\|/g,'') !== ''){
+        if(seenKeys[key]) seenKeys[key].push(rowNum);
+        else seenKeys[key] = [rowNum];
+      }
+    }
+  });
+
+  // Description -> Type consistency check: rows sharing the exact same description
+  // should almost always share the same Type. But some descriptions (generic fees like
+  // "Innovation Fee" or "Rent Installment") legitimately appear under every lease type,
+  // so a description-only check over-flags those. Before actually flagging a row, we
+  // check whether it's also inconsistent with its OWN contract's other line items,
+  // which in practice are reliably all-the-same-type. If the row agrees with its own
+  // contract (or its contract has nothing else to compare against), the description
+  // "mismatch" is treated as a shared/generic fee, not an error.
+  function contractCorroboratesMismatch(rowNum, contractNumberForRow, rowType){
+    const group = contractGroups[contractNumberForRow];
+    if(!group || group.length < 2) return true; // nothing to compare against at the contract level, trust the description signal alone
+    const counts = {};
+    group.forEach(e => { counts[e.type] = (counts[e.type]||0) + 1; });
+    const types = Object.keys(counts);
+    if(types.length < 2) return false; // contract is 100% internally consistent and this row is part of that, not an outlier here, suppress
+    const contractMajority = types.reduce((a,b) => counts[a] >= counts[b] ? a : b);
+    return rowType !== contractMajority; // only corroborated if this row also disagrees with its own contract's majority
+  }
+
+  if(typeCheck.enabled){
+    // Rebuild a rowNum -> contract lookup so the corroboration check above can find
+    // which contract each flagged row belongs to.
+    const rowToContract = {};
+    Object.entries(contractGroups).forEach(([contractNum, entries]) => {
+      entries.forEach(e => { rowToContract[e.rowNum] = contractNum; });
+    });
+
+    const minGroup = typeCheck.min_group_size || 2;
+    Object.values(descGroups).forEach(entries => {
+      if(entries.length < minGroup) return;
+      const counts = {};
+      entries.forEach(e => { counts[e.type] = (counts[e.type]||0) + 1; });
+      const types = Object.keys(counts);
+      if(types.length < 2) return;
+      const majorityType = types.reduce((a,b) => counts[a] >= counts[b] ? a : b);
+      entries.forEach(e => {
+        if(e.type !== majorityType){
+          const contractNum = rowToContract[e.rowNum];
+          if(!contractCorroboratesMismatch(e.rowNum, contractNum, e.type)) return; // matches its own contract, skip
+          allFlags.push({
+            row: e.rowNum,
+            category: 'type',
+            detail: `"${e.desc}" is usually classified as "${majorityType}" (${counts[majorityType]} of ${entries.length} matching rows), but this row is "${e.type}".`
+          });
+        }
+      });
+    });
+  }
+
+  if(dupCheck.enabled){
+    Object.values(seenKeys).forEach(rowsForKey => {
+      if(rowsForKey.length > 1){
+        const keyLabel = dupCheck.key_fields.join('/');
+        rowsForKey.forEach(r => allFlags.push({row: r, category: 'dup', detail: `Possible duplicate, shares ${keyLabel} with row(s) ${rowsForKey.filter(x=>x!==r).join(', ')}.`}));
+      }
+    });
+  }
+
+  renderResults(workbookRows.length, {pmCheck, typeCheck, statusCheck, dupCheck, dateCheck, buildingCheck});
+}
+
+// Every category's display metadata lives here, so a report config can turn on any mix
+// of checks and the KPI cards / filter tabs / tags below just follow along, instead of
+// each report type needing its own hardcoded set of five fixed cards.
+const CATEGORY_META = {
+  pm:        { kpiLabel: 'PM-user issues',        tagLabel: 'PM-user',        kpiClass: 'warn' },
+  type:      { kpiLabel: 'Type mismatches',        tagLabel: 'Type mismatch',  kpiClass: 'bad'  },
+  status:    { kpiLabel: 'Status issues',          tagLabel: 'Status',         kpiClass: ''     },
+  dup:       { kpiLabel: 'Possible duplicates',    tagLabel: 'Duplicate',      kpiClass: ''     },
+  missing:   { kpiLabel: 'Missing fields',         tagLabel: 'Missing field',  kpiClass: ''     },
+  date:      { kpiLabel: 'Missing dates',          tagLabel: 'Missing date',   kpiClass: 'warn' },
+  building:  { kpiLabel: 'Building name issues',   tagLabel: 'Building name',  kpiClass: ''     },
+  occupancy: { kpiLabel: 'Consistency issues',     tagLabel: 'Occupancy',      kpiClass: 'warn' }
+};
+const CATEGORY_ORDER = ['pm','type','status','dup','missing','date','building','occupancy'];
+
+function renderResults(totalRows, activeChecks, opts){
+  opts = opts || {};
+  document.getElementById('results').style.display = 'block';
+
+  const enabledCategories = [];
+  if(activeChecks.pmCheck && activeChecks.pmCheck.enabled) enabledCategories.push('pm');
+  if(activeChecks.typeCheck && activeChecks.typeCheck.enabled) enabledCategories.push('type','missing');
+  if(activeChecks.statusCheck && activeChecks.statusCheck.enabled) enabledCategories.push('status','missing');
+  if(activeChecks.dupCheck && activeChecks.dupCheck.enabled) enabledCategories.push('dup');
+  if(activeChecks.dateCheck && activeChecks.dateCheck.enabled) enabledCategories.push('date');
+  if(activeChecks.buildingCheck && activeChecks.buildingCheck.enabled) enabledCategories.push('building');
+  if(activeChecks.occupancyMode) enabledCategories.push('occupancy');
+  const presentCategories = new Set(allFlags.map(f => f.category));
+  const categories = CATEGORY_ORDER.filter(c => enabledCategories.includes(c) || presentCategories.has(c));
+
+  let kpiHtml = `<div class="kpi"><div class="label">${opts.totalLabel || 'Rows checked'}</div><div class="value">${totalRows}</div></div>`;
+  categories.forEach(cat => {
+    const meta = CATEGORY_META[cat];
+    const count = allFlags.filter(f => f.category === cat).length;
+    kpiHtml += `<div class="kpi ${meta.kpiClass}"><div class="label">${meta.kpiLabel}</div><div class="value">${count}</div></div>`;
+  });
+  document.getElementById('kpisContainer').innerHTML = kpiHtml;
+
+  let tabsHtml = '<div class="filter-tab active" data-filter="all">All</div>';
+  categories.forEach(cat => {
+    tabsHtml += `<div class="filter-tab" data-filter="${cat}">${CATEGORY_META[cat].tagLabel}</div>`;
+  });
+  document.getElementById('filterTabs').innerHTML = tabsHtml;
+
+  renderTable('all');
+}
+
+function renderTable(filter){
+  const wrap = document.getElementById('flagsTableWrap');
+  const rowsToShow = filter === 'all' ? allFlags : allFlags.filter(f => f.category === filter);
+  if(!rowsToShow.length){
+    wrap.innerHTML = '<div class="empty-note">No issues found in this category.</div>';
+    return;
+  }
+  const sorted = [...rowsToShow].sort((a,b) => {
+    if(typeof a.row === 'number' && typeof b.row === 'number') return a.row - b.row;
+    return String(a.row).localeCompare(String(b.row));
+  });
+  const rowHeader = sorted.some(f => typeof f.row !== 'number') ? 'Location' : 'Row';
+  let html = `<table><thead><tr><th>${rowHeader}</th><th>Issue</th><th>Detail</th></tr></thead><tbody>`;
+  sorted.forEach(f => {
+    const meta = CATEGORY_META[f.category] || {tagLabel: f.category};
+    html += `<tr><td>${f.row}</td><td><span class="tag ${f.category}">${meta.tagLabel}</span></td><td>${f.detail}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+document.getElementById('runBtn').addEventListener('click', runValidation);
+
+document.getElementById('filterTabs').addEventListener('click', (e) => {
+  const tab = e.target.closest('.filter-tab');
+  if(!tab) return;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  renderTable(tab.dataset.filter);
+});
+</script>
+</body>
+</html>
