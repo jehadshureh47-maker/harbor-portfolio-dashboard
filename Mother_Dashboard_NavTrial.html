@@ -194,13 +194,52 @@
     aspect-ratio:1; border-radius:4px; background:var(--card2);
     display:flex; align-items:center; justify-content:center;
     font-size:10.5px; font-weight:700; color:var(--sub);
+    cursor:pointer; border:1px solid transparent; transition:border-color .12s ease, transform .12s ease;
   }
+  .heatmap-cell:hover{border-color:var(--accent); transform:scale(1.08);}
+  .heatmap-cell:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
   .heatmap-cell.l1{background:rgba(91,140,255,0.20); color:var(--text);}
   .heatmap-cell.l2{background:rgba(91,140,255,0.42); color:var(--text);}
   .heatmap-cell.l3{background:rgba(91,140,255,0.66); color:#fff;}
   .heatmap-cell.l4{background:rgba(91,140,255,0.92); color:#fff;}
   .heatmap-legend{display:flex; align-items:center; justify-content:flex-end; gap:5px; margin-top:12px; font-size:11px; color:var(--sub);}
-  .heatmap-legend .heatmap-cell{width:12px; height:12px; aspect-ratio:auto;}
+  .heatmap-legend .heatmap-cell{width:12px; height:12px; aspect-ratio:auto; cursor:default;}
+  .heatmap-legend .heatmap-cell:hover{border-color:transparent; transform:none;}
+
+  .hm-modal-overlay{
+    position:fixed; inset:0; background:rgba(10,13,22,0.55); display:none;
+    align-items:center; justify-content:center; z-index:9999; padding:20px;
+  }
+  .hm-modal-overlay.open{display:flex;}
+  .hm-modal{
+    background:var(--card); border:1px solid var(--border); border-radius:14px;
+    max-width:420px; width:100%; max-height:80vh; overflow-y:auto;
+    padding:20px 22px; box-shadow:0 20px 60px rgba(0,0,0,0.35);
+  }
+  .hm-modal-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:4px;}
+  .hm-modal-title{font-size:16px; font-weight:700; color:var(--text);}
+  .hm-modal-sub{font-size:12.5px; color:var(--sub); margin-bottom:14px;}
+  .hm-modal-close{
+    background:var(--card2); border:1px solid var(--border); color:var(--sub);
+    width:26px; height:26px; border-radius:7px; cursor:pointer; font-size:14px; flex-shrink:0; line-height:1;
+  }
+  .hm-modal-close:hover{border-color:var(--accent); color:var(--text);}
+  .hm-modal-total{
+    display:flex; align-items:baseline; gap:8px; background:var(--card2); border:1px solid var(--border);
+    border-radius:10px; padding:10px 14px; margin-bottom:14px;
+  }
+  .hm-modal-total .n{font-size:22px; font-weight:800; color:var(--text);}
+  .hm-modal-total .l{font-size:12px; color:var(--sub);}
+  .hm-modal-rows{display:flex; flex-direction:column; gap:1px; border-radius:10px; overflow:hidden; border:1px solid var(--border);}
+  .hm-modal-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:var(--card); padding:10px 12px; font-size:13px;
+  }
+  .hm-modal-row:not(:last-child){border-bottom:1px solid var(--border);}
+  .hm-modal-row .rname{color:var(--text); font-weight:600;}
+  .hm-modal-row .rcount{color:var(--sub); font-variant-numeric:tabular-nums;}
+  .hm-modal-row.zero .rname, .hm-modal-row.zero .rcount{color:var(--sub); font-weight:400;}
+  .hm-modal-empty{font-size:13px; color:var(--sub); padding:6px 2px;}
 
   .overview-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; align-items:start;}
   /* Keep 4 tight columns whenever there's realistically room for them - even
@@ -1538,13 +1577,89 @@ function renderHeatmap(){
   weeks.forEach(row => {
     out += `<div class="heatmap-daylabel">${fmtShort(row[0].iso)}</div>`;
     row.forEach(cell => {
-      out += `<div class="heatmap-cell l${lvlOf(cell.count)}" title="${days[new Date(cell.iso+'T00:00:00Z').getUTCDay()]}, ${fmtShort(cell.iso)}: ${cell.count}">${cell.count}</div>`;
+      out += `<div class="heatmap-cell l${lvlOf(cell.count)}" tabindex="0" role="button" title="${days[new Date(cell.iso+'T00:00:00Z').getUTCDay()]}, ${fmtShort(cell.iso)}: ${cell.count} — click for a breakdown" onclick="showHeatmapDayDetail('${cell.iso}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showHeatmapDayDetail('${cell.iso}');}">${cell.count}</div>`;
     });
   });
   out += '</div>';
   el.innerHTML = out;
   if(badge){ badge.textContent = 'Live'; badge.style.background = 'rgba(79,208,122,0.16)'; badge.style.color = 'var(--ok)'; }
-  if(note){ note.textContent = `Real daily activity across every currently-loaded report in this portfolio, most recent ${numWeeks} weeks (rows are week-start dates).`; }
+  if(note){ note.textContent = `Real daily activity across every currently-loaded report in this portfolio, most recent ${numWeeks} weeks (rows are week-start dates). Click any day for a breakdown.`; }
+}
+
+// ---------- Heatmap day-detail popup ----------
+// Clicking a heatmap cell shows exactly which reports contributed to that
+// day's total and how much each contributed - same per-report .daily maps
+// aggregateDailyActivity() already merges, just kept separate here instead
+// of summed. Reports with no .daily at all (e.g. Occupancy - a point-in-time
+// snapshot, not a log of dated rows) are left out of the breakdown entirely
+// rather than shown as a misleading "0".
+function ensureHeatmapModal(){
+  let overlay = document.getElementById('hmModalOverlay');
+  if(overlay) return overlay;
+  overlay = document.createElement('div');
+  overlay.id = 'hmModalOverlay';
+  overlay.className = 'hm-modal-overlay';
+  overlay.innerHTML = `
+    <div class="hm-modal" role="dialog" aria-modal="true" aria-labelledby="hmModalTitle">
+      <div class="hm-modal-head">
+        <div>
+          <div class="hm-modal-title" id="hmModalTitle">&nbsp;</div>
+          <div class="hm-modal-sub" id="hmModalSub"></div>
+        </div>
+        <button class="hm-modal-close" type="button" aria-label="Close" onclick="closeHeatmapDayDetail()">&#10005;</button>
+      </div>
+      <div id="hmModalBody"></div>
+    </div>`;
+  overlay.addEventListener('click', (ev) => { if(ev.target === overlay) closeHeatmapDayDetail(); });
+  document.body.appendChild(overlay);
+  document.addEventListener('keydown', (ev) => {
+    if(ev.key === 'Escape' && overlay.classList.contains('open')) closeHeatmapDayDetail();
+  });
+  return overlay;
+}
+
+function closeHeatmapDayDetail(){
+  const overlay = document.getElementById('hmModalOverlay');
+  if(overlay) overlay.classList.remove('open');
+}
+
+function showHeatmapDayDetail(iso){
+  const overlay = ensureHeatmapModal();
+  const ids = (typeof OVERVIEW_REPORTS !== 'undefined' && OVERVIEW_REPORTS) ? OVERVIEW_REPORTS : [];
+  const rows = [];
+  let total = 0;
+  ids.forEach(id => {
+    const win = embeddedWindows[id];
+    const daily = win && win.__crossCheckData && win.__crossCheckData.daily;
+    if(!daily) return; // no dated log for this report (e.g. Occupancy) - skip, not "0"
+    const count = daily[iso] || 0;
+    total += count;
+    const meta = (typeof REPORTS !== 'undefined' ? REPORTS : []).find(r => r.id === id);
+    rows.push({ name: meta ? meta.name : id, count });
+  });
+  rows.sort((a,b) => b.count - a.count);
+
+  const d = new Date(iso + 'T00:00:00Z');
+  const dayName = d.toLocaleDateString('en-GB', { weekday:'long', timeZone:'UTC' });
+  const dateLabel = d.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric', timeZone:'UTC' });
+
+  document.getElementById('hmModalTitle').textContent = dayName;
+  document.getElementById('hmModalSub').textContent = dateLabel;
+
+  const body = document.getElementById('hmModalBody');
+  if(rows.length === 0){
+    body.innerHTML = `<div class="hm-modal-empty">No dated reports loaded yet for this portfolio.</div>`;
+  } else {
+    const rowsHtml = rows.map(r => `
+      <div class="hm-modal-row${r.count===0 ? ' zero' : ''}">
+        <span class="rname">${esc(r.name)}</span>
+        <span class="rcount">${r.count.toLocaleString()}</span>
+      </div>`).join('');
+    body.innerHTML = `
+      <div class="hm-modal-total"><span class="n">${total.toLocaleString()}</span><span class="l">total across ${rows.length} report${rows.length===1?'':'s'} that day</span></div>
+      <div class="hm-modal-rows">${rowsHtml}</div>`;
+  }
+  overlay.classList.add('open');
 }
 
 // ---------- Data Quality tab ----------
