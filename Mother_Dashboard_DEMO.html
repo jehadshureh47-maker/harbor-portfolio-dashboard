@@ -343,6 +343,17 @@
     font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:20px;
     margin-bottom:6px; width:fit-content;
   }
+  .na-panel{margin:16px 0; border:1px solid var(--border); border-radius:12px; overflow:hidden;}
+  .na-head{display:flex; align-items:center; gap:9px; padding:12px 16px; background:rgba(239,106,139,.08); font-size:14px; font-weight:600;}
+  .na-count{background:var(--bad); color:#fff; font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; margin-left:2px;}
+  .na-list{display:flex; flex-direction:column;}
+  .na-row{display:flex; align-items:center; gap:12px; padding:11px 16px; border-top:1px solid var(--border); cursor:pointer; background:none; border-left:none; border-right:none; border-bottom:none; text-align:left; width:100%; font:inherit; color:inherit;}
+  .na-row:hover{background:var(--card2);}
+  .na-dot{width:8px; height:8px; border-radius:50%; flex-shrink:0;}
+  .na-dot.bad{background:var(--bad);}
+  .na-dot.warn{background:var(--amber);}
+  .na-text{flex:1; font-size:12.5px;}
+  .na-goto{font-size:11px; color:var(--accent); flex-shrink:0;}
   .oc-donut-wrap{display:flex; align-items:center; gap:10px; margin:0 0 8px; padding:8px; background:var(--card2); border-radius:9px;}
   .oc-donut-legend{display:flex; flex-direction:column; gap:3px; font-size:11px; color:var(--sub); min-width:0;}
   .oc-donut-legend-item{display:flex; align-items:center; gap:6px; white-space:nowrap;}
@@ -1334,6 +1345,7 @@ function mountEmbeddedDashboard(pane, r){
     renderExecSummary();
     renderDataQuality();
     renderHeatmap();
+    renderNeedsAttention();
   });
   reportState[r.id].ok = true;
   updateTabIcon(r.id, 'ok');
@@ -1638,6 +1650,7 @@ function buildOverviewTab(){
     <h2><span class="h2-dot"></span>Overview</h2>
     <div class="pane-desc">Headline numbers from all 4 known reports, pulled live from each report's own tab. Looking for just the top-line figures? See the Executive Summary tab.</div>
     <div id="overviewWrap"><div class="overview-loading">Waiting for the 4 known reports to finish loading…</div></div>
+    <div id="needsAttentionWrap"></div>
     <div class="section-title"><span class="h2-dot"></span>Cross-checks</div>
     <div class="section-note">Automatic consistency checks between reports that overlap (e.g. New Lease counts, bounced-cheque contracts). Updates as each report finishes loading.</div>
     <div id="checksList" class="checks-list"></div>
@@ -2014,6 +2027,73 @@ function renderDataQuality(){
   }).join('');
 
   wrap.innerHTML = summaryHtml + groupsHtml;
+}
+
+
+// Pulls together every alert already computed elsewhere (Overview KPI-card
+// alert badges, failing cross-checks, and warning-level Data Quality issues)
+// into one list, so nothing needing a look requires scanning three separate
+// places. Hidden entirely when there's nothing to show - this is meant to
+// surface problems, not add a permanent "all clear" fixture to the page.
+function renderNeedsAttention(){
+  const wrap = document.getElementById('needsAttentionWrap');
+  if(!wrap) return;
+  const items = [];
+
+  document.querySelectorAll('.overview-card.has-alert').forEach(card => {
+    const alertEl = card.querySelector('.oc-alert');
+    const titleEl = card.querySelector('.oc-title');
+    if(!alertEl) return;
+    items.push({
+      kind: 'bad',
+      text: (titleEl ? titleEl.textContent + ': ' : '') + alertEl.textContent.replace(/^\s*\u26a0\s*/, ''),
+      goto: () => selectTab(card.dataset.goto),
+    });
+  });
+
+  document.querySelectorAll('#checksList .check-row').forEach(row => {
+    if(!row.querySelector('.icon.bad')) return;
+    const nameEl = row.querySelector('.check-name');
+    const detailEl = row.querySelector('.check-detail');
+    const name = nameEl && nameEl.childNodes[0] ? nameEl.childNodes[0].textContent.trim() : 'Cross-check failing';
+    items.push({
+      kind: 'bad',
+      text: name + (detailEl && detailEl.textContent ? ' — ' + detailEl.textContent : ''),
+      goto: () => { selectTab('overview'); row.scrollIntoView({behavior:'smooth', block:'center'}); },
+    });
+  });
+
+  REPORTS.forEach(r => {
+    const win = embeddedWindows[r.id];
+    const issues = win && win.__dataIssues;
+    if(!issues) return;
+    issues.filter(iss => iss.severity === 'warning').forEach(iss => {
+      items.push({ kind: 'warn', text: `${r.name}: ${iss.message}`, goto: () => selectTab('dataquality') });
+    });
+  });
+  if(currentPortfolio === 'al-naser'){
+    const crossIssues = computeAlNaserCrossSheetIssues();
+    if(crossIssues){
+      crossIssues.filter(iss => iss.severity === 'warning').forEach(iss => {
+        items.push({ kind: 'warn', text: iss.message, goto: () => selectTab('dataquality') });
+      });
+    }
+  }
+
+  if(items.length === 0){ wrap.innerHTML = ''; return; }
+
+  wrap.innerHTML = `<div class="na-panel">
+    <div class="na-head"><span class="h2-dot"></span>Needs Attention <span class="na-count">${items.length}</span></div>
+    <div class="na-list">${items.map((it,i) => `
+      <button type="button" class="na-row" data-na-idx="${i}">
+        <span class="na-dot ${it.kind}"></span>
+        <span class="na-text">${esc(it.text)}</span>
+        <span class="na-goto">View &rarr;</span>
+      </button>`).join('')}</div>
+  </div>`;
+  wrap.querySelectorAll('.na-row').forEach((el, i) => {
+    el.addEventListener('click', () => items[i].goto());
+  });
 }
 
 function fmtAed(n){ return (n===undefined||n===null) ? '—' : 'AED ' + Math.round(n).toLocaleString(); }
@@ -2503,6 +2583,7 @@ window.addEventListener('message', (ev) => {
     renderExecSummary();
     renderDataQuality();
     renderHeatmap();
+    renderNeedsAttention();
   }
 });
 
