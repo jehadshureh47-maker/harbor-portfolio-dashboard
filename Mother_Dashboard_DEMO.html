@@ -96,6 +96,9 @@
   }
   .theme-switch:hover{border-color:var(--accent);}
   .theme-switch .theme-switch-icon{font-size:16px; line-height:1;}
+  .header-actions{display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex-shrink:0;}
+  .header-actions .theme-switch svg{flex-shrink:0;}
+  .wn-badge{width:7px; height:7px; border-radius:50%; background:var(--amber); display:none; margin-left:1px; flex-shrink:0;}
   .note-banner{
     background:var(--card2); border:1px solid var(--border); border-radius:10px;
     padding:10px 14px; font-size:13px; color:var(--sub); margin-bottom:14px;
@@ -276,6 +279,29 @@
   .hm-modal-row .rcount{color:var(--sub); font-variant-numeric:tabular-nums;}
   .hm-modal-row.zero .rname, .hm-modal-row.zero .rcount{color:var(--sub); font-weight:400;}
   .hm-modal-empty{font-size:13px; color:var(--sub); padding:6px 2px;}
+
+  /* What's New panel - reuses the .hm-modal shell, just its own body content */
+  .wn-group:not(:last-child){margin-bottom:16px;}
+  .wn-date{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--accent); margin-bottom:6px;}
+  .wn-list{margin:0; padding-left:18px; display:flex; flex-direction:column; gap:6px;}
+  .wn-list li{font-size:13px; color:var(--text); line-height:1.45;}
+
+  /* Keyboard shortcuts panel - same .hm-modal shell */
+  .sc-table{display:flex; flex-direction:column; gap:1px; border-radius:10px; overflow:hidden; border:1px solid var(--border);}
+  .sc-row{display:flex; align-items:center; justify-content:space-between; gap:14px; background:var(--card); padding:9px 12px; font-size:13px;}
+  .sc-row:not(:last-child){border-bottom:1px solid var(--border);}
+  .sc-row .sc-desc{color:var(--text);}
+  .sc-row .sc-keys{display:flex; gap:4px; flex-shrink:0;}
+  .sc-key{
+    background:var(--card2); border:1px solid var(--border); border-radius:5px; color:var(--sub);
+    font-size:11.5px; font-weight:700; padding:2px 7px; font-family:inherit; min-width:18px; text-align:center;
+  }
+  .sc-note{font-size:12px; color:var(--sub); margin-top:12px;}
+  .sc-toggle{
+    display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--text);
+    margin-top:12px; padding-top:12px; border-top:1px solid var(--border); cursor:pointer;
+  }
+  .sc-toggle input{margin:0; cursor:pointer;}
 
   .overview-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; align-items:start;}
   /* Keep 4 tight columns whenever there's realistically room for them - even
@@ -459,6 +485,7 @@
     .sidebar-section-label:first-child{margin-top:0;}
     header{flex-direction:column; align-items:flex-start; gap:10px;}
     .theme-switch{align-self:flex-start;}
+    .header-actions{width:100%; justify-content:flex-start;}
     .selector-bar{flex-direction:column; align-items:stretch; gap:10px;}
     .selector-field{width:100%; box-sizing:border-box; justify-content:space-between;}
     .selector-field select{width:auto; flex:1; min-width:0;}
@@ -564,9 +591,19 @@
         <h1>Portfolio Reporting Hub</h1>
         <div class="sub">Demo build with synthetic data. Portfolio and month selectors are in place below; each report tab supports loading a different workbook directly, and the Overview refreshes automatically when one does.</div>
       </div>
-      <button class="theme-switch" id="themeToggleMain" type="button" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">
-        <span class="theme-switch-icon">&#9789;</span><span id="themeToggleLabel">Dark</span>
-      </button>
+      <div class="header-actions">
+        <button class="theme-switch" id="whatsNewBtn" type="button" aria-label="What's new in this dashboard" title="What's new in this dashboard">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span>What's New</span><span class="wn-badge" id="wnBadge" aria-hidden="true"></span>
+        </button>
+        <button class="theme-switch" id="shortcutsBtn" type="button" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (press ?)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span>Shortcuts</span>
+        </button>
+        <button class="theme-switch" id="themeToggleMain" type="button" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">
+          <span class="theme-switch-icon">&#9789;</span><span id="themeToggleLabel">Dark</span>
+        </button>
+      </div>
     </header>
 
     <div class="selector-bar">
@@ -3207,6 +3244,225 @@ if(portfolioSelectEl && selectorNoteEl){
     switchPortfolio(key);
   });
 }
+
+// ---------- What's New panel ----------
+// A hand-maintained changelog of real shipped features (not auto-generated),
+// most recent first. Each date's entries are copied from what actually
+// shipped, matching the project's own memory notes - nothing here is
+// aspirational or a roadmap item.
+const WHATS_NEW = [
+  { date: '2026-08-24', items: [
+    "Compare tab: added a Print/Export PDF button and a CSV download of the comparison table.",
+    "Executive Summary now tracks month-over-month trend automatically once 2+ months are uploaded (a real bar chart, plus quarterly/yearly views).",
+    "Uploaded reports now persist automatically — reload the page and everything you loaded is still there, no re-uploading.",
+  ]},
+  { date: '2026-08-20', items: [
+    "New Compare tab: put any two portfolios side by side, with dropdowns to choose which ones and click-to-expand daily trend charts.",
+    "Overview KPI cards now show a small trend sparkline under each headline number.",
+  ]},
+  { date: '2026-08-19', items: [
+    "Al Naser Club's 4 report types added to the demo dashboard with realistic synthetic data.",
+    "Click any day on the Activity heatmap to see exactly which reports contributed to that day's total.",
+  ]},
+  { date: '2026-08-18', items: [
+    "Added a light/dark mode toggle and a dedicated Executive Summary tab with headline KPI cards and a plain-English summary.",
+  ]},
+];
+(function(){
+  const WN_KEY = 'motherDashboardWhatsNewSeen';
+  const latestDate = WHATS_NEW[0] && WHATS_NEW[0].date;
+  function hasUnseen(){
+    let seen = null;
+    try{ seen = localStorage.getItem(WN_KEY); }catch(e){}
+    return !!latestDate && seen !== latestDate;
+  }
+  function updateBadge(){
+    const badge = document.getElementById('wnBadge');
+    if(badge) badge.style.display = hasUnseen() ? 'inline-block' : 'none';
+  }
+  function markSeen(){
+    if(!latestDate) return;
+    try{ localStorage.setItem(WN_KEY, latestDate); }catch(e){}
+    updateBadge();
+  }
+  let wnTriggerEl = null;
+  function ensureWhatsNewModal(){
+    let dlg = document.getElementById('wnModalOverlay');
+    if(dlg) return dlg;
+    dlg = document.createElement('dialog');
+    dlg.id = 'wnModalOverlay';
+    dlg.className = 'hm-modal';
+    dlg.setAttribute('aria-labelledby', 'wnModalTitle');
+    dlg.innerHTML = `
+      <div class="hm-modal-head">
+        <div>
+          <div class="hm-modal-title" id="wnModalTitle">What's new</div>
+          <div class="hm-modal-sub">Recent additions to this dashboard</div>
+        </div>
+        <button class="hm-modal-close" type="button" aria-label="Close">&#10005;</button>
+      </div>
+      <div id="wnModalBody"></div>`;
+    dlg.querySelector('.hm-modal-close').addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (ev) => {
+      if(ev.target !== dlg) return;
+      const rect = dlg.getBoundingClientRect();
+      const inside = rect.top <= ev.clientY && ev.clientY <= rect.bottom && rect.left <= ev.clientX && ev.clientX <= rect.right;
+      if(!inside) dlg.close();
+    });
+    dlg.addEventListener('close', () => {
+      if(wnTriggerEl && typeof wnTriggerEl.focus === 'function') wnTriggerEl.focus();
+      wnTriggerEl = null;
+      markSeen();
+    });
+    document.body.appendChild(dlg);
+    return dlg;
+  }
+  function openWhatsNewModal(){
+    wnTriggerEl = document.activeElement;
+    const dlg = ensureWhatsNewModal();
+    const body = dlg.querySelector('#wnModalBody');
+    body.innerHTML = WHATS_NEW.map(group => `
+      <div class="wn-group">
+        <div class="wn-date">${esc(new Date(group.date + 'T00:00:00Z').toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric', timeZone:'UTC'}))}</div>
+        <ul class="wn-list">${group.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>
+      </div>`).join('');
+    if(!dlg.open) dlg.showModal();
+    const closeBtn = dlg.querySelector('.hm-modal-close');
+    if(closeBtn) closeBtn.focus();
+  }
+  const wnBtn = document.getElementById('whatsNewBtn');
+  if(wnBtn) wnBtn.addEventListener('click', openWhatsNewModal);
+  updateBadge();
+  window.__mdOpenWhatsNew = openWhatsNewModal;
+})();
+
+// ---------- Keyboard shortcuts panel + global shortcut handler ----------
+// Digit shortcuts jump to a tab using the exact same ordered list the search
+// feature already navigates to (mdSearchNavTargets), so the two stay in sync
+// automatically instead of maintaining a second hardcoded tab order.
+const KEYBOARD_SHORTCUTS = [
+  { keys: ['/'], desc: 'Jump to the search box' },
+  { keys: ['1','–9'], desc: 'Jump to the 1st–9th tab in the sidebar' },
+  { keys: ['T'], desc: 'Toggle light / dark mode' },
+  { keys: ['P'], desc: 'Print the current tab (Executive Summary or Compare)' },
+  { keys: ['?'], desc: 'Show this shortcuts panel' },
+  { keys: ['Esc'], desc: 'Close any open panel' },
+];
+(function(){
+  // WCAG 2.1.4 (Character Key Shortcuts) requires that single-key, no-modifier
+  // shortcuts like these can be turned off, since they can misfire for
+  // speech-input or switch-device users who send bare keystrokes the browser
+  // sees as normal typing. This toggle (persisted, off by default) is that
+  // escape hatch - checked first, before any shortcut key is handled.
+  const SC_DISABLED_KEY = 'motherDashboardShortcutsDisabled';
+  function shortcutsDisabled(){
+    let v = null;
+    try{ v = localStorage.getItem(SC_DISABLED_KEY); }catch(e){}
+    return v === '1';
+  }
+  function setShortcutsDisabled(disabled){
+    try{ localStorage.setItem(SC_DISABLED_KEY, disabled ? '1' : '0'); }catch(e){}
+  }
+
+  let scTriggerEl = null;
+  function ensureShortcutsModal(){
+    let dlg = document.getElementById('scModalOverlay');
+    if(dlg) return dlg;
+    dlg = document.createElement('dialog');
+    dlg.id = 'scModalOverlay';
+    dlg.className = 'hm-modal';
+    dlg.setAttribute('aria-labelledby', 'scModalTitle');
+    const rowsHtml = KEYBOARD_SHORTCUTS.map(s => `
+      <div class="sc-row">
+        <span class="sc-desc">${esc(s.desc)}</span>
+        <span class="sc-keys">${s.keys.map(k => `<span class="sc-key">${esc(k)}</span>`).join('')}</span>
+      </div>`).join('');
+    dlg.innerHTML = `
+      <div class="hm-modal-head">
+        <div>
+          <div class="hm-modal-title" id="scModalTitle">Keyboard shortcuts</div>
+          <div class="hm-modal-sub">Work anywhere on the page except inside a text field</div>
+        </div>
+        <button class="hm-modal-close" type="button" aria-label="Close">&#10005;</button>
+      </div>
+      <div class="sc-table">${rowsHtml}</div>
+      <div class="sc-note">Shortcuts never override browser or OS shortcuts held with Cmd/Ctrl/Alt.</div>
+      <label class="sc-toggle"><input type="checkbox" id="scDisableToggle"> Turn off keyboard shortcuts on this device</label>`;
+    dlg.querySelector('.hm-modal-close').addEventListener('click', () => dlg.close());
+    dlg.querySelector('#scDisableToggle').addEventListener('change', (ev) => setShortcutsDisabled(ev.target.checked));
+    dlg.addEventListener('click', (ev) => {
+      if(ev.target !== dlg) return;
+      const rect = dlg.getBoundingClientRect();
+      const inside = rect.top <= ev.clientY && ev.clientY <= rect.bottom && rect.left <= ev.clientX && ev.clientX <= rect.right;
+      if(!inside) dlg.close();
+    });
+    dlg.addEventListener('close', () => {
+      if(scTriggerEl && typeof scTriggerEl.focus === 'function') scTriggerEl.focus();
+      scTriggerEl = null;
+    });
+    document.body.appendChild(dlg);
+    return dlg;
+  }
+  function openShortcutsModal(){
+    scTriggerEl = document.activeElement;
+    const dlg = ensureShortcutsModal();
+    const toggle = dlg.querySelector('#scDisableToggle');
+    if(toggle) toggle.checked = shortcutsDisabled();
+    if(!dlg.open) dlg.showModal();
+    const closeBtn = dlg.querySelector('.hm-modal-close');
+    if(closeBtn) closeBtn.focus();
+  }
+  const scBtn = document.getElementById('shortcutsBtn');
+  if(scBtn) scBtn.addEventListener('click', openShortcutsModal);
+  window.__mdOpenShortcuts = openShortcutsModal;
+
+  function mdShortcutPrint(){
+    const active = document.querySelector('.tab-btn.active');
+    const id = active && active.dataset.id;
+    if(id === 'execsummary' && typeof printExecSummary === 'function') printExecSummary();
+    else if(id === 'compare' && typeof printCompare === 'function') printCompare();
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if(e.metaKey || e.ctrlKey || e.altKey) return; // never hijack OS/browser shortcuts
+    const t = e.target;
+    const editable = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
+    if(editable) return; // typing (including in the search box) always wins
+    if(document.querySelector('dialog[open]')) return; // let an open panel own the keyboard; Escape still closes it natively
+    if(shortcutsDisabled()) return; // fully honors the opt-out - the always-present Shortcuts header button re-enables it
+
+    if(e.key === '?'){
+      e.preventDefault();
+      openShortcutsModal();
+      return;
+    }
+    if(e.key === '/'){
+      e.preventDefault();
+      const input = document.getElementById('mdSearchInput');
+      if(input) input.focus();
+      return;
+    }
+    if(e.key.toLowerCase() === 't'){
+      const btn = document.getElementById('themeToggleMain');
+      if(btn) btn.click();
+      return;
+    }
+    if(e.key.toLowerCase() === 'p'){
+      e.preventDefault();
+      mdShortcutPrint();
+      return;
+    }
+    if(/^[1-9]$/.test(e.key)){
+      const idx = parseInt(e.key, 10) - 1;
+      const targets = mdSearchNavTargets();
+      if(!targets[idx]) return;
+      selectTab(targets[idx].id);
+      const btn = document.querySelector(`.tab-btn[data-id="${targets[idx].id}"]`);
+      if(btn) btn.focus();
+      return;
+    }
+  });
+})();
 </script>
 
 </body>
