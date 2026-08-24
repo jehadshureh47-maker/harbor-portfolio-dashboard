@@ -401,6 +401,18 @@
   .compare-expand-empty{font-size:12px; color:var(--sub);}
   .period-note{background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:11px 14px; font-size:12.5px; color:var(--sub); margin-bottom:14px;}
   .period-note b{color:var(--text);}
+  .trend-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;}
+  .trend-box{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 14px;}
+  .trend-label{font-size:11px; color:var(--sub); font-weight:600; text-transform:uppercase; letter-spacing:.03em; margin-bottom:6px;}
+  .trend-table{width:100%; border-collapse:collapse; font-size:13px; margin-bottom:18px;}
+  .trend-table th, .trend-table td{padding:8px 12px; text-align:left; border-bottom:1px solid var(--border);}
+  .trend-table th{color:var(--sub); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.03em;}
+  @media (max-width:600px){ .trend-grid{grid-template-columns:1fr;} }
+  /* Hides content visually but keeps it in the accessibility tree - used for
+     the trend table's <caption> so screen-reader users get the table's
+     purpose without a redundant on-screen heading (the section title above
+     it already says this visually). */
+  .visually-hidden:where(:not(:focus-within, :active)){position:absolute !important; clip-path:inset(50%) !important; overflow:hidden !important; width:1px !important; height:1px !important; margin:-1px !important; padding:0 !important; border:0 !important; white-space:nowrap !important;}
   .exec-narrative{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:18px;}
   .exec-narrative p{margin:0; font-size:14px; line-height:1.65; color:var(--text);}
   .exec-header-row{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
@@ -1688,20 +1700,167 @@ function printExecSummary(){
   // shouldn't linger and silently strip the header/footer from normal view).
   setTimeout(cleanup, 3000);
 }
-// The Executive Summary tab's period selector is purely presentational right
-// now - see the note logic below for why "Quarterly"/"Yearly" don't fabricate
-// trend data.
+// The Executive Summary tab's period selector used to be purely
+// presentational (no real Quarterly/Yearly data existed to show). Now that
+// every real upload gets stashed into a small per-portfolio monthly-history
+// log (see saveMonthlyHistory below), it renders an actual trend once 2+
+// real months are on record - never a projection, always real uploaded
+// numbers, with partial buckets labeled honestly.
 let selectedPeriod = 'monthly';
-function renderPeriodNote(){
-  const note = document.getElementById('periodNote');
-  if(!note) return;
+const MONTHLY_HISTORY_CAP = 24;
+function monthlyHistoryKey(portfolioKey){ return 'md_monthly_history_v1__' + portfolioKey; }
+// Called right after each portfolio's Exec Summary render computes its real
+// totals for the currently-loaded period. Dedupes by periodKey so
+// re-uploading the same month's file updates that entry instead of adding a
+// duplicate row - only real, already-computed numbers are stored, nothing
+// new is calculated here.
+function saveMonthlyHistory(portfolioKey, snap){
+  if(!snap || !snap.periodKey) return;
+  try{
+    const key = monthlyHistoryKey(portfolioKey);
+    let hist = [];
+    try{ hist = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){ hist = []; }
+    if(!Array.isArray(hist)) hist = [];
+    const entry = {
+      periodKey: snap.periodKey,
+      period: snap.period,
+      totalCollected: snap.totalCollected || 0,
+      bouncedAmount: snap.bouncedAmount || 0,
+      bouncedCount: snap.bouncedCount || 0,
+      netCollected: snap.netCollected || 0,
+      bounceRatePct: (snap.bounceRatePct === null || snap.bounceRatePct === undefined) ? null : snap.bounceRatePct,
+      savedAt: new Date().toISOString(),
+    };
+    const idx = hist.findIndex(h => h.periodKey === entry.periodKey);
+    if(idx >= 0) hist[idx] = entry; else hist.push(entry);
+    hist.sort((a,b) => a.periodKey < b.periodKey ? -1 : (a.periodKey > b.periodKey ? 1 : 0));
+    if(hist.length > MONTHLY_HISTORY_CAP) hist = hist.slice(hist.length - MONTHLY_HISTORY_CAP);
+    localStorage.setItem(key, JSON.stringify(hist));
+  } catch(e){ console.warn('Mother Dashboard: could not save monthly history', e); }
+}
+function getMonthlyHistory(portfolioKey){
+  try{
+    const raw = localStorage.getItem(monthlyHistoryKey(portfolioKey));
+    if(!raw) return [];
+    const hist = JSON.parse(raw);
+    return Array.isArray(hist) ? hist : [];
+  } catch(e){ return []; }
+}
+function monthKeyToQuarter(periodKey){
+  const parts = (periodKey || '').split('-');
+  const y = parseInt(parts[0], 10), m = parseInt(parts[1], 10);
+  if(!y || !m) return periodKey;
+  return `${y}-Q${Math.ceil(m/3)}`;
+}
+function aggregateHistoryByBucket(history, bucketFn){
+  const buckets = {};
+  history.forEach(h => {
+    const key = bucketFn(h.periodKey);
+    if(!buckets[key]) buckets[key] = { key, months: [], totalCollected:0, bouncedAmount:0, bouncedCount:0 };
+    buckets[key].months.push(h.periodKey);
+    buckets[key].totalCollected += h.totalCollected || 0;
+    buckets[key].bouncedAmount += h.bouncedAmount || 0;
+    buckets[key].bouncedCount += h.bouncedCount || 0;
+  });
+  return Object.values(buckets).sort((a,b) => a.key < b.key ? -1 : (a.key > b.key ? 1 : 0));
+}
+const TREND_MONTH_NAMES = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+// Small bar chart of real month-over-month history - one bar per month
+// that's actually been uploaded and saved, most recent last. Returns '' when
+// there isn't enough real data to plot, same graceful-empty convention as
+// sparklineSvg/dualSparklineSvg. The per-bar <title> gives sighted users a
+// hover tooltip, but per modern-web-guidance's accessibility guidance that
+// alone isn't a real accessible name - so the <svg> itself also carries
+// role="img" plus an aria-label spelling out every month's real value, so
+// screen-reader users get the same information without needing to hover.
+function monthlyTrendSvg(history, metricKey, color, metricLabel){
+  if(!history || history.length < 2) return '';
+  const W = 100, H = 100, PAD = 4;
+  const vals = history.map(h => Math.max(0, h[metricKey] || 0));
+  const max = Math.max(...vals, 1);
+  const n = history.length;
+  const gap = (W - PAD*2) / n;
+  const barW = gap * 0.62;
+  const bars = history.map((h, i) => {
+    const v = Math.max(0, h[metricKey] || 0);
+    const barH = (v / max) * (H - PAD*2 - 14);
+    const x = PAD + i*gap + (gap - barW)/2;
+    const y = H - PAD - 14 - barH;
+    return `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${barW.toFixed(2)}" height="${Math.max(barH,1).toFixed(2)}" rx="1.5" fill="${color}"><title>${esc(h.period || h.periodKey)}: ${fmtAed(v)}</title></rect>`;
+  }).join('');
+  const labels = history.map((h, i) => {
+    const x = PAD + i*gap + gap/2;
+    const mNum = parseInt((h.periodKey || '').slice(5,7), 10);
+    const lbl = TREND_MONTH_NAMES[mNum] || '';
+    return `<text x="${x.toFixed(2)}" y="${H-2}" font-size="7" text-anchor="middle" fill="var(--sub)">${esc(lbl)}</text>`;
+  }).join('');
+  const spoken = history.map(h => `${esc(h.period || h.periodKey)}: ${fmtAed(Math.max(0, h[metricKey] || 0))}`).join(', ');
+  const ariaLabel = `${esc(metricLabel || 'Monthly trend')} by month: ${spoken}`;
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="width:100%; height:64px; display:block;" role="img" aria-label="${ariaLabel}">${bars}${labels}</svg>`;
+}
+// Renders the real monthly/quarterly/yearly trend for whichever portfolio is
+// currently active, using only saveMonthlyHistory's stored real totals.
+// Quarterly/yearly buckets that don't yet have every real month covered are
+// labeled "partial" rather than silently summed as if complete.
+function renderMonthlyTrend(){
+  const wrap = document.getElementById('monthlyTrendWrap');
+  if(!wrap) return;
+  const history = getMonthlyHistory(currentPortfolio);
+  if(history.length < 2){ wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
+
   if(selectedPeriod === 'monthly'){
-    note.style.display = 'none';
+    const recent = history.slice(-6);
+    wrap.style.display = 'block';
+    wrap.innerHTML = `
+      <div class="section-title" style="margin-top:0;"><span class="h2-dot"></span>Monthly Trend</div>
+      <div class="section-note">Real totals from every month you've loaded so far (last ${recent.length} shown) — nothing projected or estimated.</div>
+      <div class="trend-grid">
+        <div class="trend-box"><div class="trend-label">Total Collected</div>${monthlyTrendSvg(recent, 'totalCollected', 'var(--accent)', 'Total Collected')}</div>
+        <div class="trend-box"><div class="trend-label">Bounced / At Risk</div>${monthlyTrendSvg(recent, 'bouncedAmount', 'var(--bad)', 'Bounced or At Risk')}</div>
+      </div>`;
     return;
   }
-  const label = selectedPeriod === 'quarterly' ? 'Quarterly' : 'Yearly';
-  note.style.display = 'block';
-  note.innerHTML = `<b>${label} view needs more than one month of data</b> — only a single month is currently loaded, so there's nothing to trend yet. Once monthly reports build up (via the shared folder structure IT is setting up), this will automatically show real ${selectedPeriod === 'quarterly' ? 'quarter-over-quarter' : 'year-over-year'} comparisons instead of a single snapshot. The numbers below are still this month's real figures.`;
+
+  const bucketFn = selectedPeriod === 'quarterly' ? monthKeyToQuarter : (pk => (pk || '').slice(0,4));
+  const buckets = aggregateHistoryByBucket(history, bucketFn);
+  if(buckets.length < 2){
+    const label = selectedPeriod === 'quarterly' ? 'quarter' : 'year';
+    wrap.style.display = 'block';
+    wrap.innerHTML = `<div class="section-note" style="margin-top:0;">Only real data for ${buckets.length ? 'one ' + label : 'part of a ' + label} loaded so far — need a second real ${label} of uploads before a ${label}-over-${label} comparison shows here. This month's own figures above are still real.</div>`;
+    return;
+  }
+  const label = selectedPeriod === 'quarterly' ? 'Quarter' : 'Year';
+  const rows = buckets.map(b => {
+    const monthsNote = selectedPeriod === 'quarterly' && b.months.length < 3 ? ` <span style="color:var(--sub); font-weight:400;">(${b.months.length} of 3 months — partial)</span>` : '';
+    return `<tr><td>${esc(b.key)}${monthsNote}</td><td>${fmtAed(b.totalCollected)}</td><td>${fmtAed(b.bouncedAmount)}</td><td>${fmtAed(b.totalCollected - b.bouncedAmount)}</td></tr>`;
+  }).join('');
+  wrap.style.display = 'block';
+  wrap.innerHTML = `
+    <div class="section-title" style="margin-top:0;"><span class="h2-dot"></span>${esc(label)}ly Trend</div>
+    <div class="section-note">Built from the real months you've loaded — partial ${label.toLowerCase()}s are labeled, nothing is projected.</div>
+    <table class="trend-table">
+      <caption class="visually-hidden">${esc(label)}-by-${esc(label.toLowerCase())} totals from real uploaded reports</caption>
+      <thead><tr><th scope="col">${esc(label)}</th><th scope="col">Collected</th><th scope="col">Bounced</th><th scope="col">Net</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+function renderPeriodNote(){
+  const note = document.getElementById('periodNote');
+  if(note){
+    if(selectedPeriod === 'monthly'){
+      note.style.display = 'none';
+    } else {
+      const history = getMonthlyHistory(currentPortfolio);
+      if(history.length < 2){
+        const label = selectedPeriod === 'quarterly' ? 'Quarterly' : 'Yearly';
+        note.style.display = 'block';
+        note.innerHTML = `<b>${label} view needs more than one month of data</b> — only ${history.length === 1 ? 'one month is' : 'no months are'} currently saved, so there's nothing to trend yet. Load another month's reports (each upload is saved automatically) and this will show a real ${selectedPeriod === 'quarterly' ? 'quarter-over-quarter' : 'year-over-year'} comparison. The numbers below are still this month's real figures.`;
+      } else {
+        note.style.display = 'none';
+      }
+    }
+  }
+  renderMonthlyTrend();
 }
 function addSidebarSectionLabels(){
   const tabBar = document.getElementById('tabBar');
@@ -2016,6 +2175,7 @@ function buildExecSummaryTab(){
       </div>
     </div>
     <div id="periodNote" class="period-note" style="display:none;"></div>
+    <div id="monthlyTrendWrap" style="display:none;"></div>
     <div id="execDataAsOf" class="period-note" style="display:none;"></div>
     <div id="execHeroWrap"><div class="overview-loading">Waiting for the 4 known reports to finish loading…</div></div>
     <div class="section-title"><span class="h2-dot"></span>Summary</div>
@@ -2566,7 +2726,9 @@ function renderExecSummaryAwqaf(){
     extraValueFormatted: fmtAed(nl.rent_value_total),
     extraSub: `${nl.total_new_leases.toLocaleString()} new lease(s) signed`,
   };
+  saveMonthlyHistory('awqaf', portfolioSnapshot['awqaf']);
   if(typeof renderCompare === 'function') renderCompare();
+  if(typeof renderPeriodNote === 'function') renderPeriodNote();
 
   if(dataAsOfWrap){
     const period = fmtPeriod(cc.date_min, cc.date_max);
@@ -2805,7 +2967,9 @@ function renderExecSummaryAlNaser(){
     extraValueFormatted: fmtPctVal(oc.overall_occupancy),
     extraSub: `${fmtPctVal(oc.residential_occupancy)} residential, ${fmtPctVal(oc.commercial_occupancy)} commercial`,
   };
+  saveMonthlyHistory('al-naser', portfolioSnapshot['al-naser']);
   if(typeof renderCompare === 'function') renderCompare();
+  if(typeof renderPeriodNote === 'function') renderPeriodNote();
 
   if(dataAsOfWrap){
     const period = fmtPeriod(co.date_min, co.date_max);
