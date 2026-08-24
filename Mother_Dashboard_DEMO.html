@@ -517,6 +517,20 @@
     }
     body.print-exec-only .print-only-header .p-title{font-size:19px; font-weight:800; color:#1a2233;}
     body.print-exec-only .print-only-header .p-sub{font-size:12px; color:#5a6478; margin-top:3px;}
+    /* Same clean one-page mode as print-exec-only, triggered by the Compare
+       tab's own Print button - strips the app chrome and the tab's own
+       action buttons/selectors so what prints is just the comparison table
+       and the portfolio-specific cards below it. */
+    body.print-compare-only header,
+    body.print-compare-only .selector-bar,
+    body.print-compare-only .summary-bar,
+    body.print-compare-only .theme-switch,
+    body.print-compare-only .footer-note,
+    body.print-compare-only .compare-selectors,
+    body.print-compare-only .exec-print-btn{display:none !important;}
+    body.print-compare-only .print-only-header{
+      display:block !important; margin-bottom:16px; padding-bottom:12px; border-bottom:2px solid #1a2233;
+    }
   }
 </style>
 </head>
@@ -2007,8 +2021,20 @@ function buildCompareTab(){
   pane.style.display = 'none';
   const portfolioOpts = Object.keys(PORTFOLIOS).map(k => `<option value="${k}">${esc(PORTFOLIOS[k].label || k)}</option>`).join('');
   pane.innerHTML = `
-    <h2><span class="h2-dot"></span>Compare</h2>
-    <div class="pane-desc">Compare any two loaded portfolios side by side. Reuses the exact figures already shown on each portfolio's own Executive Summary tab - nothing here is calculated differently, and every row compared uses the same formula for both portfolios. Metrics with no equivalent in the other portfolio are shown separately below, not forced into a false comparison. Rows marked "trend" expand into a daily chart on click.</div>
+    <div class="print-only-header" id="comparePrintHeader">
+      <div class="p-title">Mother Dashboard — Portfolio Comparison</div>
+      <div class="p-sub" id="comparePrintHeaderSub"></div>
+    </div>
+    <div class="exec-header-row">
+      <div>
+        <h2><span class="h2-dot"></span>Compare</h2>
+        <div class="pane-desc">Compare any two loaded portfolios side by side. Reuses the exact figures already shown on each portfolio's own Executive Summary tab - nothing here is calculated differently, and every row compared uses the same formula for both portfolios. Metrics with no equivalent in the other portfolio are shown separately below, not forced into a false comparison. Rows marked "trend" expand into a daily chart on click.</div>
+      </div>
+      <div style="display:flex; gap:8px; flex-shrink:0;">
+        <button class="exec-print-btn" type="button" onclick="exportCompareCsv()" title="Download this comparison as a CSV file"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Export CSV</button>
+        <button class="exec-print-btn" type="button" onclick="printCompare()" title="Print or save this comparison as a PDF"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Print / Export PDF</button>
+      </div>
+    </div>
     <div class="compare-selectors">
       <label>Portfolio A <select id="cmpSelA">${portfolioOpts}</select></label>
       <label>Portfolio B <select id="cmpSelB">${portfolioOpts}</select></label>
@@ -2038,6 +2064,38 @@ function toggleCompareExpand(key){
   if(compareExpandedRows.has(key)) compareExpandedRows.delete(key); else compareExpandedRows.add(key);
   renderCompare();
 }
+// Same print-only-mode pattern as printExecSummary() - strips the app chrome
+// via body.print-compare-only (see the print stylesheet) so what prints is
+// just the comparison table and portfolio-specific cards, not a new render
+// path or a new calculation.
+function printCompare(){
+  document.body.classList.add('print-compare-only');
+  const cleanup = () => document.body.classList.remove('print-compare-only');
+  window.addEventListener('afterprint', cleanup, { once: true });
+  window.print();
+  setTimeout(cleanup, 3000);
+}
+// Reuses the same downloadCsv() helper every report tab's own CSV export
+// already uses - every value here is copied straight from the on-screen
+// comparison table (via portfolioSnapshot), nothing recalculated for export.
+function exportCompareCsv(){
+  const a = portfolioSnapshot[compareSel.a];
+  const b = portfolioSnapshot[compareSel.b];
+  const nameA = (PORTFOLIOS[compareSel.a] && PORTFOLIOS[compareSel.a].label) || compareSel.a;
+  const nameB = (PORTFOLIOS[compareSel.b] && PORTFOLIOS[compareSel.b].label) || compareSel.b;
+  if(!a && !b) return;
+  const header = ['Metric', nameA, nameB];
+  const rows = [
+    ['Period', (a && a.period) || '—', (b && b.period) || '—'],
+    ['Total Collected', a ? fmtAed(a.totalCollected) : '—', b ? fmtAed(b.totalCollected) : '—'],
+    ['Bounced / At Risk', a ? fmtAed(a.bouncedAmount) : '—', b ? fmtAed(b.bouncedAmount) : '—'],
+    ['Bounce Rate', a && a.bounceRatePct !== null && a.bounceRatePct !== undefined ? a.bounceRatePct.toFixed(1) + '%' : '—', b && b.bounceRatePct !== null && b.bounceRatePct !== undefined ? b.bounceRatePct.toFixed(1) + '%' : '—'],
+    ['Net Collected', a ? fmtAed(a.netCollected) : '—', b ? fmtAed(b.netCollected) : '—'],
+  ];
+  if(a) rows.push([`${nameA} — ${a.extraLabel}`, a.extraValueFormatted, '']);
+  if(b) rows.push([`${nameB} — ${b.extraLabel}`, '', b.extraValueFormatted]);
+  downloadCsv(`compare-${compareSel.a}-vs-${compareSel.b}-${new Date().toISOString().slice(0,10)}.csv`, header, rows);
+}
 function renderCompare(){
   const wrap = document.getElementById('compareWrap');
   if(!wrap) return;
@@ -2045,6 +2103,8 @@ function renderCompare(){
   const b = portfolioSnapshot[compareSel.b];
   const nameA = (PORTFOLIOS[compareSel.a] && PORTFOLIOS[compareSel.a].label) || compareSel.a;
   const nameB = (PORTFOLIOS[compareSel.b] && PORTFOLIOS[compareSel.b].label) || compareSel.b;
+  const printSub = document.getElementById('comparePrintHeaderSub');
+  if(printSub) printSub.textContent = `${nameA} vs ${nameB} — generated ${new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'})}`;
   if(!a && !b) return; // leave the default "visit each portfolio" message in place
 
   const missingNote = (!a || !b)
