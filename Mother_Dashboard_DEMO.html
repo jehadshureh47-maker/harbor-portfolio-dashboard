@@ -321,6 +321,11 @@
   .overview-card .oc-row .oc-label{color:var(--sub);}
   .overview-card .oc-row .oc-value{font-weight:600;}
   .oc-bar{height:3px; border-radius:2px; background:var(--card2); margin:2px 0 5px; overflow:hidden;}
+  .oc-spark{margin:2px 0 7px; color:var(--accent);}
+  .oc-spark-svg{display:block; width:100%; height:22px;}
+  .overview-card:nth-child(4n+2) .oc-spark{color:var(--amber);}
+  .overview-card:nth-child(4n+3) .oc-spark{color:var(--ok);}
+  .overview-card:nth-child(4n+4) .oc-spark{color:var(--accent2);}
   .oc-bar .oc-bar-fill{height:100%; background:var(--accent); border-radius:2px;}
   .overview-card .oc-period{font-size:10.5px; color:var(--sub); margin-top:8px;}
   .overview-card .oc-toggle{
@@ -368,6 +373,32 @@
   .exec-card.exec-accent-2 .exec-value{color:var(--bad);}
   .exec-card.exec-accent-3 .exec-value{color:var(--ok);}
   .exec-card .exec-sub{font-size:12.5px; color:var(--sub); margin-top:7px;}
+  .compare-mismatch{background:rgba(230,180,60,.12); border:1px solid var(--amber); color:var(--amber); border-radius:10px; padding:10px 14px; font-size:12.5px; margin-bottom:14px;}
+  .compare-card{background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:18px;}
+  .compare-row{display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:12px; align-items:center; padding:12px 16px; border-bottom:1px solid var(--border);}
+  .compare-row:last-child{border-bottom:none;}
+  .compare-row.compare-head{background:var(--card2); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--sub);}
+  .compare-row.compare-head span{display:block; font-weight:400; text-transform:none; letter-spacing:0; font-size:11px; opacity:.8; margin-top:2px;}
+  .compare-metric{font-size:13px; color:var(--text);}
+  .compare-val{font-size:14.5px; font-weight:700; color:var(--text); text-align:right;}
+  .compare-val .compare-sub{font-size:11.5px; color:var(--sub); font-weight:400; margin-top:2px;}
+  .compare-delta-row{padding:10px 16px; font-size:12.5px; color:var(--sub); border-top:1px solid var(--border); background:var(--card2);}
+  .compare-specific-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:600px){ .compare-specific-grid{grid-template-columns:1fr;} .compare-row{grid-template-columns:1fr .8fr .8fr; padding:10px 12px;} .compare-row.compare-head{font-size:10px;} .compare-selectors{flex-direction:column; align-items:stretch;} }
+  .compare-selectors{display:flex; gap:14px; align-items:center; margin-bottom:14px; flex-wrap:wrap;}
+  .compare-selectors label{font-size:11.5px; color:var(--sub); display:flex; align-items:center; gap:7px;}
+  .compare-selectors select{background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:6px 10px; font-size:12.5px; font-family:inherit;}
+  .compare-row.compare-clickable{cursor:pointer;}
+  .compare-row.compare-clickable:hover{background:var(--card2);}
+  .compare-delta-badge{display:inline-block; font-size:10.5px; font-weight:700; padding:1px 6px; border-radius:6px; margin-top:3px;}
+  .compare-delta-badge.up{color:var(--ok); background:rgba(60,180,110,.12);}
+  .compare-delta-badge.down{color:var(--amber); background:rgba(230,180,60,.12);}
+  .compare-expand{grid-column:1/-1; padding:12px 16px 14px; background:var(--card2); border-top:1px solid var(--border);}
+  .compare-expand-legend{display:flex; gap:16px; font-size:11px; color:var(--sub); margin-bottom:6px;}
+  .compare-expand-legend span{display:inline-flex; align-items:center; gap:5px;}
+  .compare-expand-dot{width:8px; height:8px; border-radius:50%; display:inline-block;}
+  .compare-expand-svg{display:block; width:100%; height:60px;}
+  .compare-expand-empty{font-size:12px; color:var(--sub);}
   .period-note{background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:11px 14px; font-size:12.5px; color:var(--sub); margin-bottom:14px;}
   .period-note b{color:var(--text);}
   .exec-narrative{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:18px;}
@@ -1157,6 +1188,7 @@ function mdSearchNavTargets(){
   return [
     {id:'overview', name:'Overview'},
     {id:'execsummary', name:'Executive Summary'},
+    {id:'compare', name:'Compare'},
     {id:'dataquality', name:'Data Quality'},
     ...REPORTS.map(r => ({id:r.id, name:r.name})),
   ];
@@ -1526,6 +1558,68 @@ function miniDonut(segments, centerText){
 // icon badge / donut / progressive-disclosure behavior only lives in one
 // place. `cards` items may optionally include `icon` (a CARD_ICONS key) and
 // `donut` ({segments:[{label,pct,color}], centerText}).
+// Small inline sparkline showing a report's real daily-activity pattern for
+// the currently loaded period - built from the exact same per-day series
+// that already powers the Activity by Day heatmap and its day-detail popup,
+// so nothing here is a new or fabricated number (same "don't invent trend
+// data we don't have" rule the Quarterly/Yearly period note already
+// follows). Returns '' (renders nothing) when there's no real day-level
+// series to show - e.g. Occupancy, which is a point-in-time percentage, not
+// a per-day count - or too little real variation to be worth drawing.
+function sparklineSvg(daily){
+  if(!daily) return '';
+  const entries = Object.entries(daily).sort((a,b) => a[0] < b[0] ? -1 : (a[0] > b[0] ? 1 : 0));
+  if(entries.length < 3) return '';
+  const counts = entries.map(e => e[1]);
+  const max = Math.max(...counts);
+  if(max <= 0) return '';
+  const w = 100, h = 24, pad = 2;
+  const stepX = (w - pad*2) / (counts.length - 1);
+  const pts = counts.map((c,i) => {
+    const x = pad + i*stepX;
+    const y = h - pad - (c/max) * (h - pad*2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  const linePts = pts.join(' ');
+  const areaPts = `${pad},${h-pad} ${linePts} ${(w-pad).toFixed(1)},${h-pad}`;
+  const shortDate = iso => { const [y,m,d] = iso.split('-'); return `${d}/${m}`; };
+  const first = shortDate(entries[0][0]), last = shortDate(entries[entries.length-1][0]);
+  return `<svg class="oc-spark-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <title>Daily activity, ${first}–${last} (same data behind Activity by Day)</title>
+    <polyline points="${areaPts}" fill="currentColor" stroke="none" opacity="0.14"></polyline>
+    <polyline points="${linePts}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></polyline>
+  </svg>`;
+}
+// Two-series version of sparklineSvg used by the Compare tab's click-to-expand
+// metric charts. Same "reuse real per-day data, invent nothing" rule: both
+// series come straight from the same daily maps sparklineSvg already draws
+// from. Missing days on either side are treated as 0 rather than skipped, so
+// both lines share one aligned date axis. Returns null if there isn't enough
+// real data on either side to justify a chart.
+function dualSparklineSvg(dailyA, dailyB, colorA, colorB){
+  if(!dailyA || !dailyB) return null;
+  const dates = Array.from(new Set([...Object.keys(dailyA), ...Object.keys(dailyB)])).sort();
+  if(dates.length < 3) return null;
+  const seriesA = dates.map(d => dailyA[d] || 0);
+  const seriesB = dates.map(d => dailyB[d] || 0);
+  const max = Math.max(...seriesA, ...seriesB);
+  if(max <= 0) return null;
+  const w = 300, h = 60, pad = 4;
+  const stepX = (w - pad*2) / (dates.length - 1);
+  const toPts = series => series.map((c,i) => {
+    const x = pad + i*stepX;
+    const y = h - pad - (c/max) * (h - pad*2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const shortDate = iso => { const [y,m,d] = iso.split('-'); return `${d}/${m}`; };
+  const first = shortDate(dates[0]), last = shortDate(dates[dates.length-1]);
+  const svg = `<svg class="compare-expand-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <title>Daily values, ${first}–${last}</title>
+    <polyline points="${toPts(seriesA)}" fill="none" stroke="${colorA}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+    <polyline points="${toPts(seriesB)}" fill="none" stroke="${colorB}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+  </svg>`;
+  return { svg, first, last };
+}
 function renderOverviewCards(wrap, cards){
   wrap.innerHTML = `<div class="overview-grid">${cards.map(c => `
     <div class="overview-card${c.alert ? ' has-alert' : ''}" data-goto="${c.id}">
@@ -1536,6 +1630,7 @@ function renderOverviewCards(wrap, cards){
       <div class="oc-big">${splitBig(c.big)}</div>
       ${c.alert ? `<div class="oc-alert">&#9888; ${esc(c.alertText || 'Above target')}</div>` : ''}
       <div class="oc-sub">${esc(c.sub)}</div>
+      ${c.spark ? `<div class="oc-spark">${c.spark}</div>` : ''}
       <button class="oc-toggle" type="button">Details <span class="oc-chev">&#9662;</span></button>
       <div class="oc-details">
         ${c.donut ? miniDonut(c.donut.segments, c.donut.centerText) : ''}
@@ -1705,6 +1800,169 @@ function buildOverviewTab(){
   panesWrap.insertBefore(pane, panesWrap.firstChild);
   buildChecks();
   buildHeatmapPreview();
+}
+
+// ---------- Compare tab ----------
+// Awqaf vs Al Naser Club side by side. Deliberately does not recompute
+// anything of its own - each renderExecSummary*() function below stashes
+// the exact same numbers it just put on that portfolio's own Executive
+// Summary into portfolioSnapshot[key], and this tab just reads that. That
+// guarantees a number shown here can never drift from what the same
+// portfolio's own Exec Summary shows, and means only metrics that already
+// share one formula across both portfolios (Total Collected, Bounced/At
+// Risk, Bounce Rate, Net Collected - all "bounced amount / that portfolio's
+// own collected-amount figure") are compared side by side; Awqaf's New
+// Lease Value and Al Naser's Occupancy Rate have no counterpart in the
+// other portfolio, so they're shown separately, not forced into the same
+// row. Because report iframes for only one portfolio exist in the DOM at a
+// time (switchPortfolio() rebuilds tabBar/panes), the snapshot is what lets
+// this tab show both at once - it persists across portfolio switches even
+// though the underlying iframes for the portfolio you're not currently on
+// have been torn down.
+let portfolioSnapshot = {};
+let compareSel = { a: 'awqaf', b: 'al-naser' };
+let compareExpandedRows = new Set();
+function buildCompareTab(){
+  const tabBar = document.getElementById('tabBar');
+  const panesWrap = document.getElementById('panes');
+  const btn = document.createElement('button');
+  btn.className = 'tab-btn';
+  btn.dataset.id = 'compare';
+  btn.id = 'tab-compare';
+  btn.title = 'Compare';
+  btn.setAttribute('role', 'tab');
+  btn.setAttribute('aria-selected', 'false');
+  btn.setAttribute('aria-controls', 'pane-compare');
+  btn.tabIndex = -1;
+  btn.innerHTML = '<span class="tab-label">Compare</span><span class="tab-short">CM</span>';
+  btn.addEventListener('click', () => selectTab('compare'));
+  tabBar.appendChild(btn);
+
+  const pane = document.createElement('div');
+  pane.className = 'report-pane';
+  pane.dataset.report = 'compare';
+  pane.id = 'pane-compare';
+  pane.setAttribute('role', 'tabpanel');
+  pane.setAttribute('aria-labelledby', 'tab-compare');
+  pane.tabIndex = 0;
+  pane.style.display = 'none';
+  const portfolioOpts = Object.keys(PORTFOLIOS).map(k => `<option value="${k}">${esc(PORTFOLIOS[k].label || k)}</option>`).join('');
+  pane.innerHTML = `
+    <h2><span class="h2-dot"></span>Compare</h2>
+    <div class="pane-desc">Compare any two loaded portfolios side by side. Reuses the exact figures already shown on each portfolio's own Executive Summary tab - nothing here is calculated differently, and every row compared uses the same formula for both portfolios. Metrics with no equivalent in the other portfolio are shown separately below, not forced into a false comparison. Rows marked "trend" expand into a daily chart on click.</div>
+    <div class="compare-selectors">
+      <label>Portfolio A <select id="cmpSelA">${portfolioOpts}</select></label>
+      <label>Portfolio B <select id="cmpSelB">${portfolioOpts}</select></label>
+    </div>
+    <div id="compareWrap"><div class="overview-loading">Visit each portfolio's Executive Summary tab at least once this session to include it here.</div></div>
+  `;
+  panesWrap.appendChild(pane);
+  const selA = document.getElementById('cmpSelA');
+  const selB = document.getElementById('cmpSelB');
+  selA.value = compareSel.a;
+  selB.value = compareSel.b;
+  selA.addEventListener('change', () => {
+    if(selA.value === compareSel.b){ compareSel.b = compareSel.a; selB.value = compareSel.b; }
+    compareSel.a = selA.value;
+    compareExpandedRows.clear();
+    renderCompare();
+  });
+  selB.addEventListener('change', () => {
+    if(selB.value === compareSel.a){ compareSel.a = compareSel.b; selA.value = compareSel.a; }
+    compareSel.b = selB.value;
+    compareExpandedRows.clear();
+    renderCompare();
+  });
+  renderCompare();
+}
+function toggleCompareExpand(key){
+  if(compareExpandedRows.has(key)) compareExpandedRows.delete(key); else compareExpandedRows.add(key);
+  renderCompare();
+}
+function renderCompare(){
+  const wrap = document.getElementById('compareWrap');
+  if(!wrap) return;
+  const a = portfolioSnapshot[compareSel.a];
+  const b = portfolioSnapshot[compareSel.b];
+  const nameA = (PORTFOLIOS[compareSel.a] && PORTFOLIOS[compareSel.a].label) || compareSel.a;
+  const nameB = (PORTFOLIOS[compareSel.b] && PORTFOLIOS[compareSel.b].label) || compareSel.b;
+  if(!a && !b) return; // leave the default "visit each portfolio" message in place
+
+  const missingNote = (!a || !b)
+    ? `<div class="compare-mismatch">Only ${a ? esc(nameA) : esc(nameB)} has been loaded this session. Switch to ${a ? esc(nameB) : esc(nameA)} and open its Executive Summary tab once to complete the comparison.</div>`
+    : '';
+
+  const periodsMatch = !!(a && b && a.periodKey && b.periodKey && a.periodKey === b.periodKey);
+  let periodMismatch = '';
+  if(a && b && a.periodKey && b.periodKey && !periodsMatch){
+    periodMismatch = `<div class="compare-mismatch">These portfolios' latest loaded data covers different periods (${esc(nameA)}: ${esc(a.period||'—')}, ${esc(nameB)}: ${esc(b.period||'—')}). The figures below are each portfolio's own latest loaded month, not necessarily the same period - keep that in mind when comparing. Delta badges are hidden while periods don't match.</div>`;
+  }
+
+  // Neutral, factual "higher by X" badge - deliberately not colored good/bad,
+  // since "higher" means different things for different metrics (higher
+  // collected vs. higher bounced). Only shown when both portfolios' loaded
+  // periods actually match, so a badge never implies a same-period
+  // comparison that isn't real.
+  const badge = (aVal, bVal, fmt) => {
+    if(!periodsMatch || aVal == null || bVal == null || aVal === bVal) return { aBadge: '', bBadge: '' };
+    const diffText = `higher by ${fmt(Math.abs(aVal - bVal))}`;
+    return aVal > bVal
+      ? { aBadge: `<span class="compare-delta-badge up">${diffText}</span>`, bBadge: '' }
+      : { aBadge: '', bBadge: `<span class="compare-delta-badge up">${diffText}</span>` };
+  };
+
+  const metricRow = (key, label, aText, aSub, bText, bSub, aBadge, bBadge, dailyA, dailyB, colorA, colorB) => {
+    const clickable = !!(dailyA && dailyB);
+    const expanded = clickable && compareExpandedRows.has(key);
+    let expandHtml = '';
+    if(expanded){
+      const chart = dualSparklineSvg(dailyA, dailyB, colorA, colorB);
+      expandHtml = `<div class="compare-expand">${chart ? `<div class="compare-expand-legend"><span><span class="compare-expand-dot" style="background:${colorA}"></span>${esc(nameA)}</span><span><span class="compare-expand-dot" style="background:${colorB}"></span>${esc(nameB)}</span><span>${chart.first}–${chart.last}, daily</span></div>${chart.svg}` : `<div class="compare-expand-empty">Not enough day-level data to chart this metric yet.</div>`}</div>`;
+    }
+    return `
+      <div class="compare-row${clickable ? ' compare-clickable' : ''}"${clickable ? ` onclick="toggleCompareExpand('${key}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCompareExpand('${key}');}"` : ''}>
+        <div class="compare-metric">${esc(label)}${clickable ? ` <span style="opacity:.6;">${expanded ? '▾' : '▸'} trend</span>` : ''}</div>
+        <div class="compare-val">${esc(aText)}${aSub ? `<div class="compare-sub">${esc(aSub)}</div>` : ''}${aBadge}</div>
+        <div class="compare-val">${esc(bText)}${bSub ? `<div class="compare-sub">${esc(bSub)}</div>` : ''}${bBadge}</div>
+      </div>${expandHtml}`;
+  };
+
+  const collectedBadges = badge(a && a.totalCollected, b && b.totalCollected, fmtAed);
+  const bouncedBadges = badge(a && a.bouncedAmount, b && b.bouncedAmount, fmtAed);
+  const netBadges = badge(a && a.netCollected, b && b.netCollected, fmtAed);
+
+  let deltaLine = '';
+  if(a && b && a.bounceRatePct !== null && b.bounceRatePct !== null){
+    const diff = b.bounceRatePct - a.bounceRatePct;
+    if(Math.abs(diff) < 0.05){
+      deltaLine = `<div class="compare-delta-row">Both portfolios have about the same bounce rate this period.</div>`;
+    } else {
+      const higher = diff > 0 ? nameB : nameA;
+      const lower = diff > 0 ? nameA : nameB;
+      deltaLine = `<div class="compare-delta-row">${esc(higher)}'s bounce rate is ${Math.abs(diff).toFixed(1)} point(s) higher than ${esc(lower)}'s this period.</div>`;
+    }
+  }
+
+  wrap.innerHTML = `
+    ${missingNote}
+    ${periodMismatch}
+    <div class="compare-card">
+      <div class="compare-row compare-head">
+        <div>Metric</div>
+        <div style="text-align:right;">${esc(nameA)}${a && a.period ? `<span>${esc(a.period)}</span>` : ''}</div>
+        <div style="text-align:right;">${esc(nameB)}${b && b.period ? `<span>${esc(b.period)}</span>` : ''}</div>
+      </div>
+      ${metricRow('collected', 'Total Collected', a ? fmtAed(a.totalCollected) : '—', a && a.totalCollectedSub, b ? fmtAed(b.totalCollected) : '—', b && b.totalCollectedSub, collectedBadges.aBadge, collectedBadges.bBadge, a && a.totalCollectedDaily, b && b.totalCollectedDaily, 'var(--accent)', 'var(--accent2)')}
+      ${metricRow('bounced', 'Bounced / At Risk', a ? fmtAed(a.bouncedAmount) : '—', a && `${a.bouncedCount.toLocaleString()} cheque(s)`, b ? fmtAed(b.bouncedAmount) : '—', b && `${b.bouncedCount.toLocaleString()} cheque(s)`, bouncedBadges.aBadge, bouncedBadges.bBadge, a && a.bouncedDaily, b && b.bouncedDaily, 'var(--amber)', 'var(--accent2)')}
+      ${metricRow('rate', 'Bounce Rate', a ? (a.bounceRatePct !== null ? a.bounceRatePct.toFixed(1) + '%' : '—') : '—', 'bounced ÷ collected', b ? (b.bounceRatePct !== null ? b.bounceRatePct.toFixed(1) + '%' : '—') : '—', 'bounced ÷ collected', '', '', null, null, null, null)}
+      ${metricRow('net', 'Net Collected', a ? fmtAed(a.netCollected) : '—', '', b ? fmtAed(b.netCollected) : '—', '', netBadges.aBadge, netBadges.bBadge, null, null, null, null)}
+      ${deltaLine}
+    </div>
+    <div class="compare-specific-grid">
+      ${a ? `<div class="exec-card exec-accent-4"><div class="exec-label">${esc(nameA)} — ${esc(a.extraLabel)}</div><div class="exec-value">${esc(a.extraValueFormatted)}</div><div class="exec-sub">${esc(a.extraSub)} — no equivalent metric for ${esc(nameB)}</div></div>` : ''}
+      ${b ? `<div class="exec-card exec-accent-4"><div class="exec-label">${esc(nameB)} — ${esc(b.extraLabel)}</div><div class="exec-value">${esc(b.extraValueFormatted)}</div><div class="exec-sub">${esc(b.extraSub)} — no equivalent metric for ${esc(nameA)}</div></div>` : ''}
+    </div>
+  `;
 }
 
 // ---------- Executive Summary tab ----------
@@ -2207,7 +2465,7 @@ function renderOverviewAwqaf(){
   const cards = [
     {
       id:'count-report', title:'Cheque Count', icon:'doc', big: cc.total_lines.toLocaleString() + ' lines',
-      sub: fmtAed(cc.total_amount),
+      sub: fmtAed(cc.total_amount), spark: sparklineSvg(cc.daily),
       donut: ccNewRen ? { centerText: ccNewRen.toLocaleString(), segments: [
         {label:'Renewal', pct: (cc.renewal_lease_contracts/ccNewRen)*100, color:'var(--accent)'},
         {label:'New', pct: (cc.new_lease_contracts/ccNewRen)*100, color:'var(--accent2)'},
@@ -2221,7 +2479,7 @@ function renderOverviewAwqaf(){
     },
     {
       id:'bounced-cheques', title:'Bounced Cheques', icon:'alert', big: bc.total_count.toLocaleString() + ' cheques',
-      sub: fmtAed(bc.total_amount),
+      sub: fmtAed(bc.total_amount), spark: sparklineSvg(bc.daily),
       donut: bc.total_count ? { centerText: bc.total_count.toLocaleString(), segments: [
         {label:'Legal Action', pct: ((bc.status['Under Legal Action']||0)/bc.total_count)*100, color:'var(--bad)'},
         {label:'Under Process', pct: ((bc.status['Under Process']||0)/bc.total_count)*100, color:'var(--amber)'},
@@ -2240,7 +2498,7 @@ function renderOverviewAwqaf(){
     },
     {
       id:'new-lease', title:'New Lease Report', icon:'check', big: nl.total_new_leases.toLocaleString() + ' new leases',
-      sub: `${nl.total_requests.toLocaleString()} fee lines`,
+      sub: `${nl.total_requests.toLocaleString()} fee lines`, spark: sparklineSvg(nl.daily),
       rows: [
         ['Total fees collected', fmtAed(nl.total_amount)],
         ['Total rent value', fmtAed(nl.rent_value_total)],
@@ -2250,7 +2508,7 @@ function renderOverviewAwqaf(){
     },
     {
       id:'request-count', title:'Request Count', icon:'inbox', big: rc.total_requests.toLocaleString() + ' requests',
-      sub: fmtAed(rc.total_amount),
+      sub: fmtAed(rc.total_amount), spark: sparklineSvg(rc.daily),
       donut: rc.total_requests ? { centerText: rc.total_requests.toLocaleString(), segments: [
         {label:'Renewal', pct: ((rc.type_counts['Renewal Lease']||0)/rc.total_requests)*100, color:'var(--accent)'},
         {label:'New', pct: ((rc.type_counts['New Lease']||0)/rc.total_requests)*100, color:'var(--accent2)'},
@@ -2289,6 +2547,26 @@ function renderExecSummaryAwqaf(){
   const netCollected = (cc.total_amount||0) - (bc.total_amount||0);
   const bounceRatePct = cc.total_amount ? (bc.total_amount / cc.total_amount) * 100 : null;
   const BOUNCE_TARGET = 4;
+
+  // Stash this exact set of already-computed numbers for the Compare tab -
+  // see the comment above buildCompareTab() for why this is the only path
+  // that tab reads from.
+  portfolioSnapshot['awqaf'] = {
+    period: fmtPeriod(cc.date_min, cc.date_max),
+    periodKey: cc.date_min ? cc.date_min.slice(0,7) : null,
+    totalCollected: cc.total_amount,
+    totalCollectedSub: 'Cheque Count',
+    totalCollectedDaily: cc.daily,
+    bouncedAmount: bc.total_amount,
+    bouncedCount: bc.total_count,
+    bouncedDaily: bc.daily,
+    netCollected,
+    bounceRatePct,
+    extraLabel: 'New Lease Value',
+    extraValueFormatted: fmtAed(nl.rent_value_total),
+    extraSub: `${nl.total_new_leases.toLocaleString()} new lease(s) signed`,
+  };
+  if(typeof renderCompare === 'function') renderCompare();
 
   if(dataAsOfWrap){
     const period = fmtPeriod(cc.date_min, cc.date_max);
@@ -2432,7 +2710,7 @@ function renderOverviewAlNaser(){
   const cards = [
     {
       id:'al-bounced', title:'Bounced Cheques', icon:'alert', big: bc.total_count.toLocaleString() + ' cheques',
-      sub: fmtAed(bc.total_amount),
+      sub: fmtAed(bc.total_amount), spark: sparklineSvg(bc.daily),
       rows: [
         ['Still open', withPct(bc.open_count, bc.total_count) + ' · ' + fmtAed(bc.open_amount)],
         ['Most common reason', topEntry(bc.reason), true],
@@ -2443,7 +2721,7 @@ function renderOverviewAlNaser(){
     },
     {
       id:'al-clearance', title:'Cheque Clearance', icon:'shield', big: cl.total_count.toLocaleString() + ' tracked',
-      sub: fmtAed(cl.total_amount),
+      sub: fmtAed(cl.total_amount), spark: sparklineSvg(cl.daily),
       donut: cl.total_count ? { centerText: cl.total_count.toLocaleString(), segments: [
         {label:'Cleared', pct: ((cl.status['Cleared']||0)/cl.total_count)*100, color:'var(--ok)'},
         {label:'Bounced', pct: ((cl.status['Bounced']||0)/cl.total_count)*100, color:'var(--bad)'},
@@ -2458,7 +2736,7 @@ function renderOverviewAlNaser(){
     },
     {
       id:'al-collections', title:'Collections Detail', icon:'inbox', big: co.total_count.toLocaleString() + ' transactions',
-      sub: fmtAed(co.total_amount),
+      sub: fmtAed(co.total_amount), spark: sparklineSvg(co.daily),
       donut: co.total_amount ? { centerText: co.total_count.toLocaleString(), segments: [
         {label:'Rent', pct: (co.total_rent/co.total_amount)*100, color:'var(--accent)'},
         {label:'Other fees', pct: (co.total_fees/co.total_amount)*100, color:'var(--accent2)'},
@@ -2471,7 +2749,7 @@ function renderOverviewAlNaser(){
     },
     {
       id:'al-occupancy', title:'Occupancy', icon:'bldg', big: fmtPctVal(oc.overall_occupancy),
-      sub: oc.period || '',
+      sub: oc.period || '', spark: sparklineSvg(oc.daily),
       rows: [
         ['Residential', fmtPctVal(oc.residential_occupancy), true],
         ['Commercial', fmtPctVal(oc.commercial_occupancy), true],
@@ -2508,6 +2786,26 @@ function renderExecSummaryAlNaser(){
   const BOUNCE_TARGET = 4;
   const OCCUPANCY_TARGET = 90;
   const occupancyPct = (oc.overall_occupancy===null||oc.overall_occupancy===undefined||isNaN(oc.overall_occupancy)) ? null : oc.overall_occupancy * 100;
+
+  // Stash this exact set of already-computed numbers for the Compare tab -
+  // see the comment above buildCompareTab() for why this is the only path
+  // that tab reads from.
+  portfolioSnapshot['al-naser'] = {
+    period: fmtPeriod(co.date_min, co.date_max),
+    periodKey: co.date_min ? co.date_min.slice(0,7) : null,
+    totalCollected: co.total_amount,
+    totalCollectedSub: 'Collections Detail',
+    totalCollectedDaily: co.daily,
+    bouncedAmount: bc.total_amount,
+    bouncedCount: bc.total_count,
+    bouncedDaily: bc.daily,
+    netCollected,
+    bounceRatePct,
+    extraLabel: 'Occupancy Rate',
+    extraValueFormatted: fmtPctVal(oc.overall_occupancy),
+    extraSub: `${fmtPctVal(oc.residential_occupancy)} residential, ${fmtPctVal(oc.commercial_occupancy)} commercial`,
+  };
+  if(typeof renderCompare === 'function') renderCompare();
 
   if(dataAsOfWrap){
     const period = fmtPeriod(co.date_min, co.date_max);
@@ -2577,6 +2875,7 @@ let OVERVIEW_REPORTS = OVERVIEW_REPORTS_AWQAF;
 // pane instead of silently reusing Awqaf's tabs/data under a different label.
 const PORTFOLIOS = {
   'awqaf': {
+    label: 'Awqaf',
     reports: REPORTS_AWQAF,
     crossChecks: CROSS_CHECKS_AWQAF,
     overviewReports: OVERVIEW_REPORTS_AWQAF,
@@ -2586,6 +2885,7 @@ const PORTFOLIOS = {
     note: 'Showing Awqaf &middot; July 2026 (the only reports loaded so far). To check a different month, open a report tab and use its own "upload" button to load that file, the Overview updates automatically once it\'s loaded.',
   },
   'al-naser': {
+    label: 'Al Naser Club',
     reports: REPORTS_ALNASER,
     crossChecks: CROSS_CHECKS_ALNASER,
     overviewReports: OVERVIEW_REPORTS_ALNASER,
@@ -2638,6 +2938,7 @@ function switchPortfolio(key){
   OVERVIEW_REPORTS = cfg.overviewReports;
   buildOverviewTab();
   buildExecSummaryTab();
+  buildCompareTab();
   buildDataQualityTab();
   buildTabs();
   addSidebarSectionLabels();
