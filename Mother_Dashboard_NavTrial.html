@@ -1927,6 +1927,13 @@ function saveMonthlyHistory(portfolioKey, snap){
       // Awqaf snapshots, same "don't invent a number that isn't real"
       // convention as bounceRatePct above.
       occupancyPct: (snap.occupancyPct === null || snap.occupancyPct === undefined) ? null : snap.occupancyPct,
+      // Identity keys (contract number, or tenant|chequeNo) for every bounced
+      // cheque this month, straight from that report's own cross-check
+      // export - not recomputed here. Lets us diff "which ones are new /
+      // resolved" vs last month without inventing anything: only stored when
+      // the report actually exposes a contracts list (see
+      // computeChangedRecords).
+      bouncedKeys: Array.isArray(snap.bouncedKeys) ? snap.bouncedKeys : [],
       savedAt: new Date().toISOString(),
     };
     const idx = hist.findIndex(h => h.periodKey === entry.periodKey);
@@ -1984,6 +1991,38 @@ function computeMomChangeAlerts(portfolioKey){
   }
 
   return alerts;
+}
+// Changed-records diff: which bounced-cheque identity keys are new this
+// month vs last month, and which ones from last month are no longer on the
+// list (resolved/cleared). Built entirely from the bouncedKeys arrays
+// saveMonthlyHistory already stashed - a straight Set diff, nothing
+// recomputed or guessed. Needs at least 2 real saved months, same as
+// computeMomChangeAlerts. Returns null (not an empty result) when there
+// isn't enough real data to diff, so the caller can tell "nothing changed"
+// apart from "can't tell yet."
+function computeChangedRecords(portfolioKey){
+  const history = getMonthlyHistory(portfolioKey);
+  if(history.length < 2) return null;
+  const prev = history[history.length - 2];
+  const curr = history[history.length - 1];
+  // Older saved entries (from before this feature shipped) won't have a
+  // bouncedKeys array at all - that's a real "can't diff this" case, not a
+  // zero-changes case, so it's called out separately rather than silently
+  // showing an empty new/resolved list.
+  if(!Array.isArray(prev.bouncedKeys) || !Array.isArray(curr.bouncedKeys)){
+    return { unavailable: true, prevPeriod: prev.period || prev.periodKey, currPeriod: curr.period || curr.periodKey };
+  }
+  const prevSet = new Set(prev.bouncedKeys);
+  const currSet = new Set(curr.bouncedKeys);
+  const added = curr.bouncedKeys.filter(k => !prevSet.has(k));
+  const resolved = prev.bouncedKeys.filter(k => !currSet.has(k));
+  return {
+    unavailable: false,
+    added,
+    resolved,
+    prevPeriod: prev.period || prev.periodKey,
+    currPeriod: curr.period || curr.periodKey,
+  };
 }
 function monthKeyToQuarter(periodKey){
   const parts = (periodKey || '').split('-');
@@ -2083,6 +2122,51 @@ function renderMonthlyTrend(){
       <tbody>${rows}</tbody>
     </table>`;
 }
+// Renders the identity-key diff from computeChangedRecords() - new bounced
+// cheques vs resolved ones since the last real saved month. Only covers
+// Bounced Cheques (Awqaf) / Al Naser Bounced List since those are the only
+// two reports that expose a per-record identity key on __crossCheckData;
+// deliberately doesn't claim to diff anything else rather than guess.
+function renderChangedRecords(){
+  const wrap = document.getElementById('changedRecordsWrap');
+  if(!wrap) return;
+  const diff = computeChangedRecords(currentPortfolio);
+  if(!diff){ wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
+
+  const chipList = (keys, color) => keys.length
+    ? `<div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">${keys.map(k => `<span style="font-size:11.5px; padding:3px 8px; border-radius:6px; background:var(--card2); border:1px solid var(--border); color:${color};">${esc(k)}</span>`).join('')}</div>`
+    : `<div style="font-size:11.5px; color:var(--sub); margin-top:6px;">None.</div>`;
+
+  wrap.style.display = 'block';
+
+  if(diff.unavailable){
+    wrap.innerHTML = `
+      <div class="section-title" style="margin-top:0;"><span class="h2-dot"></span>Changed Since Last Month — Bounced Cheques</div>
+      <div class="section-note">Last month's saved data predates this feature, so there's nothing to diff against yet. Once another month is loaded, this will show exactly which bounced cheques are new vs resolved compared to ${esc(diff.prevPeriod)}.</div>`;
+    return;
+  }
+
+  if(diff.added.length === 0 && diff.resolved.length === 0){
+    wrap.innerHTML = `
+      <div class="section-title" style="margin-top:0;"><span class="h2-dot"></span>Changed Since Last Month — Bounced Cheques</div>
+      <div class="section-note">No change in the bounced-cheque list vs ${esc(diff.prevPeriod)} — same entries, nothing new and nothing resolved.</div>`;
+    return;
+  }
+
+  wrap.innerHTML = `
+    <div class="section-title" style="margin-top:0;"><span class="h2-dot"></span>Changed Since Last Month — Bounced Cheques</div>
+    <div class="section-note">Comparing the real bounced-cheque list this month vs ${esc(diff.prevPeriod)} — identity keys only (contract number, or tenant/cheque), not a re-check of amounts.</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:4px;">
+      <div>
+        <div style="font-size:12.5px; font-weight:600; color:var(--bad);">${diff.added.length} new bounced cheque${diff.added.length===1?'':'s'}</div>
+        ${chipList(diff.added, 'var(--bad)')}
+      </div>
+      <div>
+        <div style="font-size:12.5px; font-weight:600; color:var(--ok);">${diff.resolved.length} resolved / cleared since last month</div>
+        ${chipList(diff.resolved, 'var(--ok)')}
+      </div>
+    </div>`;
+}
 function renderPeriodNote(){
   const note = document.getElementById('periodNote');
   if(note){
@@ -2100,6 +2184,7 @@ function renderPeriodNote(){
     }
   }
   renderMonthlyTrend();
+  renderChangedRecords();
 }
 function addSidebarSectionLabels(){
   const tabBar = document.getElementById('tabBar');
@@ -2663,6 +2748,7 @@ function buildExecSummaryTab(){
     </div>
     <div id="periodNote" class="period-note" style="display:none;"></div>
     <div id="monthlyTrendWrap" style="display:none;"></div>
+    <div id="changedRecordsWrap" style="display:none;"></div>
     <div id="execDataAsOf" class="period-note" style="display:none;"></div>
     <div id="execHeroWrap"><div class="overview-loading">Waiting for the 4 known reports to finish loading…</div></div>
     <div class="section-title"><span class="h2-dot"></span>Summary</div>
@@ -3300,6 +3386,7 @@ function renderExecSummaryAwqaf(){
     bouncedDaily: bc.daily,
     netCollected,
     bounceRatePct,
+    bouncedKeys: Array.isArray(bc.contracts) ? bc.contracts : [],
     extraLabel: 'New Lease Value',
     extraValueFormatted: fmtAed(nl.rent_value_total),
     extraSub: `${nl.total_new_leases.toLocaleString()} new lease(s) signed`,
@@ -3542,6 +3629,7 @@ function renderExecSummaryAlNaser(){
     netCollected,
     bounceRatePct,
     occupancyPct,
+    bouncedKeys: Array.isArray(bc.contracts) ? bc.contracts : [],
     extraLabel: 'Occupancy Rate',
     extraValueFormatted: fmtPctVal(oc.overall_occupancy),
     extraSub: `${fmtPctVal(oc.residential_occupancy)} residential, ${fmtPctVal(oc.commercial_occupancy)} commercial`,
@@ -3737,6 +3825,7 @@ const WHATS_NEW = [
   { date: '2026-08-26', items: [
     "New guided tour for first-time viewers - walks through the sidebar, search, Needs Attention, Executive Summary, Compare, and Board Pack. Reopen it anytime from the Tour button in the header.",
     "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Collected, or a drop in occupancy (Al Naser) vs the last saved month. Swing size is configurable from the Thresholds button.",
+    "Executive Summary now shows exactly which bounced cheques are new vs resolved compared to last month, once 2+ real months are on record.",
   ]},
   { date: '2026-08-24', items: [
     "Compare tab: added a Print/Export PDF button and a CSV download of the comparison table.",
