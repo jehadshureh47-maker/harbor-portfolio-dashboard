@@ -832,6 +832,12 @@ const CROSS_CHECKS_MERIDIAN = [
 const DEFAULT_THRESHOLDS = {
   meridian: { bounceTarget: 4 },
   'bayline': { bounceTarget: 4, occupancyTarget: 90 },
+  // Month-over-month change alerts: how big a swing between the last two
+  // real saved months counts as worth flagging in Needs Attention. Shared
+  // across both portfolios rather than per-portfolio, to keep the
+  // Thresholds panel from growing a duplicate set of inputs for a feature
+  // that's about swing size, not a portfolio-specific target.
+  momAlerts: { bounceSwingPp: 2, collectedDropPct: 15, occupancyDropPp: 3 },
 };
 const THRESHOLDS_KEY = 'mdThresholds';
 function loadThresholds(){
@@ -1937,6 +1943,10 @@ function saveMonthlyHistory(portfolioKey, snap){
       bouncedCount: snap.bouncedCount || 0,
       netCollected: snap.netCollected || 0,
       bounceRatePct: (snap.bounceRatePct === null || snap.bounceRatePct === undefined) ? null : snap.bounceRatePct,
+      // Only Bayline Properties has an occupancy figure - stays null/absent
+      // for Meridian snapshots, same "don't invent a number that isn't
+      // real" convention as bounceRatePct above.
+      occupancyPct: (snap.occupancyPct === null || snap.occupancyPct === undefined) ? null : snap.occupancyPct,
       savedAt: new Date().toISOString(),
     };
     const idx = hist.findIndex(h => h.periodKey === entry.periodKey);
@@ -1953,6 +1963,47 @@ function getMonthlyHistory(portfolioKey){
     const hist = JSON.parse(raw);
     return Array.isArray(hist) ? hist : [];
   } catch(e){ return []; }
+}
+// Month-over-month change alerts: compares the two most recent REAL saved
+// months for a portfolio and flags swings in the bad direction (bounce rate
+// up, collections down, occupancy down) beyond the configured threshold.
+// Needs at least 2 real saved months - never fires off a single month or a
+// projection, same convention as renderMonthlyTrend(). Good-direction
+// swings (bounce rate down, collections up) are real news but aren't
+// "needs attention" material, so they're deliberately not flagged here -
+// this only surfaces things worth a second look.
+function computeMomChangeAlerts(portfolioKey){
+  const history = getMonthlyHistory(portfolioKey);
+  if(history.length < 2) return [];
+  const prev = history[history.length - 2];
+  const curr = history[history.length - 1];
+  const mom = (THRESHOLDS.momAlerts) || DEFAULT_THRESHOLDS.momAlerts;
+  const alerts = [];
+
+  if(curr.bounceRatePct !== null && curr.bounceRatePct !== undefined &&
+     prev.bounceRatePct !== null && prev.bounceRatePct !== undefined){
+    const swing = curr.bounceRatePct - prev.bounceRatePct;
+    if(swing >= mom.bounceSwingPp){
+      alerts.push(`Bounce rate jumped ${prev.bounceRatePct.toFixed(1)}% → ${curr.bounceRatePct.toFixed(1)}% (up ${swing.toFixed(1)}pp) vs ${prev.period || prev.periodKey}`);
+    }
+  }
+
+  if(prev.totalCollected){
+    const pctChange = ((curr.totalCollected - prev.totalCollected) / prev.totalCollected) * 100;
+    if(pctChange <= -mom.collectedDropPct){
+      alerts.push(`Total Collected dropped ${Math.abs(pctChange).toFixed(0)}% vs ${prev.period || prev.periodKey} (${fmtAed(prev.totalCollected)} → ${fmtAed(curr.totalCollected)})`);
+    }
+  }
+
+  if(curr.occupancyPct !== null && curr.occupancyPct !== undefined &&
+     prev.occupancyPct !== null && prev.occupancyPct !== undefined){
+    const swing = prev.occupancyPct - curr.occupancyPct;
+    if(swing >= mom.occupancyDropPp){
+      alerts.push(`Occupancy dropped ${prev.occupancyPct.toFixed(1)}% → ${curr.occupancyPct.toFixed(1)}% (down ${swing.toFixed(1)}pp) vs ${prev.period || prev.periodKey}`);
+    }
+  }
+
+  return alerts;
 }
 function monthKeyToQuarter(periodKey){
   const parts = (periodKey || '').split('-');
@@ -3106,6 +3157,10 @@ function renderNeedsAttention(){
     }
   }
 
+  computeMomChangeAlerts(currentPortfolio).forEach(text => {
+    items.push({ kind: 'warn', text, goto: () => selectTab('execsummary'), dl: { t: 'execsummary' } });
+  });
+
   if(items.length === 0){ wrap.innerHTML = ''; return; }
 
   // Each row's href reproduces the exact same jump the button already does -
@@ -3506,6 +3561,7 @@ function renderExecSummaryBayline(){
     bouncedDaily: bc.daily,
     netCollected,
     bounceRatePct,
+    occupancyPct,
     extraLabel: 'Occupancy Rate',
     extraValueFormatted: fmtPctVal(oc.overall_occupancy),
     extraSub: `${fmtPctVal(oc.residential_occupancy)} residential, ${fmtPctVal(oc.commercial_occupancy)} commercial`,
@@ -3700,6 +3756,7 @@ if(portfolioSelectEl && selectorNoteEl){
 const WHATS_NEW = [
   { date: '2026-08-26', items: [
     "New guided tour for first-time viewers - walks through the sidebar, search, Needs Attention, Executive Summary, Compare, and Board Pack. Reopen it anytime from the Tour button in the header.",
+    "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Collected, or a drop in occupancy (Bayline) vs the last saved month. Swing size is configurable from the Thresholds button.",
   ]},
   { date: '2026-08-24', items: [
     "Compare tab: added a Print/Export PDF button and a CSV download of the comparison table.",
@@ -3984,6 +4041,10 @@ const KEYBOARD_SHORTCUTS = [
     dlg.querySelector('#thMeridianBounce').value = THRESHOLDS.meridian.bounceTarget;
     dlg.querySelector('#thBaylineBounce').value = THRESHOLDS['bayline'].bounceTarget;
     dlg.querySelector('#thBaylineOcc').value = THRESHOLDS['bayline'].occupancyTarget;
+    const mom = THRESHOLDS.momAlerts || DEFAULT_THRESHOLDS.momAlerts;
+    dlg.querySelector('#thMomBounce').value = mom.bounceSwingPp;
+    dlg.querySelector('#thMomCollected').value = mom.collectedDropPct;
+    dlg.querySelector('#thMomOcc').value = mom.occupancyDropPp;
   }
   function ensureThresholdsModal(){
     let dlg = document.getElementById('thModalOverlay');
@@ -4012,28 +4073,53 @@ const KEYBOARD_SHORTCUTS = [
         <label for="thBaylineOcc">Bayline Properties &mdash; occupancy target</label>
         <div class="th-input-wrap"><input type="number" id="thBaylineOcc" min="0" max="100" step="0.5"><span>%</span></div>
       </div>
+      <div class="th-note" style="margin-top:14px; margin-bottom:2px;">Month-over-month change alerts &mdash; how big a swing vs last saved month before Needs Attention flags it:</div>
+      <div class="th-row">
+        <label for="thMomBounce">Bounce rate swing</label>
+        <div class="th-input-wrap"><input type="number" id="thMomBounce" min="0" max="100" step="0.5"><span>pp</span></div>
+      </div>
+      <div class="th-row">
+        <label for="thMomCollected">Total Collected drop</label>
+        <div class="th-input-wrap"><input type="number" id="thMomCollected" min="0" max="100" step="1"><span>%</span></div>
+      </div>
+      <div class="th-row">
+        <label for="thMomOcc">Occupancy drop (Bayline)</label>
+        <div class="th-input-wrap"><input type="number" id="thMomOcc" min="0" max="100" step="0.5"><span>pp</span></div>
+      </div>
       <div class="th-note">Alerts and KPI colors on the Overview and Executive Summary tabs use these. Changes apply immediately.</div>
       <button type="button" class="th-reset-btn" id="thResetBtn">Reset to defaults</button>`;
     const applyFromInputs = () => {
       const bMeridian = parseFloat(dlg.querySelector('#thMeridianBounce').value);
       const bBayline = parseFloat(dlg.querySelector('#thBaylineBounce').value);
       const oBayline = parseFloat(dlg.querySelector('#thBaylineOcc').value);
+      const momBounce = parseFloat(dlg.querySelector('#thMomBounce').value);
+      const momCollected = parseFloat(dlg.querySelector('#thMomCollected').value);
+      const momOcc = parseFloat(dlg.querySelector('#thMomOcc').value);
       if(!isNaN(bMeridian) && bMeridian >= 0) THRESHOLDS.meridian.bounceTarget = bMeridian;
       if(!isNaN(bBayline) && bBayline >= 0) THRESHOLDS['bayline'].bounceTarget = bBayline;
       if(!isNaN(oBayline) && oBayline >= 0) THRESHOLDS['bayline'].occupancyTarget = oBayline;
+      if(!THRESHOLDS.momAlerts) THRESHOLDS.momAlerts = JSON.parse(JSON.stringify(DEFAULT_THRESHOLDS.momAlerts));
+      if(!isNaN(momBounce) && momBounce >= 0) THRESHOLDS.momAlerts.bounceSwingPp = momBounce;
+      if(!isNaN(momCollected) && momCollected >= 0) THRESHOLDS.momAlerts.collectedDropPct = momCollected;
+      if(!isNaN(momOcc) && momOcc >= 0) THRESHOLDS.momAlerts.occupancyDropPp = momOcc;
       saveThresholds();
       renderOverview();
       renderExecSummary();
+      if(typeof renderNeedsAttention === 'function') renderNeedsAttention();
     };
     dlg.querySelector('#thMeridianBounce').addEventListener('change', applyFromInputs);
     dlg.querySelector('#thBaylineBounce').addEventListener('change', applyFromInputs);
     dlg.querySelector('#thBaylineOcc').addEventListener('change', applyFromInputs);
+    dlg.querySelector('#thMomBounce').addEventListener('change', applyFromInputs);
+    dlg.querySelector('#thMomCollected').addEventListener('change', applyFromInputs);
+    dlg.querySelector('#thMomOcc').addEventListener('change', applyFromInputs);
     dlg.querySelector('#thResetBtn').addEventListener('click', () => {
       THRESHOLDS = JSON.parse(JSON.stringify(DEFAULT_THRESHOLDS));
       saveThresholds();
       populateThresholdInputs(dlg);
       renderOverview();
       renderExecSummary();
+      if(typeof renderNeedsAttention === 'function') renderNeedsAttention();
     });
     dlg.querySelector('.hm-modal-close').addEventListener('click', () => dlg.close());
     dlg.addEventListener('click', (ev) => {
