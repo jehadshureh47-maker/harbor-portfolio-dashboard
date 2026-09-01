@@ -145,6 +145,11 @@
   .footer-note{color:var(--sub); font-size:12px; text-align:center; margin-top:22px; padding-top:14px; border-top:1px solid var(--border);}
   .report-pane{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; max-width:100%; overflow:hidden;}
   .embed-wrap{margin:-12px -14px; border-radius:14px; overflow:hidden;}
+  /* When the privacy note sits above the embed (see renderPaneShell), cancel
+     just the top half of that negative margin so the iframe doesn't get
+     pulled up over the note's text - the left/right "bleed to the pane's
+     edges" effect is unaffected. */
+  .privacy-note + .embed-wrap{margin-top:0;}
   .embed-frame{width:100%; border:0; display:block; min-height:900px;}
   .report-pane h2{margin:0 0 4px; font-size:17px; display:flex; align-items:center; gap:9px;}
   .pane-desc{color:var(--sub); font-size:13px; margin-bottom:14px;}
