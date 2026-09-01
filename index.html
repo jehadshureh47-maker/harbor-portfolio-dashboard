@@ -132,6 +132,7 @@
 
   .tab-bar{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;}
   .tab-btn{
+    position:relative;
     background:var(--card); border:1px solid var(--border); color:var(--sub);
     padding:6px 12px; border-radius:8px; font-size:13px; cursor:pointer; font-weight:600;
   }
@@ -141,6 +142,12 @@
   .tab-icon.ok{background:rgba(79,208,122,0.25); color:var(--ok);}
   .tab-icon.bad{background:rgba(239,106,139,0.25); color:var(--bad);}
   .tab-icon.pending{background:rgba(147,160,189,0.25); color:var(--pending);}
+  /* Small unread-update indicator, added to every tab pill (not just Overview)
+     so a viewer notices there's something new in "Updates" regardless of
+     which report tab they're already on. Positioned absolutely so it never
+     has to account for each tab-btn's own internal layout (label/icon/short
+     code differ tab to tab). Toggled centrally by updateBadgeFor() below. */
+  .tab-notice-dot{position:absolute; top:2px; right:2px; width:8px; height:8px; border-radius:50%; background:var(--amber); box-shadow:0 0 0 2px var(--card); display:none; pointer-events:none;}
 
   .footer-note{color:var(--sub); font-size:12px; text-align:center; margin-top:22px; padding-top:14px; border-top:1px solid var(--border);}
   .report-pane{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; max-width:100%; overflow:hidden;}
@@ -4493,6 +4500,7 @@ function switchPortfolio(key){
   buildTabs();
   addSidebarSectionLabels();
   mdSearchClear();
+  if(typeof window.refreshPortfolioUpdatesDots === 'function') window.refreshPortfolioUpdatesDots();
 }
 
 switchPortfolio('awqaf');
@@ -4735,8 +4743,23 @@ const PORTFOLIO_UPDATES = {
     try{ localStorage.setItem(PU_KEY_PREFIX + key, latestDate); }catch(e){}
   }
   function updateBadgeFor(key){
+    const show = hasUnseen(key);
     const badge = document.getElementById('ptUpdatesBadge');
-    if(badge) badge.style.display = hasUnseen(key) ? 'inline-block' : 'none';
+    if(badge) badge.style.display = show ? 'inline-block' : 'none';
+    // Also sweep every tab pill (Overview, Exec Summary, Compare, Data
+    // Quality, and every report tab) with the same small dot, so a viewer
+    // notices there's an unseen portfolio update no matter which tab they
+    // already happen to be on - not just if they click into Overview.
+    document.querySelectorAll('#tabBar .tab-btn').forEach(btn => {
+      let dot = btn.querySelector('.tab-notice-dot');
+      if(!dot){
+        dot = document.createElement('span');
+        dot.className = 'tab-notice-dot';
+        dot.setAttribute('aria-hidden', 'true');
+        btn.appendChild(dot);
+      }
+      dot.style.display = show ? 'block' : 'none';
+    });
   }
   let puTriggerEl = null;
   let puOpenKey = null;
@@ -4794,11 +4817,19 @@ const PORTFOLIO_UPDATES = {
     if(btn) btn.onclick = () => openPortfolioUpdatesModal(currentPortfolio);
     updateBadgeFor(currentPortfolio);
   };
+  // buildTabs() runs after buildOverviewTab() inside switchPortfolio(), so
+  // the report tab pills (RC/NL/BC/CC etc.) don't exist yet at the point
+  // wirePortfolioUpdatesButton() runs above - only the Overview pill does.
+  // switchPortfolio() calls this separately, once every tab for the
+  // (possibly just-switched-to) portfolio is actually in the DOM, so the
+  // notice dot lands on all of them, not just Overview.
+  window.refreshPortfolioUpdatesDots = function(){ updateBadgeFor(currentPortfolio); };
   // switchPortfolio('awqaf') already ran once, further up the script, before
   // this IIFE existed - so the very first Overview pane's button is sitting
   // in the DOM unwired. Wire it now for whatever's already there; every
   // later switchPortfolio() call re-wires it itself via buildOverviewTab().
   window.wirePortfolioUpdatesButton();
+  window.refreshPortfolioUpdatesDots();
 })();
 
 // ---------- Guided tour for first-time viewers ----------
