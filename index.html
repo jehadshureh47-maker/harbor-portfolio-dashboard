@@ -5046,6 +5046,93 @@ mdApplyDeepLink();
 // any) has already been applied, so the tour never pops up over a link
 // someone followed straight to a specific tab or filter.
 if(typeof window.__mdMaybeAutoOpenTour === 'function') window.__mdMaybeAutoOpenTour();
+
+// ---------- Per-viewer portfolio scoping (Cloudflare Access identity) ----------
+// Each external contact only needs to see their own portfolio, not the full
+// 7-portfolio switcher meant for internal staff. This narrows the visible UI
+// based on the email Cloudflare Access authenticated the viewer as (read via
+// Access's built-in /cdn-cgi/access/get-identity endpoint - no extra Worker
+// needed, it's available automatically on any Access-protected hostname).
+//
+// IMPORTANT: this is a UI-level restriction only. Every portfolio's data is
+// still embedded in this one HTML file and ships to every viewer's browser -
+// this just hides what a scoped viewer sees and switches to. The actual
+// security boundary is the Cloudflare Access login gate in front of the whole
+// site (only the approved emails ever reach this page at all). Someone who
+// both (a) is on that approved list and (b) goes looking in their browser's
+// dev tools could still find other portfolios' figures in the page source.
+// Good enough for trusted internal/PM viewers; if a portfolio's data ever
+// needs to be kept from someone who otherwise has a legitimate reason to be
+// on the approved list, that needs real server-side separation (separate
+// pages/deployments, each with its own Access policy) instead of this.
+const PORTFOLIO_ACCESS = {
+  // Internal staff / family - see everything, same as before this change.
+  'jehadshureh47@gmail.com': 'all',
+  'rahul@harbordubai.com': 'all',
+  'haider@harbordubai.com': 'all',
+  'shatharafeh@gmail.com': 'all',
+  'srafeh@awqafdubai.gov.ae': 'all',
+  // Everyone else is scoped to just their own portfolio.
+  'rabah@harbordubai.com': ['awqaf'],
+  'bibin@harbordubai.com': ['awqaf'],
+  'ola.kreaa@harbordubai.com': ['awqaf'],
+  'abdelrahman@harbordubai.com': ['awqaf'],
+  'preethi@harbordubai.com': ['dubai-court'],
+  'ibrahim@harbordubai.com': ['rta'],
+  'hreb_ahmed.hussien@rta.ae': ['rta'],
+  'ahmed.bassyoni@harbordubai.com': ['vip'],
+  'jona@harbordubai.com': ['vip'],
+  'diaa@harbordubai.com': ['police'],
+  'tamimi@harbordubai.com': ['al-naser'],
+  'lorie@harbordubai.com': ['national-bonds'],
+};
+
+(function applyPortfolioScoping(){
+  fetch('/cdn-cgi/access/get-identity', { credentials: 'include' })
+    .then(r => r.ok ? r.json() : null)
+    .then(identity => {
+      const email = identity && identity.email ? String(identity.email).toLowerCase() : null;
+      if(!email) return; // not behind Access right now (e.g. local file testing) - leave everything open
+      const allowed = PORTFOLIO_ACCESS[email];
+      if(!allowed || allowed === 'all') return; // full access, or an email we haven't mapped yet - fail open rather than lock someone out
+
+      // Narrow the Portfolio dropdown down to what this viewer is allowed to see.
+      if(portfolioSelectEl){
+        Array.from(portfolioSelectEl.options).forEach(opt => {
+          if(!allowed.includes(opt.value)) opt.remove();
+        });
+      }
+
+      // If they've landed somewhere outside their allowed set - the hardcoded
+      // 'awqaf' default, or a shared deep link into another portfolio - move
+      // them to the first (usually only) portfolio they're actually allowed.
+      if(!allowed.includes(currentPortfolio)){
+        const target = allowed[0];
+        switchPortfolio(target);
+        if(portfolioSelectEl) portfolioSelectEl.value = target;
+        const label = (PORTFOLIOS[target] && PORTFOLIOS[target].label) || PORTFOLIO_LABELS[target] || target;
+        const note = PORTFOLIOS[target] ? PORTFOLIOS[target].note
+          : ('No reports loaded yet for ' + label + '. Once its files come in, they\'ll show up here with their own tabs.');
+        if(selectorNoteEl) selectorNoteEl.innerHTML = note;
+      }
+
+      // With exactly one portfolio available there's nothing left to pick, so
+      // hide the now-single-option dropdown and drop the Compare tab - it has
+      // nothing meaningful to compare against for a single-portfolio viewer,
+      // and its own two pickers list every implemented portfolio by name.
+      if(allowed.length === 1){
+        const bar = portfolioSelectEl && portfolioSelectEl.closest('.selector-bar');
+        if(bar) bar.style.display = 'none';
+        const comparePane = document.getElementById('pane-compare');
+        if(comparePane && comparePane.style.display !== 'none'){
+          selectTab('overview'); // don't leave them stranded on a tab we're about to remove
+        }
+        const compareBtn = document.getElementById('tab-compare');
+        if(compareBtn) compareBtn.remove();
+      }
+    })
+    .catch(() => { /* identity endpoint unreachable - fail open, don't break the page over this */ });
+})();
 </script>
 
 </body>
