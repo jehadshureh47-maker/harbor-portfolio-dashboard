@@ -162,6 +162,9 @@
   .empty-state-note{display:flex; align-items:flex-start; gap:10px; background:var(--card2); border:1px dashed var(--border); border-radius:10px; padding:12px 14px;}
   .empty-state-note .esn-icon{flex-shrink:0; width:20px; height:20px; margin-top:1px; color:var(--sub); display:inline-flex;}
   .empty-state-note .esn-icon svg{width:100%; height:100%;}
+  .privacy-note{display:flex; align-items:flex-start; gap:8px; margin:8px 0 4px; font-size:12px; line-height:1.5; color:var(--sub);}
+  .privacy-note .pn-icon{flex-shrink:0; width:15px; height:15px; margin-top:1px; opacity:.75; display:inline-flex;}
+  .privacy-note .pn-icon svg{width:100%; height:100%;}
   .status b{color:var(--text);}
   .loader-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;}
   .btn{
@@ -723,6 +726,10 @@
         <button class="theme-switch" id="thresholdsBtn" type="button" aria-label="Alert thresholds" title="Configure bounce rate / occupancy alert thresholds">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
           <span>Thresholds</span>
+        </button>
+        <button class="theme-switch" id="backupBtn" type="button" aria-label="Backup or restore your data" title="Back up or restore this browser's uploaded report history">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>Backup</span>
         </button>
         <button class="theme-switch" id="boardPackBtn" type="button" aria-label="Print or export a Board Pack PDF" title="Board Pack: Executive Summary + Needs Attention + Compare in one PDF">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
@@ -1590,13 +1597,18 @@ function renderPaneShell(r){
     // Embedded reports get the literal standalone dashboard in an iframe —
     // no separate load button/preview table needed here, since that full
     // dashboard already has its own Load Excel File / filters / everything.
-    return `<div class="embed-wrap"><iframe class="embed-frame" scrolling="no"></iframe></div>`;
+    // The privacy note lives in the outer page (not inside the iframe) so it
+    // shows up once here regardless of that embedded dashboard's own upload
+    // UI, without needing to touch the embedded file's markup directly.
+    return `<div class="embed-wrap"><iframe class="embed-frame" scrolling="no"></iframe></div>
+    <div class="privacy-note"><span class="pn-icon">${cardIcon('shield')}</span><span>Uploading a file into this report only previews it here, in your own browser. It isn't shared with other viewers, sent anywhere, or saved outside this device.</span></div>`;
   }
   return `
     <h2><span class="h2-dot"></span>${esc(r.name)}</h2>
     <div class="pane-desc">${r.known ? 'Has a real, tailored engine built from this report\'s actual workbook.' : 'Structure unknown — shows a best-guess auto-dashboard once a file loads.'}</div>
     <div class="status report-status empty-state-note"><span class="esn-icon">${cardIcon('inbox')}</span><span>No workbook loaded yet. Drag an Excel file onto this area, or click "Load Excel File" below to browse for one.</span></div>
     <div class="loader-row"><button class="btn load-btn">Load Excel File…</button><button class="btn export-btn" style="display:none; background:linear-gradient(180deg,#38d9c9,#20a89a);">Export CSV</button></div>
+    <div class="privacy-note"><span class="pn-icon">${cardIcon('shield')}</span><span>Uploading a file here only previews it in your own browser — it isn't shared with other viewers, sent anywhere, or saved outside this device.</span></div>
     <div class="sheet-row" style="display:none;"><label>Sheet</label><select class="sheet-select"></select></div>
     <div class="preview-wrap" style="display:none;"><table><thead class="preview-head"></thead><tbody class="preview-body"></tbody></table></div>
     <div class="preview-note"></div>
@@ -2170,6 +2182,97 @@ function getMonthlyHistory(portfolioKey){
     const hist = JSON.parse(raw);
     return Array.isArray(hist) ? hist : [];
   } catch(e){ return []; }
+}
+
+// ---------- Backup / restore (per-browser data only) ----------
+// Every viewer's uploaded-report history lives only in that one browser's
+// localStorage (see monthlyHistoryKey above) - there's no server behind this
+// page. That's by design (nothing a viewer uploads is shared with anyone
+// else), but it also means clearing browser data, switching browsers, or
+// moving to a new device silently wipes months of saved history with no way
+// to get it back. This lets a viewer download everything this browser has
+// saved as one JSON file, and load that file back in later (same browser
+// after a reset, or a different one) to pick up where they left off. It's a
+// personal backup/restore, not a sharing mechanism - importing a file only
+// ever affects the browser doing the importing.
+const BACKUP_FILE_VERSION = 1;
+function collectPortfolioHistoryKeys(){
+  const prefix = 'md_monthly_history_v1__';
+  const keys = [];
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(k && k.indexOf(prefix) === 0) keys.push(k.slice(prefix.length));
+    }
+  } catch(e){}
+  return keys;
+}
+function buildBackupPayload(){
+  const portfolios = {};
+  collectPortfolioHistoryKeys().forEach(portfolioKey => {
+    const hist = getMonthlyHistory(portfolioKey);
+    if(hist.length) portfolios[portfolioKey] = hist;
+  });
+  let thresholds = null;
+  try{ const raw = localStorage.getItem(THRESHOLDS_KEY); if(raw) thresholds = JSON.parse(raw); } catch(e){}
+  return {
+    __mdBackup: 'mother-dashboard',
+    version: BACKUP_FILE_VERSION,
+    exportedAt: new Date().toISOString(),
+    portfolios,
+    thresholds,
+  };
+}
+function downloadBackupFile(){
+  const payload = buildBackupPayload();
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'mother-dashboard-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  return payload;
+}
+// Merges one portfolio's incoming history into whatever this browser already
+// has, de-duped by periodKey (same rule saveMonthlyHistory already uses) -
+// an imported month overwrites that same month if it's already on record,
+// everything else already saved here is left untouched.
+function mergeMonthlyHistory(portfolioKey, incoming){
+  if(!Array.isArray(incoming) || !incoming.length) return;
+  const key = monthlyHistoryKey(portfolioKey);
+  let hist = [];
+  try{ hist = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){ hist = []; }
+  if(!Array.isArray(hist)) hist = [];
+  incoming.forEach(entry => {
+    if(!entry || !entry.periodKey) return;
+    const idx = hist.findIndex(h => h.periodKey === entry.periodKey);
+    if(idx >= 0) hist[idx] = entry; else hist.push(entry);
+  });
+  hist.sort((a,b) => a.periodKey < b.periodKey ? -1 : (a.periodKey > b.periodKey ? 1 : 0));
+  if(hist.length > MONTHLY_HISTORY_CAP) hist = hist.slice(hist.length - MONTHLY_HISTORY_CAP);
+  localStorage.setItem(key, JSON.stringify(hist));
+}
+function restoreFromBackupPayload(payload){
+  if(!payload || typeof payload !== 'object' || !payload.portfolios || typeof payload.portfolios !== 'object'){
+    throw new Error('That doesn\'t look like a Mother Dashboard backup file.');
+  }
+  const portfolioKeys = Object.keys(payload.portfolios);
+  let monthCount = 0;
+  portfolioKeys.forEach(pk => {
+    const incoming = payload.portfolios[pk];
+    if(Array.isArray(incoming)) monthCount += incoming.length;
+    mergeMonthlyHistory(pk, incoming);
+  });
+  if(payload.thresholds && typeof payload.thresholds === 'object'){
+    try{
+      THRESHOLDS = Object.assign(JSON.parse(JSON.stringify(DEFAULT_THRESHOLDS)), payload.thresholds);
+      saveThresholds();
+    } catch(e){}
+  }
+  return { portfolioCount: portfolioKeys.length, monthCount };
 }
 // Month-over-month change alerts: compares the two most recent REAL saved
 // months for a portfolio and flags swings in the bad direction (bounce rate
@@ -4987,6 +5090,101 @@ const KEYBOARD_SHORTCUTS = [
   const thBtn = document.getElementById('thresholdsBtn');
   if(thBtn) thBtn.addEventListener('click', openThresholdsModal);
   window.__mdOpenThresholds = openThresholdsModal;
+
+  // Backup/restore panel - same .hm-modal shell. Everything it touches
+  // (buildBackupPayload/restoreFromBackupPayload/etc.) is defined earlier in
+  // the file alongside saveMonthlyHistory, since that's the data it's
+  // actually backing up.
+  let bkTriggerEl = null;
+  function bkPortfolioSummaryHtml(){
+    const keys = collectPortfolioHistoryKeys();
+    if(!keys.length){
+      return '<div class="hm-modal-empty">Nothing saved in this browser yet - upload a report in any tab first.</div>';
+    }
+    const rows = keys.map(pk => {
+      const count = getMonthlyHistory(pk).length;
+      const label = (PORTFOLIO_LABELS && PORTFOLIO_LABELS[pk]) || pk;
+      return `<div class="hm-modal-row${count ? '' : ' zero'}"><span class="rname">${esc(label)}</span><span class="rcount">${count} month${count === 1 ? '' : 's'}</span></div>`;
+    }).join('');
+    return `<div class="hm-modal-rows">${rows}</div>`;
+  }
+  function ensureBackupModal(){
+    let dlg = document.getElementById('bkModalOverlay');
+    if(dlg) return dlg;
+    dlg = document.createElement('dialog');
+    dlg.id = 'bkModalOverlay';
+    dlg.className = 'hm-modal';
+    dlg.setAttribute('aria-labelledby', 'bkModalTitle');
+    dlg.innerHTML = `
+      <div class="hm-modal-head">
+        <div>
+          <div class="hm-modal-title" id="bkModalTitle">Backup your data</div>
+          <div class="hm-modal-sub">Saved on this device only</div>
+        </div>
+        <button class="hm-modal-close" type="button" aria-label="Close">&#10005;</button>
+      </div>
+      <div class="th-note" style="margin-bottom:12px;">Every report you upload here is saved only in this browser, on this device - nothing is shared with other viewers or sent anywhere else. That also means clearing your browser data or switching devices would normally lose it. Download a backup file to keep a copy, or load one back in to restore it.</div>
+      <div id="bkPortfolioSummary"></div>
+      <button type="button" class="hm-modal-export-btn" id="bkExportBtn" style="margin-top:14px;">Download backup file</button>
+      <button type="button" class="hm-modal-export-btn" id="bkImportBtn" style="margin-top:8px;">Restore from a backup file&hellip;</button>
+      <div class="th-note" id="bkStatus" style="margin-top:10px;"></div>`;
+    dlg.querySelector('#bkExportBtn').addEventListener('click', () => {
+      const payload = downloadBackupFile();
+      const status = dlg.querySelector('#bkStatus');
+      const n = Object.keys(payload.portfolios).length;
+      status.textContent = n ? ('Downloaded - ' + n + ' portfolio' + (n === 1 ? '' : 's') + ' included.') : 'Downloaded (nothing was saved in this browser yet, so the file is empty).';
+    });
+    dlg.querySelector('#bkImportBtn').addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/json,.json';
+      input.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if(!file) return;
+        const status = dlg.querySelector('#bkStatus');
+        status.textContent = 'Reading ' + file.name + '…';
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try{
+            const payload = JSON.parse(ev.target.result);
+            const result = restoreFromBackupPayload(payload);
+            status.textContent = 'Restored ' + result.monthCount + ' month(s) across ' + result.portfolioCount + ' portfolio(s). Reloading…';
+            setTimeout(() => window.location.reload(), 1200);
+          } catch(err){
+            status.textContent = 'Could not restore that file: ' + err.message;
+          }
+        };
+        reader.onerror = () => { status.textContent = 'Could not read that file.'; };
+        reader.readAsText(file);
+      });
+      input.click();
+    });
+    dlg.querySelector('.hm-modal-close').addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (ev) => {
+      if(ev.target !== dlg) return;
+      const rect = dlg.getBoundingClientRect();
+      const inside = rect.top <= ev.clientY && ev.clientY <= rect.bottom && rect.left <= ev.clientX && ev.clientX <= rect.right;
+      if(!inside) dlg.close();
+    });
+    dlg.addEventListener('close', () => {
+      if(bkTriggerEl && typeof bkTriggerEl.focus === 'function') bkTriggerEl.focus();
+      bkTriggerEl = null;
+    });
+    document.body.appendChild(dlg);
+    return dlg;
+  }
+  function openBackupModal(){
+    bkTriggerEl = document.activeElement;
+    const dlg = ensureBackupModal();
+    dlg.querySelector('#bkPortfolioSummary').innerHTML = bkPortfolioSummaryHtml();
+    dlg.querySelector('#bkStatus').textContent = '';
+    if(!dlg.open) dlg.showModal();
+    const closeBtn = dlg.querySelector('.hm-modal-close');
+    if(closeBtn) closeBtn.focus();
+  }
+  const bkBtn = document.getElementById('backupBtn');
+  if(bkBtn) bkBtn.addEventListener('click', openBackupModal);
+  window.__mdOpenBackup = openBackupModal;
 
   function mdShortcutPrint(){
     const active = document.querySelector('.tab-btn.active');
