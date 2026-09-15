@@ -3994,6 +3994,18 @@ function aggregateHistoryByBucket(history, bucketFn){
   return Object.values(buckets).sort((a,b) => a.key < b.key ? -1 : (a.key > b.key ? 1 : 0));
 }
 const TREND_MONTH_NAMES = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+// Compact "12.3K" / "1.2M" formatter for on-chart labels, where fmtAed's
+// full "AED 1,234,567.89" is too wide to sit above a bar without colliding
+// with its neighbors. Not a replacement for fmtAed anywhere else - this is
+// only for tight inline chart labels; every hover tooltip and aria-label
+// still uses the real, full-precision fmtAed value.
+function fmtAedCompact(n){
+  if(n===undefined||n===null||isNaN(n)) return '—';
+  const abs = Math.abs(n);
+  if(abs >= 1000000) return (n/1000000).toFixed(abs >= 10000000 ? 0 : 1).replace(/\.0$/,'') + 'M';
+  if(abs >= 1000) return (n/1000).toFixed(abs >= 100000 ? 0 : 1).replace(/\.0$/,'') + 'K';
+  return Math.round(n).toLocaleString();
+}
 // Small bar chart of real month-over-month history - one bar per month
 // that's actually been uploaded and saved, most recent last. Returns '' when
 // there isn't enough real data to plot, same graceful-empty convention as
@@ -4002,20 +4014,27 @@ const TREND_MONTH_NAMES = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','S
 // alone isn't a real accessible name - so the <svg> itself also carries
 // role="img" plus an aria-label spelling out every month's real value, so
 // screen-reader users get the same information without needing to hover.
+// Each bar also carries a visible compact value label above it (not just
+// the hover tooltip) - with only 2-3 months of real history so far, a
+// reader has no way to read an exact value off an unlabeled bar height.
 function monthlyTrendSvg(history, metricKey, color, metricLabel){
   if(!history || history.length < 2) return '';
   const W = 100, H = 100, PAD = 4;
+  const LABEL_H = 9; // reserved space at top for the value label, so a full-height bar's own label never clips off the viewBox
   const vals = history.map(h => Math.max(0, h[metricKey] || 0));
   const max = Math.max(...vals, 1);
   const n = history.length;
   const gap = (W - PAD*2) / n;
   const barW = gap * 0.62;
+  const barsTopY = PAD + LABEL_H;
+  const barsAvailH = H - PAD*2 - 14 - LABEL_H;
   const bars = history.map((h, i) => {
     const v = Math.max(0, h[metricKey] || 0);
-    const barH = (v / max) * (H - PAD*2 - 14);
+    const barH = (v / max) * barsAvailH;
     const x = PAD + i*gap + (gap - barW)/2;
     const y = H - PAD - 14 - barH;
-    return `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${barW.toFixed(2)}" height="${Math.max(barH,1).toFixed(2)}" rx="1.5" fill="${color}"><title>${esc(h.period || h.periodKey)}: ${fmtAed(v)}</title></rect>`;
+    const valueLabel = `<text x="${(x+barW/2).toFixed(2)}" y="${Math.max(y - 2, barsTopY + 2).toFixed(2)}" font-size="6.5" text-anchor="middle" fill="var(--ink)" font-weight="600">${esc(fmtAedCompact(v))}</text>`;
+    return `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${barW.toFixed(2)}" height="${Math.max(barH,1).toFixed(2)}" rx="1.5" fill="${color}"><title>${esc(h.period || h.periodKey)}: ${fmtAed(v)}</title></rect>${valueLabel}`;
   }).join('');
   const labels = history.map((h, i) => {
     const x = PAD + i*gap + gap/2;
@@ -6511,20 +6530,25 @@ function renderExecSummaryAwqaf(){
 
   const chequeUnit = currentLang === 'ar' ? t('execsum.chequeUnit','cheque') : pluralize(bc.total_count, t('execsum.chequeUnit','cheque'), t('execsum.chequeUnitPlural','cheques'));
   const leaseUnitHero = currentLang === 'ar' ? t('execsum.leaseUnit','lease') : pluralize(nl.total_new_leases, t('execsum.leaseUnit','lease'), t('execsum.leaseUnitPlural','leases'));
-  renderExecCards(heroWrap, [
-    {label: totalCollectedLabel('awqaf'), value: fmtAed(cc.total_amount), sub: t('execsum.heroTotalSub','Cheque Count, this month — recorded ledger sum, not confirmed bank clearance')},
-    {label: currentLang === 'ar' ? 'قيمة الشيكات المرتجعة المسجلة' : 'Reported bounced value', value: fmtAed(bc.total_amount), sub:`${bc.total_count.toLocaleString()} ${chequeUnit} · ${currentLang === 'ar' ? 'كل الحالات، بما فيها المدفوعة؛ ليست رصيداً مستحقاً' : 'all statuses, including Paid; not outstanding exposure'}`},
-    {label: netCollectedLabel('awqaf'), value: fmtAed(netCollected), sub: t('execsum.heroNetSub','Recorded value minus bounced')},
-    {label: t('execsum.heroNewLeaseLabel','New Lease Value'), value: fmtAed(nl.rent_value_total), sub: t('execsum.heroNewLeaseSub','{n} new {unit} — new-lease value only').replace('{n}', nl.total_new_leases.toLocaleString()).replace('{unit}', leaseUnitHero)},
-  ]);
 
   // Only compare against a real saved period strictly BEFORE this one - same
   // guard the Overview leasing card uses (see renderOverviewAwqaf's
   // awqafPriorHistory), so the delta is correct on the very first render
   // after a fresh upload and on every later re-render alike, never
-  // off-by-one either way.
+  // off-by-one either way. Computed here (moved above the hero cards below)
+  // so the MoM change for each headline number can live on its own card
+  // instead of being repeated as a whole separate row further down.
   const awqafPriorHistory = getMonthlyHistory('awqaf').filter(h => h.periodKey && awqafPeriodKey && h.periodKey < awqafPeriodKey);
   const priorSnap = awqafPriorHistory.length ? awqafPriorHistory[awqafPriorHistory.length - 1] : null;
+  const heroDelta = (curr, prevKey, isAed) => priorSnap ? momDeltaText(curr, priorSnap[prevKey], isAed) : null;
+  const withHeroDelta = (sub, delta) => delta ? `${sub} · ${delta}` : sub;
+
+  renderExecCards(heroWrap, [
+    {label: totalCollectedLabel('awqaf'), value: fmtAed(cc.total_amount), sub: withHeroDelta(t('execsum.heroTotalSub','Cheque Count, this month — recorded ledger sum, not confirmed bank clearance'), heroDelta(cc.total_amount, 'totalCollected', true))},
+    {label: currentLang === 'ar' ? 'قيمة الشيكات المرتجعة المسجلة' : 'Reported bounced value', value: fmtAed(bc.total_amount), sub: withHeroDelta(`${bc.total_count.toLocaleString()} ${chequeUnit} · ${currentLang === 'ar' ? 'كل الحالات، بما فيها المدفوعة؛ ليست رصيداً مستحقاً' : 'all statuses, including Paid; not outstanding exposure'}`, heroDelta(bc.total_amount, 'bouncedAmount', true))},
+    {label: netCollectedLabel('awqaf'), value: fmtAed(netCollected), sub: withHeroDelta(t('execsum.heroNetSub','Recorded value minus bounced'), heroDelta(netCollected, 'netCollected', true))},
+    {label: t('execsum.heroNewLeaseLabel','New Lease Value'), value: fmtAed(nl.rent_value_total), sub: withHeroDelta(t('execsum.heroNewLeaseSub','{n} new {unit} — new-lease value only').replace('{n}', nl.total_new_leases.toLocaleString()).replace('{unit}', leaseUnitHero), heroDelta(nl.rent_value_total || 0, 'leaseRentValue', true))},
+  ]);
 
   // Shared building blocks for Risk & Attention and Forward View below -
   // computed once here rather than re-querying the DOM / recomputing Data
@@ -6557,16 +6581,15 @@ function renderExecSummaryAwqaf(){
     // separating cheque-money rows from lease-activity rows from
     // request-workload rows themselves. Same rows, same values, same MoM
     // deltas as before - purely a presentation regroup, no new numbers.
-    const chequeUnitPerf = currentLang === 'ar' ? t('execsum.chequeUnit','cheque') : pluralize(bc.total_count, t('execsum.chequeUnit','cheque'), t('execsum.chequeUnitPlural','cheques'));
-    const leaseUnitPerf = currentLang === 'ar' ? t('execsum.leaseUnit','lease') : pluralize(nl.total_new_leases, t('execsum.leaseUnit','lease'), t('execsum.leaseUnitPlural','leases'));
+    // The "Collections" group and the Leasing group's "New Lease Value" row
+    // used to repeat the exact same 4 headline numbers already shown above
+    // in the Hero cards (same label, same value, same MoM delta - just
+    // printed twice). Those MoM deltas now live on the Hero cards themselves
+    // (see heroDelta/withHeroDelta above), so this section keeps only the
+    // rows that say something the Hero cards don't: lease renewals and
+    // request workload.
     const groups = [
-      { title: t('execsum.groupCollections','Collections'), rows: [
-        [totalCollectedLabel('awqaf'), fmtAed(cc.total_amount), priorSnap ? momDeltaText(cc.total_amount, priorSnap.totalCollected, true) : null],
-        [t('execsum.heroBouncedLabel','Bounced / At Risk'), `${fmtAed(bc.total_amount)} (${bc.total_count.toLocaleString()} ${chequeUnitPerf})`, priorSnap ? momDeltaText(bc.total_amount, priorSnap.bouncedAmount, true) : null],
-        [netCollectedLabel('awqaf'), fmtAed(netCollected), priorSnap ? momDeltaText(netCollected, priorSnap.netCollected, true) : null],
-      ]},
       { title: t('execsum.groupLeasing','Leasing'), rows: [
-        [t('execsum.heroNewLeaseLabel','New Lease Value'), `${fmtAed(nl.rent_value_total)} (${nl.total_new_leases.toLocaleString()} new ${leaseUnitPerf})`, priorSnap ? momDeltaText(nl.rent_value_total || 0, priorSnap.leaseRentValue, true) : null],
         [t('execsum.rowRenewalContracts','Renewal Lease contracts'), ccRenewal.toLocaleString(), priorSnap ? momDeltaText(ccRenewal, priorSnap.renewalLeaseContracts, false) : null],
       ]},
       { title: t('execsum.groupOperations','Operations'), rows: [
