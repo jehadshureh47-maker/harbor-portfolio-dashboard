@@ -649,6 +649,20 @@
   .compare-selectors select{background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:6px 10px; font-size:12.5px; font-family:inherit;}
   .compare-row.compare-clickable{cursor:pointer;}
   .compare-row.compare-clickable:hover{background:var(--card2);}
+  /* Compare tab mode toggle (Portfolio vs Portfolio / Month vs Month) - same
+     pill-group visual language as .compare-selectors, so the new control
+     doesn't read as a bolted-on afterthought next to the existing one. */
+  .compare-mode-toggle{display:inline-flex; gap:2px; padding:3px; background:var(--card2); border:1px solid var(--border); border-radius:999px; margin-bottom:14px;}
+  .compare-mode-btn{appearance:none; border:none; background:transparent; color:var(--sub); font-size:11.5px; font-weight:600; padding:7px 14px; border-radius:999px; cursor:pointer; font-family:inherit; transition:background .15s ease, color .15s ease;}
+  .compare-mode-btn:hover{color:var(--text);}
+  .compare-mode-btn.active{background:var(--accent); color:#fff;}
+  .compare-mode-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .compare-month-note{background:rgba(230,180,60,.12); border:1px solid var(--amber); color:var(--amber); border-radius:10px; padding:10px 14px; font-size:12.5px; margin-bottom:14px;}
+  /* Single-loaded-portfolio state: only one value column has real data, so
+     collapse the grid to metric+one column instead of wasting half the
+     table width on a column of "-" placeholders. */
+  .compare-row.single-col{grid-template-columns:1.4fr 1fr;}
+  @media (max-width:600px){ .compare-row.single-col{grid-template-columns:1fr .8fr;} }
   .compare-delta-badge{display:inline-block; font-size:10.5px; font-weight:700; padding:1px 6px; border-radius:6px; margin-top:3px;}
   .compare-delta-badge.up{color:var(--ok); background:rgba(60,180,110,.12);}
   .compare-delta-badge.down{color:var(--amber); background:rgba(230,180,60,.12);}
@@ -1506,6 +1520,16 @@ const TRANSLATIONS = {
     'compare.labelPortfolioA': 'Portfolio A',
     'compare.labelPortfolioB': 'Portfolio B',
     'compare.waitingNote': "Visit each portfolio's Executive Summary tab at least once this session to include it here.",
+    'compare.modePortfolio': 'Portfolio vs Portfolio',
+    'compare.modeMonth': 'Month vs Month',
+    'compare.modeToggleLabel': 'Comparison mode',
+    'compare.labelPortfolioSingle': 'Portfolio',
+    'compare.labelMonthA': 'Earlier month',
+    'compare.labelMonthB': 'Later month',
+    'compare.monthPaneDesc': "Compare two saved months for the same portfolio side by side, using the exact figures each month saved to its own history - nothing recalculated. Pick a portfolio, then two of its saved months.",
+    'compare.monthWaitingNote': "{portfolio} doesn't have two saved months yet. Load and save its reports for at least two different months (visit its Executive Summary tab once per month) to compare them here.",
+    'compare.monthPrintSubtitle': '{portfolio}: {a} vs {b} — generated {date}',
+    'compare.sameMonthNote': 'Both columns are showing the same saved month right now - pick two different months above to see a real change.',
     'cc.badgePassed': 'Passed',
     'cc.badgeReview': 'Review',
     'cc.badgeExplanation': 'Explanation',
@@ -1993,6 +2017,16 @@ const TRANSLATIONS = {
     'compare.labelPortfolioA': 'المحفظة أ',
     'compare.labelPortfolioB': 'المحفظة ب',
     'compare.waitingNote': 'قم بزيارة تبويب الملخص التنفيذي لكل محفظة مرة واحدة على الأقل خلال هذه الجلسة لتضمينها هنا.',
+    'compare.modePortfolio': 'محفظة مقابل محفظة',
+    'compare.modeMonth': 'شهر مقابل شهر',
+    'compare.modeToggleLabel': 'وضع المقارنة',
+    'compare.labelPortfolioSingle': 'المحفظة',
+    'compare.labelMonthA': 'الشهر الأقدم',
+    'compare.labelMonthB': 'الشهر الأحدث',
+    'compare.monthPaneDesc': 'قارن بين شهرين محفوظين لنفس المحفظة جنباً إلى جنب، باستخدام الأرقام الفعلية التي حفظها كل شهر في سجله - دون أي إعادة حساب. اختر محفظة، ثم شهرين محفوظين منها.',
+    'compare.monthWaitingNote': 'لا تملك {portfolio} شهرين محفوظين بعد. قم بتحميل تقاريرها وحفظها لشهرين مختلفين على الأقل (بزيارة تبويب الملخص التنفيذي مرة لكل شهر) لمقارنتهما هنا.',
+    'compare.monthPrintSubtitle': '{portfolio}: {a} مقابل {b} — تم الإنشاء في {date}',
+    'compare.sameMonthNote': 'كلا العمودين يعرضان حالياً نفس الشهر المحفوظ - اختر شهرين مختلفين أعلاه لرؤية تغيير حقيقي.',
     'cc.badgePassed': 'ناجح',
     'cc.badgeReview': 'مراجعة',
     'cc.badgeExplanation': 'توضيح',
@@ -4353,6 +4387,16 @@ function buildOverviewTab(){
 let portfolioSnapshot = {};
 let compareSel = { a: 'awqaf', b: 'al-naser' };
 let compareExpandedRows = new Set();
+// Second comparison axis: same portfolio, two different saved months,
+// instead of two different portfolios in the same month. Reads straight
+// from getMonthlyHistory() (same store the Executive Summary trend chart
+// and MoM deltas already use) rather than recomputing anything - see
+// renderCompareMonth() below. Only portfolios that actually call
+// saveMonthlyHistory() (awqaf, al-naser, rta - not the static Police tab)
+// are offered here.
+let compareMode = 'portfolio'; // 'portfolio' | 'month'
+let compareMonthSel = { portfolio: 'awqaf', monthA: null, monthB: null };
+const COMPARE_MONTH_PORTFOLIOS = ['awqaf', 'al-naser', 'rta'];
 function buildCompareTab(){
   const tabBar = document.getElementById('tabBar');
   const panesWrap = document.getElementById('panes');
@@ -4394,9 +4438,18 @@ function buildCompareTab(){
         <button class="exec-print-btn" type="button" onclick="printCompare()" title="${esc(t('compare.printBtnTitle','Print or save this comparison as a PDF'))}" data-i18n-title="compare.printBtnTitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> <span data-i18n="execsum.printBtnLabel">${esc(t('execsum.printBtnLabel','Print / Export PDF'))}</span></button>
       </div>
     </div>
-    <div class="compare-selectors">
+    <div class="compare-mode-toggle" role="tablist" aria-label="${esc(t('compare.modeToggleLabel','Comparison mode'))}">
+      <button type="button" class="compare-mode-btn" id="cmpModePortfolio" role="tab" data-mode="portfolio" data-i18n="compare.modePortfolio">${esc(t('compare.modePortfolio','Portfolio vs Portfolio'))}</button>
+      <button type="button" class="compare-mode-btn" id="cmpModeMonth" role="tab" data-mode="month" data-i18n="compare.modeMonth">${esc(t('compare.modeMonth','Month vs Month'))}</button>
+    </div>
+    <div class="compare-selectors" id="cmpPortfolioSelectors">
       <label><span data-i18n="compare.labelPortfolioA">${esc(t('compare.labelPortfolioA','Portfolio A'))}</span> <select id="cmpSelA">${portfolioOpts}</select></label>
       <label><span data-i18n="compare.labelPortfolioB">${esc(t('compare.labelPortfolioB','Portfolio B'))}</span> <select id="cmpSelB">${portfolioOpts}</select></label>
+    </div>
+    <div class="compare-selectors" id="cmpMonthSelectors" style="display:none;">
+      <label><span data-i18n="compare.labelPortfolioSingle">${esc(t('compare.labelPortfolioSingle','Portfolio'))}</span> <select id="cmpMonthPortfolio">${COMPARE_MONTH_PORTFOLIOS.map(k => `<option value="${k}">${esc((PORTFOLIOS[k] && PORTFOLIOS[k].label) || k)}</option>`).join('')}</select></label>
+      <label><span data-i18n="compare.labelMonthA">${esc(t('compare.labelMonthA','Earlier month'))}</span> <select id="cmpMonthA"></select></label>
+      <label><span data-i18n="compare.labelMonthB">${esc(t('compare.labelMonthB','Later month'))}</span> <select id="cmpMonthB"></select></label>
     </div>
     <div id="compareWrap"><div class="overview-loading" data-i18n="compare.waitingNote">${esc(t('compare.waitingNote',"Visit each portfolio's Executive Summary tab at least once this session to include it here."))}</div></div>
   `;
@@ -4417,7 +4470,88 @@ function buildCompareTab(){
     compareExpandedRows.clear();
     renderCompare();
   });
-  renderCompare();
+
+  const modeBtnPortfolio = document.getElementById('cmpModePortfolio');
+  const modeBtnMonth = document.getElementById('cmpModeMonth');
+  modeBtnPortfolio.addEventListener('click', () => setCompareMode('portfolio'));
+  modeBtnMonth.addEventListener('click', () => setCompareMode('month'));
+
+  const monthPortfolioSel = document.getElementById('cmpMonthPortfolio');
+  const monthASel = document.getElementById('cmpMonthA');
+  const monthBSel = document.getElementById('cmpMonthB');
+  if(!COMPARE_MONTH_PORTFOLIOS.includes(compareMonthSel.portfolio)) compareMonthSel.portfolio = COMPARE_MONTH_PORTFOLIOS[0];
+  monthPortfolioSel.value = compareMonthSel.portfolio;
+  monthPortfolioSel.addEventListener('change', () => {
+    compareMonthSel.portfolio = monthPortfolioSel.value;
+    compareMonthSel.monthA = null; // force re-pick of defaults (most recent two) for the newly chosen portfolio
+    compareMonthSel.monthB = null;
+    populateCompareMonthSelects();
+    renderCompareMonth();
+  });
+  monthASel.addEventListener('change', () => {
+    if(monthASel.value === compareMonthSel.monthB){ compareMonthSel.monthB = compareMonthSel.monthA; monthBSel.value = compareMonthSel.monthB; }
+    compareMonthSel.monthA = monthASel.value;
+    renderCompareMonth();
+  });
+  monthBSel.addEventListener('change', () => {
+    if(monthBSel.value === compareMonthSel.monthA){ compareMonthSel.monthA = compareMonthSel.monthB; monthASel.value = compareMonthSel.monthA; }
+    compareMonthSel.monthB = monthBSel.value;
+    renderCompareMonth();
+  });
+
+  setCompareMode(compareMode);
+}
+// Switches the Compare tab between its two axes - Portfolio vs Portfolio
+// (existing behavior, untouched) and Month vs Month (same portfolio, two
+// saved months). Toggles which selector row is visible, updates the active
+// button state, and (re)populates + renders the month selectors on demand
+// rather than eagerly on every tab build, since getMonthlyHistory() is cheap
+// but there's no reason to read localStorage for a mode the viewer hasn't
+// opened yet.
+function setCompareMode(mode){
+  compareMode = mode === 'month' ? 'month' : 'portfolio';
+  const portfolioSelectors = document.getElementById('cmpPortfolioSelectors');
+  const monthSelectors = document.getElementById('cmpMonthSelectors');
+  const modeBtnPortfolio = document.getElementById('cmpModePortfolio');
+  const modeBtnMonth = document.getElementById('cmpModeMonth');
+  if(!portfolioSelectors || !monthSelectors || !modeBtnPortfolio || !modeBtnMonth) return; // pane not built yet (e.g. deep-link firing before buildCompareTab ran)
+  const isMonth = compareMode === 'month';
+  portfolioSelectors.style.display = isMonth ? 'none' : 'flex';
+  monthSelectors.style.display = isMonth ? 'flex' : 'none';
+  modeBtnPortfolio.classList.toggle('active', !isMonth);
+  modeBtnMonth.classList.toggle('active', isMonth);
+  modeBtnPortfolio.setAttribute('aria-selected', String(!isMonth));
+  modeBtnMonth.setAttribute('aria-selected', String(isMonth));
+  if(isMonth){
+    populateCompareMonthSelects();
+    renderCompareMonth();
+  } else {
+    renderCompare();
+  }
+}
+// Fills the two month <select>s from this portfolio's real saved history
+// (oldest to newest, same ordering the Monthly Trend chart uses), and picks
+// sensible defaults - the two most recently saved months - the first time a
+// portfolio is selected in Month mode, or after switching portfolios (see
+// the cmpMonthPortfolio change handler above, which nulls out monthA/monthB
+// first). Keeps the current selection across an unrelated re-render.
+function populateCompareMonthSelects(){
+  const monthASel = document.getElementById('cmpMonthA');
+  const monthBSel = document.getElementById('cmpMonthB');
+  if(!monthASel || !monthBSel) return;
+  const hist = getMonthlyHistory(compareMonthSel.portfolio);
+  const opts = hist.map(h => `<option value="${esc(h.periodKey)}">${esc(h.period || h.periodKey)}</option>`).join('');
+  monthASel.innerHTML = opts;
+  monthBSel.innerHTML = opts;
+  const validKeys = new Set(hist.map(h => h.periodKey));
+  if(!compareMonthSel.monthA || !validKeys.has(compareMonthSel.monthA)){
+    compareMonthSel.monthA = hist.length >= 2 ? hist[hist.length - 2].periodKey : (hist[0] ? hist[0].periodKey : null);
+  }
+  if(!compareMonthSel.monthB || !validKeys.has(compareMonthSel.monthB) || compareMonthSel.monthB === compareMonthSel.monthA){
+    compareMonthSel.monthB = hist.length >= 2 ? hist[hist.length - 1].periodKey : null;
+  }
+  if(compareMonthSel.monthA) monthASel.value = compareMonthSel.monthA;
+  if(compareMonthSel.monthB) monthBSel.value = compareMonthSel.monthB;
 }
 function toggleCompareExpand(key){
   if(compareExpandedRows.has(key)) compareExpandedRows.delete(key); else compareExpandedRows.add(key);
@@ -4612,7 +4746,12 @@ function mdApplyDeepLink(){
       if(dl.b && PORTFOLIOS[dl.b]) compareSel.b = dl.b;
       if(dl.x && ['collected','bounced'].includes(dl.x)) compareExpandedRows.add(dl.x);
       selectTab('compare');
-      if(typeof renderCompare === 'function') renderCompare();
+      // Every existing Compare deep link carries portfolio-mode params (a/b),
+      // so force that mode on arrival even if the viewer's tab was last left
+      // in Month mode - otherwise the linked-to comparison would be set but
+      // hidden behind the month selectors.
+      if(typeof setCompareMode === 'function') setCompareMode('portfolio');
+      else if(typeof renderCompare === 'function') renderCompare();
       return;
     }
 
@@ -4661,6 +4800,10 @@ function renderCompare(){
   const missingNote = (!a || !b)
     ? `<div class="compare-mismatch">${esc(t('compare.onlyLoadedNote','Only {loaded} has been loaded this session. Switch to {other} and open its Executive Summary tab once to complete the comparison.').replace('{loaded}', a ? nameA : nameB).replace('{other}', a ? nameB : nameA))}</div>`
     : '';
+  // When only one side has loaded, every row's other column would just show
+  // "-" - real wasted width, not real information. Collapse to metric + the
+  // one loaded portfolio's column instead (see .compare-row.single-col CSS).
+  const onlyOneLoaded = !!((a && !b) || (!a && b));
 
   const periodsMatch = !!(a && b && a.periodKey && b.periodKey && a.periodKey === b.periodKey);
   let periodMismatch = '';
@@ -4698,6 +4841,15 @@ function renderCompare(){
     const printLink = clickable
       ? `<a class="compare-row-link" href="${esc(mdBuildDeepLink({p:currentPortfolio, t:'compare', a:compareSel.a, b:compareSel.b, x:key}))}">${esc(t('compare.openLive','Open live ↗'))}</a>`
       : '';
+    if(onlyOneLoaded){
+      const text = a ? aText : bText;
+      const sub = a ? aSub : bSub;
+      return `
+      <div class="compare-row single-col${clickable ? ' compare-clickable' : ''}"${clickable ? ` onclick="toggleCompareExpand('${key}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCompareExpand('${key}');}"` : ''}>
+        <div class="compare-metric">${esc(label)}${clickable ? ` <span style="opacity:.6;">${expanded ? '▾' : '▸'} ${esc(t('compare.trend','trend'))}</span>` : ''}${printLink}</div>
+        <div class="compare-val">${esc(text)}${sub ? `<div class="compare-sub">${esc(sub)}</div>` : ''}</div>
+      </div>${expandHtml}`;
+    }
     return `
       <div class="compare-row${clickable ? ' compare-clickable' : ''}"${clickable ? ` onclick="toggleCompareExpand('${key}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCompareExpand('${key}');}"` : ''}>
         <div class="compare-metric">${esc(label)}${clickable ? ` <span style="opacity:.6;">${expanded ? '▾' : '▸'} ${esc(t('compare.trend','trend'))}</span>` : ''}${printLink}</div>
@@ -4723,15 +4875,22 @@ function renderCompare(){
     }
   }
 
+  const headRow = onlyOneLoaded
+    ? `<div class="compare-row compare-head single-col">
+        <div>${esc(t('compare.colHeaderMetric','Metric'))}</div>
+        <div style="text-align:right;">${esc(a ? nameA : nameB)}${(a || b).period ? `<span>${esc((a || b).period)}</span>` : ''}</div>
+      </div>`
+    : `<div class="compare-row compare-head">
+        <div>${esc(t('compare.colHeaderMetric','Metric'))}</div>
+        <div style="text-align:right;">${esc(nameA)}${a && a.period ? `<span>${esc(a.period)}</span>` : ''}</div>
+        <div style="text-align:right;">${esc(nameB)}${b && b.period ? `<span>${esc(b.period)}</span>` : ''}</div>
+      </div>`;
+
   wrap.innerHTML = `
     ${missingNote}
     ${periodMismatch}
     <div class="compare-card">
-      <div class="compare-row compare-head">
-        <div>${esc(t('compare.colHeaderMetric','Metric'))}</div>
-        <div style="text-align:right;">${esc(nameA)}${a && a.period ? `<span>${esc(a.period)}</span>` : ''}</div>
-        <div style="text-align:right;">${esc(nameB)}${b && b.period ? `<span>${esc(b.period)}</span>` : ''}</div>
-      </div>
+      ${headRow}
       ${metricRow('collected', compareLabel(totalCollectedLabel, compareSel.a, compareSel.b), a ? fmtAed(a.totalCollected) : '—', a && a.totalCollectedSub, b ? fmtAed(b.totalCollected) : '—', b && b.totalCollectedSub, collectedBadges.aBadge, collectedBadges.bBadge, a && a.totalCollectedDaily, b && b.totalCollectedDaily, 'var(--accent)', 'var(--accent2)')}
       ${metricRow('bounced', t('compare.bouncedAtRisk','Bounced / At Risk'), a ? fmtAed(a.bouncedAmount) : '—', a && `${a.bouncedCount.toLocaleString()} ${pluralize(a.bouncedCount, t('compare.cheque.singular','cheque'), t('compare.cheque.plural','cheques'))}`, b ? fmtAed(b.bouncedAmount) : '—', b && `${b.bouncedCount.toLocaleString()} ${pluralize(b.bouncedCount, t('compare.cheque.singular','cheque'), t('compare.cheque.plural','cheques'))}`, bouncedBadges.aBadge, bouncedBadges.bBadge, a && a.bouncedDaily, b && b.bouncedDaily, 'var(--amber)', 'var(--accent2)')}
       ${metricRow('rate', t('compare.bounceRate','Bounce Rate'), a ? (a.bounceRatePct !== null ? a.bounceRatePct.toFixed(1) + '%' : '—') : '—', t('compare.bouncedOf','bounced ÷ {ratioWord}').replace('{ratioWord}', collectedRatioWord(compareSel.a)), b ? (b.bounceRatePct !== null ? b.bounceRatePct.toFixed(1) + '%' : '—') : '—', t('compare.bouncedOf','bounced ÷ {ratioWord}').replace('{ratioWord}', collectedRatioWord(compareSel.b)), '', '', null, null, null, null)}
@@ -4742,6 +4901,89 @@ function renderCompare(){
       ${a ? `<div class="exec-card exec-accent-4"><div class="exec-label">${esc(nameA)} — ${esc(a.extraLabel)}</div><div class="exec-value">${esc(a.extraValueFormatted)}</div><div class="exec-sub">${esc(a.extraSub)} ${esc(t('compare.noEquivalentMetric','— no equivalent metric for {other}').replace('{other}', nameB))}</div></div>` : ''}
       ${b ? `<div class="exec-card exec-accent-4"><div class="exec-label">${esc(nameB)} — ${esc(b.extraLabel)}</div><div class="exec-value">${esc(b.extraValueFormatted)}</div><div class="exec-sub">${esc(b.extraSub)} ${esc(t('compare.noEquivalentMetric','— no equivalent metric for {other}').replace('{other}', nameA))}</div></div>` : ''}
     </div>
+  `;
+}
+// Percentage-point delta formatter for the Month vs Month table (bounce
+// rate, occupancy) - same "arrow + magnitude + no-change wording" shape as
+// momDeltaText above, but in points rather than AED, since a percentage
+// figure run through momDeltaText's money formatter would read nonsensically
+// (e.g. "AED 3" for a 3-point swing). Reuses the same compare.point.* i18n
+// keys the old cross-portfolio bounce-rate delta line already used.
+function momDeltaPct(currPct, priorPct){
+  if(typeof priorPct !== 'number' || isNaN(priorPct) || typeof currPct !== 'number' || isNaN(currPct)) return null;
+  const diff = currPct - priorPct;
+  if(Math.abs(diff) < 0.05) return t('metric.noChange', 'No change vs last period');
+  const arrow = diff > 0 ? '▲' : '▼';
+  const pointWord = pluralize(Math.abs(diff), t('compare.point.singular','point'), t('compare.point.plural','points'));
+  return `${arrow} ${Math.abs(diff).toFixed(1)} ${pointWord} ${t('metric.vsLastPeriod', 'vs last period')}`;
+}
+// ---------- Compare tab: Month vs Month mode ----------
+// Same portfolio, two different saved months, read straight from
+// getMonthlyHistory() - the exact store the Executive Summary trend chart
+// and its own MoM deltas already read from, so nothing here is recalculated
+// and a number shown here can never drift from what that month's own
+// history entry recorded. Unlike renderCompare() (portfolio vs portfolio),
+// both columns describe the same portfolio, so each metric's label is shown
+// once - not the A/B dual-wording trick renderCompare uses only because two
+// DIFFERENT portfolios can use different words for the same concept.
+function renderCompareMonth(){
+  const wrap = document.getElementById('compareWrap');
+  if(!wrap) return;
+  const portfolio = compareMonthSel.portfolio;
+  const name = (PORTFOLIOS[portfolio] && PORTFOLIOS[portfolio].label) || portfolio;
+  const hist = getMonthlyHistory(portfolio);
+  const monthA = hist.find(h => h.periodKey === compareMonthSel.monthA) || null;
+  const monthB = hist.find(h => h.periodKey === compareMonthSel.monthB) || null;
+
+  const printSub = document.getElementById('comparePrintHeaderSub');
+  if(printSub) printSub.textContent = t('compare.monthPrintSubtitle','{portfolio}: {a} vs {b} — generated {date}').replace('{portfolio}', name).replace('{a}', (monthA && monthA.period) || '—').replace('{b}', (monthB && monthB.period) || '—').replace('{date}', new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-AE' : 'en-GB', {day:'numeric', month:'long', year:'numeric'}));
+
+  if(hist.length < 2 || !monthA || !monthB){
+    wrap.innerHTML = `<div class="compare-month-note">${esc(t('compare.monthWaitingNote', "{portfolio} doesn't have two saved months yet. Load and save its reports for at least two different months (visit its Executive Summary tab once per month) to compare them here.").replace('{portfolio}', name))}</div>`;
+    return;
+  }
+
+  const sameMonth = monthA.periodKey === monthB.periodKey;
+
+  const row = (label, aText, bText, deltaText) => `
+    <div class="compare-row">
+      <div class="compare-metric">${esc(label)}</div>
+      <div class="compare-val">${esc(aText)}</div>
+      <div class="compare-val">${esc(bText)}${deltaText ? `<div class="compare-sub">${esc(deltaText)}</div>` : ''}</div>
+    </div>`;
+
+  const chequeUnitA = pluralize(monthA.bouncedCount||0, t('compare.cheque.singular','cheque'), t('compare.cheque.plural','cheques'));
+  const chequeUnitB = pluralize(monthB.bouncedCount||0, t('compare.cheque.singular','cheque'), t('compare.cheque.plural','cheques'));
+
+  // Portfolio-specific extra metric, same idea as renderCompare's "no
+  // equivalent metric" cards below the main table - only shown when the
+  // history actually saved that field for both selected months (Awqaf's
+  // leaseRentValue, Al Naser's occupancyPct). RTA's history doesn't save a
+  // renewal-progress figure, so it simply has no extra row here rather than
+  // showing a fabricated one.
+  let extraRow = '';
+  if(portfolio === 'awqaf' && monthA.leaseRentValue !== null && monthA.leaseRentValue !== undefined && monthB.leaseRentValue !== null && monthB.leaseRentValue !== undefined){
+    const leaseUnitA = pluralize(monthA.newLeaseContracts||0, t('execsum.leaseUnit','lease'), t('execsum.leaseUnitPlural','leases'));
+    const leaseUnitB = pluralize(monthB.newLeaseContracts||0, t('execsum.leaseUnit','lease'), t('execsum.leaseUnitPlural','leases'));
+    extraRow = row(t('execsum.heroNewLeaseLabel','New Lease Value'), `${fmtAed(monthA.leaseRentValue)} (${(monthA.newLeaseContracts||0).toLocaleString()} ${leaseUnitA})`, `${fmtAed(monthB.leaseRentValue)} (${(monthB.newLeaseContracts||0).toLocaleString()} ${leaseUnitB})`, momDeltaText(monthB.leaseRentValue||0, monthA.leaseRentValue, true));
+  } else if(portfolio === 'al-naser' && monthA.occupancyPct !== null && monthA.occupancyPct !== undefined && monthB.occupancyPct !== null && monthB.occupancyPct !== undefined){
+    extraRow = row(t('metric.occupancyRate','Occupancy Rate'), monthA.occupancyPct.toFixed(1) + '%', monthB.occupancyPct.toFixed(1) + '%', momDeltaPct(monthB.occupancyPct, monthA.occupancyPct));
+  }
+
+  wrap.innerHTML = `
+    <div class="compare-card">
+      <div class="compare-row compare-head">
+        <div>${esc(t('compare.colHeaderMetric','Metric'))}</div>
+        <div style="text-align:right;">${esc(name)}<span>${esc(monthA.period || monthA.periodKey)}</span></div>
+        <div style="text-align:right;">${esc(name)}<span>${esc(monthB.period || monthB.periodKey)}</span></div>
+      </div>
+      ${row(totalCollectedLabel(portfolio), fmtAed(monthA.totalCollected), fmtAed(monthB.totalCollected), momDeltaText(monthB.totalCollected, monthA.totalCollected, true))}
+      ${row(t('compare.bouncedAtRisk','Bounced / At Risk'), `${fmtAed(monthA.bouncedAmount)} (${(monthA.bouncedCount||0).toLocaleString()} ${chequeUnitA})`, `${fmtAed(monthB.bouncedAmount)} (${(monthB.bouncedCount||0).toLocaleString()} ${chequeUnitB})`, momDeltaText(monthB.bouncedAmount, monthA.bouncedAmount, true))}
+      ${row(t('compare.bounceRate','Bounce Rate'), (monthA.bounceRatePct !== null && monthA.bounceRatePct !== undefined) ? monthA.bounceRatePct.toFixed(1) + '%' : '—', (monthB.bounceRatePct !== null && monthB.bounceRatePct !== undefined) ? monthB.bounceRatePct.toFixed(1) + '%' : '—', momDeltaPct(monthB.bounceRatePct, monthA.bounceRatePct))}
+      ${row(netCollectedLabel(portfolio), fmtAed(monthA.netCollected), fmtAed(monthB.netCollected), momDeltaText(monthB.netCollected, monthA.netCollected, true))}
+    </div>
+    ${extraRow ? `<div class="compare-card">${extraRow}</div>` : ''}
+    ${sameMonth ? `<div class="compare-month-note">${esc(t('compare.sameMonthNote','Both columns are showing the same saved month right now - pick two different months above to see a real change.'))}</div>` : ''}
   `;
 }
 
