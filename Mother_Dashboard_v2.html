@@ -701,8 +701,19 @@
   .period-note{background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:11px 14px; font-size:12.5px; color:var(--sub); margin-bottom:14px;}
   .period-note b{color:var(--text);}
   .trend-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;}
-  .trend-box{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 14px;}
-  .trend-label{font-size:11px; color:var(--sub); font-weight:600; text-transform:uppercase; letter-spacing:.03em; margin-bottom:6px;}
+  .trend-box{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 16px;}
+  .trend-label{font-size:11px; color:var(--sub); font-weight:600; text-transform:uppercase; letter-spacing:.03em; margin-bottom:8px;}
+  /* #514: the "Changed Since Last Month" new/resolved pill lists used to
+     render as two permanent, unbounded columns - with dozens of contract
+     pills the section just grew the whole page taller. Presented as two
+     selectable options (a small tab strip) instead, with only the active
+     list shown and capped to a scroll region - the same contained-list
+     idea Explore Records already uses (#324/CC-K), applied here to a pill
+     grid instead of a table. */
+  .changed-toggle{display:flex; flex-wrap:wrap; gap:8px; margin-top:2px;}
+  .changed-toggle button{font:inherit; font-size:12.5px; font-weight:600; padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:var(--sub); cursor:pointer;}
+  .changed-toggle button[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .changed-scroll{max-height:260px; overflow-y:auto; margin-top:10px; padding:2px 4px 2px 0; display:flex; flex-wrap:wrap; align-content:flex-start; gap:6px;}
   .trend-table{width:100%; border-collapse:collapse; font-size:13px; margin-bottom:18px;}
   .trend-table th, .trend-table td{padding:8px 12px; text-align:left; border-bottom:1px solid var(--border);}
   .trend-table th{color:var(--sub); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.03em;}
@@ -4098,32 +4109,43 @@ function fmtAedCompact(n){
 // reader has no way to read an exact value off an unlabeled bar height.
 function monthlyTrendSvg(history, metricKey, color, metricLabel){
   if(!history || history.length < 2) return '';
-  const W = 100, H = 100, PAD = 4;
-  const LABEL_H = 9; // reserved space at top for the value label, so a full-height bar's own label never clips off the viewBox
+  // #513: this was drawn on a SQUARE 100x100 viewBox but rendered into a
+  // wide, short box (width:100%, height:64px). preserveAspectRatio="meet"
+  // never distorts a mismatched aspect ratio - instead it shrinks the
+  // square drawing down to fit the shorter dimension (64px) and centers
+  // it, so the chart rendered as a small square with big empty space on
+  // both sides inside the much-wider card (the "tiny chart in a big empty
+  // box" look). Widening the viewBox to match the card's real wide aspect
+  // ratio - and raising the render height - uses the full card width and
+  // gives bars real height, without touching preserveAspectRatio (so the
+  // old distortion bug, #51, can't come back).
+  const W = 400, H = 150, PAD_X = 14, PAD_Y = 10;
+  const LABEL_H = 16; // reserved space at top for the value label, so a full-height bar's own label never clips off the viewBox
+  const BOTTOM_H = 26; // reserved space at bottom for the month label
   const vals = history.map(h => Math.max(0, h[metricKey] || 0));
   const max = Math.max(...vals, 1);
   const n = history.length;
-  const gap = (W - PAD*2) / n;
+  const gap = (W - PAD_X*2) / n;
   const barW = gap * 0.62;
-  const barsTopY = PAD + LABEL_H;
-  const barsAvailH = H - PAD*2 - 14 - LABEL_H;
+  const barsTopY = PAD_Y + LABEL_H;
+  const barsAvailH = H - PAD_Y*2 - BOTTOM_H - LABEL_H;
   const bars = history.map((h, i) => {
     const v = Math.max(0, h[metricKey] || 0);
     const barH = (v / max) * barsAvailH;
-    const x = PAD + i*gap + (gap - barW)/2;
-    const y = H - PAD - 14 - barH;
-    const valueLabel = `<text x="${(x+barW/2).toFixed(2)}" y="${Math.max(y - 2, barsTopY + 2).toFixed(2)}" font-size="6.5" text-anchor="middle" fill="var(--ink)" font-weight="600">${esc(fmtAedCompact(v))}</text>`;
-    return `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${barW.toFixed(2)}" height="${Math.max(barH,1).toFixed(2)}" rx="1.5" fill="${color}"><title>${esc(h.period || h.periodKey)}: ${fmtAed(v)}</title></rect>${valueLabel}`;
+    const x = PAD_X + i*gap + (gap - barW)/2;
+    const y = H - PAD_Y - BOTTOM_H - barH;
+    const valueLabel = `<text x="${(x+barW/2).toFixed(2)}" y="${Math.max(y - 4, barsTopY + 4).toFixed(2)}" font-size="13" text-anchor="middle" fill="var(--ink)" font-weight="600">${esc(fmtAedCompact(v))}</text>`;
+    return `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${barW.toFixed(2)}" height="${Math.max(barH,2).toFixed(2)}" rx="3" fill="${color}"><title>${esc(h.period || h.periodKey)}: ${fmtAed(v)}</title></rect>${valueLabel}`;
   }).join('');
   const labels = history.map((h, i) => {
-    const x = PAD + i*gap + gap/2;
+    const x = PAD_X + i*gap + gap/2;
     const mNum = parseInt((h.periodKey || '').slice(5,7), 10);
     const lbl = TREND_MONTH_NAMES[mNum] || '';
-    return `<text x="${x.toFixed(2)}" y="${H-2}" font-size="7" text-anchor="middle" fill="var(--sub)">${esc(lbl)}</text>`;
+    return `<text x="${x.toFixed(2)}" y="${H-8}" font-size="13" text-anchor="middle" fill="var(--sub)">${esc(lbl)}</text>`;
   }).join('');
   const spoken = history.map(h => `${esc(h.period || h.periodKey)}: ${fmtAed(Math.max(0, h[metricKey] || 0))}`).join(', ');
   const ariaLabel = `${esc(metricLabel || 'Monthly trend')} by month: ${spoken}`;
-  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="width:100%; height:64px; display:block;" role="img" aria-label="${ariaLabel}">${bars}${labels}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="width:100%; height:150px; display:block;" role="img" aria-label="${ariaLabel}">${bars}${labels}</svg>`;
 }
 // Awqaf's Cheque Count total_amount is a raw recorded ledger sum with no
 // cleared/collected status field anywhere in that workbook (some lines are
@@ -4218,14 +4240,24 @@ function renderMonthlyTrend(){
 // Bounced Cheques (Awqaf) / Al Naser Bounced List since those are the only
 // two reports that expose a per-record identity key on __crossCheckData;
 // deliberately doesn't claim to diff anything else rather than guess.
+// #514: state for which pill list the toggle currently shows ('added' or
+// 'resolved'). Module-level so it survives re-renders (e.g. a theme/period
+// switch that calls renderChangedRecords() again) instead of always
+// resetting to the default.
+let changedRecordsView = 'added';
 function renderChangedRecords(){
   const wrap = document.getElementById('changedRecordsWrap');
   if(!wrap) return;
   const diff = computeChangedRecords(currentPortfolio);
   if(!diff){ wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
 
+  // #514: was two permanent, unbounded columns (26 new + 40 resolved here
+  // grew the whole Executive Summary page taller). Now a single scrollable
+  // list behind two toggle "options" - the same contained-list idea
+  // Explore Records already uses (#324/CC-K) - so a long list scrolls in
+  // place instead of pushing the page down.
   const chipList = (keys, color) => keys.length
-    ? `<div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">${keys.map(k => `<span style="font-size:11.5px; padding:3px 8px; border-radius:6px; background:var(--card2); border:1px solid var(--border); color:${color};">${esc(k)}</span>`).join('')}</div>`
+    ? `<div class="changed-scroll">${keys.map(k => `<span style="font-size:11.5px; padding:3px 8px; border-radius:6px; background:var(--card2); border:1px solid var(--border); color:${color}; height:fit-content;">${esc(k)}</span>`).join('')}</div>`
     : `<div style="font-size:11.5px; color:var(--sub); margin-top:6px;">None.</div>`;
 
   wrap.style.display = 'block';
@@ -4244,19 +4276,27 @@ function renderChangedRecords(){
     return;
   }
 
+  // if the previously-active option has nothing to show this month but the
+  // other one does, default to whichever actually has items
+  if((changedRecordsView === 'added' && diff.added.length === 0) || (changedRecordsView === 'resolved' && diff.resolved.length === 0)){
+    changedRecordsView = diff.added.length ? 'added' : 'resolved';
+  }
+  const activeKeys = changedRecordsView === 'resolved' ? diff.resolved : diff.added;
+  const activeColor = changedRecordsView === 'resolved' ? 'var(--pending)' : 'var(--bad)';
+
   wrap.innerHTML = `
     <div class="section-title" style="margin-top:0;"><span class="h2-dot"></span>Changed Since Last Month — Bounced Cheques</div>
     <div class="section-note">Comparing the real bounced-cheque list this month vs ${esc(diff.prevPeriod)} — identity keys only (contract number, or tenant/cheque), not a re-check of amounts.</div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:4px;">
-      <div>
-        <div style="font-size:12.5px; font-weight:600; color:var(--bad);">${diff.added.length} new bounced cheque${diff.added.length===1?'':'s'}</div>
-        ${chipList(diff.added, 'var(--bad)')}
-      </div>
-      <div>
-        <div style="font-size:12.5px; font-weight:600; color:var(--pending);">${diff.resolved.length} no longer present vs last month</div>
-        ${chipList(diff.resolved, 'var(--pending)')}
-      </div>
-    </div>`;
+    <div class="changed-toggle" role="group" aria-label="Choose which changed-cheque list to view">
+      <button type="button" id="changedViewAdded" aria-pressed="${changedRecordsView !== 'resolved'}">${diff.added.length} new bounced cheque${diff.added.length===1?'':'s'}</button>
+      <button type="button" id="changedViewResolved" aria-pressed="${changedRecordsView === 'resolved'}">${diff.resolved.length} no longer present</button>
+    </div>
+    ${chipList(activeKeys, activeColor)}`;
+
+  const btnAdded = document.getElementById('changedViewAdded');
+  const btnResolved = document.getElementById('changedViewResolved');
+  if(btnAdded) btnAdded.addEventListener('click', () => { changedRecordsView = 'added'; renderChangedRecords(); });
+  if(btnResolved) btnResolved.addEventListener('click', () => { changedRecordsView = 'resolved'; renderChangedRecords(); });
 }
 function renderPeriodNote(){
   const note = document.getElementById('periodNote');
