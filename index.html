@@ -696,6 +696,17 @@
   .compare-mode-btn:hover{color:var(--text);}
   .compare-mode-btn.active{background:var(--accent); color:#fff;}
   .compare-mode-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  /* #575: chip multi-select for which metric rows show - deliberately a
+     different shape from .compare-mode-btn above (individually-toggleable
+     pills, not a segmented either/or control), since any subset from 1 to 4
+     is valid here. */
+  .compare-metric-chips{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:14px;}
+  .compare-metric-chips-label{font-size:11.5px; color:var(--sub); font-weight:600; margin-right:2px;}
+  .compare-metric-chip{appearance:none; border:1px solid var(--border); background:var(--card2); color:var(--sub); font-size:12px; font-weight:600; padding:6px 13px; border-radius:999px; cursor:pointer; font-family:inherit; transition:background .15s ease, color .15s ease, border-color .15s ease;}
+  .compare-metric-chip:hover{border-color:var(--accent); color:var(--text);}
+  .compare-metric-chip.active{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .compare-metric-chip:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  @media (max-width:600px){ .compare-metric-chips{gap:6px;} .compare-metric-chip{padding:5px 11px; font-size:11.5px;} }
   .compare-month-note{background:rgba(230,180,60,.12); border:1px solid var(--amber); color:var(--amber); border-radius:10px; padding:10px 14px; font-size:12.5px; margin-bottom:14px;}
   /* Single-loaded-portfolio state: only one value column has real data, so
      collapse the grid to metric+one column instead of wasting half the
@@ -1730,6 +1741,12 @@ const TRANSLATIONS = {
     'compare.colHeaderMetric': 'Metric',
     'compare.bouncedAtRisk': 'Bounced / At Risk',
     'compare.bounceRate': 'Bounce Rate',
+    'compare.metricsLabel': 'Metrics shown',
+    'compare.metricChip.collected': 'Total Collected',
+    'compare.metricChip.bounced': 'Bounced / At Risk',
+    'compare.metricChip.rate': 'Bounce Rate',
+    'compare.metricChip.net': 'Net Collected',
+    'compare.noMetricsSelected': 'No metrics selected - choose at least one above.',
     'compare.bouncedOf': 'bounced ÷ {ratioWord}',
     'compare.cheque.singular': 'cheque',
     'compare.cheque.plural': 'cheques',
@@ -2228,6 +2245,12 @@ const TRANSLATIONS = {
     'compare.colHeaderMetric': 'المؤشر',
     'compare.bouncedAtRisk': 'المرتجع / المعرَّض للخطر',
     'compare.bounceRate': 'معدل الارتجاع',
+    'compare.metricsLabel': 'المؤشرات المعروضة',
+    'compare.metricChip.collected': 'إجمالي المحصَّل',
+    'compare.metricChip.bounced': 'المرتجع / المعرَّض للخطر',
+    'compare.metricChip.rate': 'معدل الارتجاع',
+    'compare.metricChip.net': 'صافي المحصَّل',
+    'compare.noMetricsSelected': 'لم يتم اختيار أي مؤشر - اختر واحدًا على الأقل أعلاه.',
     'compare.bouncedOf': 'المرتجع ÷ {ratioWord}',
     'compare.cheque.singular': 'شيك',
     'compare.cheque.plural': 'شيكات',
@@ -4753,6 +4776,17 @@ let compareExpandedRows = new Set();
 let compareMode = 'portfolio'; // 'portfolio' | 'month'
 let compareMonthSel = { portfolio: 'awqaf', monthA: null, monthB: null };
 const COMPARE_MONTH_PORTFOLIOS = ['awqaf', 'al-naser', 'rta'];
+// #575: which of the 4 standard metric rows show, in both Compare modes
+// (Portfolio vs Portfolio and Month vs Month share this same set since both
+// draw from the same 4 metrics - see renderCompare/renderCompareMonth).
+// Chip multi-select in the pane header lets a viewer hide rows they don't
+// care about for this session. In-memory only, like compareSel/compareMode
+// above - resets to "everything on" each page load rather than silently
+// hiding rows a past session turned off. Portfolio-specific "extra" rows
+// (New Lease Value, Occupancy Rate) aren't part of this set - they only
+// exist for one side of a comparison to begin with, so there's nothing to
+// toggle off symmetrically.
+let compareActiveMetrics = new Set(['collected', 'bounced', 'rate', 'net']);
 function buildCompareTab(){
   const tabBar = document.getElementById('tabBar');
   const panesWrap = document.getElementById('panes');
@@ -4798,6 +4832,13 @@ function buildCompareTab(){
       <button type="button" class="compare-mode-btn" id="cmpModePortfolio" role="tab" data-mode="portfolio" data-i18n="compare.modePortfolio">${esc(t('compare.modePortfolio','Portfolio vs Portfolio'))}</button>
       <button type="button" class="compare-mode-btn" id="cmpModeMonth" role="tab" data-mode="month" data-i18n="compare.modeMonth">${esc(t('compare.modeMonth','Month vs Month'))}</button>
     </div>
+    <div class="compare-metric-chips" id="cmpMetricChips" role="group" aria-label="${esc(t('compare.metricsLabel','Metrics shown'))}">
+      <span class="compare-metric-chips-label" data-i18n="compare.metricsLabel">${esc(t('compare.metricsLabel','Metrics shown'))}</span>
+      <button type="button" class="compare-metric-chip" data-metric="collected" data-i18n="compare.metricChip.collected">${esc(t('compare.metricChip.collected','Total Collected'))}</button>
+      <button type="button" class="compare-metric-chip" data-metric="bounced" data-i18n="compare.metricChip.bounced">${esc(t('compare.metricChip.bounced','Bounced / At Risk'))}</button>
+      <button type="button" class="compare-metric-chip" data-metric="rate" data-i18n="compare.metricChip.rate">${esc(t('compare.metricChip.rate','Bounce Rate'))}</button>
+      <button type="button" class="compare-metric-chip" data-metric="net" data-i18n="compare.metricChip.net">${esc(t('compare.metricChip.net','Net Collected'))}</button>
+    </div>
     <div class="compare-selectors" id="cmpPortfolioSelectors">
       <label><span data-i18n="compare.labelPortfolioA">${esc(t('compare.labelPortfolioA','Portfolio A'))}</span> <select id="cmpSelA">${portfolioOpts}</select></label>
       <label><span data-i18n="compare.labelPortfolioB">${esc(t('compare.labelPortfolioB','Portfolio B'))}</span> <select id="cmpSelB">${portfolioOpts}</select></label>
@@ -4831,6 +4872,15 @@ function buildCompareTab(){
   const modeBtnMonth = document.getElementById('cmpModeMonth');
   modeBtnPortfolio.addEventListener('click', () => setCompareMode('portfolio'));
   modeBtnMonth.addEventListener('click', () => setCompareMode('month'));
+
+  // #575: metric chip bar - shared by both Compare modes, so it's wired once
+  // here rather than inside setCompareMode().
+  pane.querySelectorAll('.compare-metric-chip').forEach(chip => {
+    const key = chip.dataset.metric;
+    chip.classList.toggle('active', compareActiveMetrics.has(key));
+    chip.setAttribute('aria-pressed', String(compareActiveMetrics.has(key)));
+    chip.addEventListener('click', () => toggleCompareMetric(key));
+  });
 
   const monthPortfolioSel = document.getElementById('cmpMonthPortfolio');
   const monthASel = document.getElementById('cmpMonthA');
@@ -4885,6 +4935,27 @@ function setCompareMode(mode){
     renderCompare();
   }
 }
+// #575: toggles one metric row on/off in the Compare tab's chip bar. Shared
+// across both modes - whichever is currently active gets re-rendered so the
+// change shows immediately. Refuses to turn off the last remaining chip: an
+// empty comparison table isn't a real state, and there's no clearer way to
+// communicate "you need at least one" than simply not letting the last one
+// go dark.
+function toggleCompareMetric(key){
+  if(compareActiveMetrics.has(key)){
+    if(compareActiveMetrics.size <= 1) return;
+    compareActiveMetrics.delete(key);
+  } else {
+    compareActiveMetrics.add(key);
+  }
+  const chip = document.querySelector(`.compare-metric-chip[data-metric="${key}"]`);
+  if(chip){
+    chip.classList.toggle('active', compareActiveMetrics.has(key));
+    chip.setAttribute('aria-pressed', String(compareActiveMetrics.has(key)));
+  }
+  if(compareMode === 'month') renderCompareMonth();
+  else renderCompare();
+}
 // Fills the two month <select>s from this portfolio's real saved history
 // (oldest to newest, same ordering the Monthly Trend chart uses), and picks
 // sensible defaults - the two most recently saved months - the first time a
@@ -4935,13 +5006,15 @@ function exportCompareCsv(){
   const nameB = (PORTFOLIOS[compareSel.b] && PORTFOLIOS[compareSel.b].label) || compareSel.b;
   if(!a && !b) return;
   const header = [remainingText('Metric'), nameA, nameB];
+  // #575: exported rows mirror whichever metric chips are currently on, so
+  // the CSV never contains a row the viewer deliberately hid on screen.
   const rows = [
     [remainingText('Period'), (a && a.period) || '—', (b && b.period) || '—'],
-    [compareLabel(totalCollectedLabel, compareSel.a, compareSel.b), a ? fmtAed(a.totalCollected) : '—', b ? fmtAed(b.totalCollected) : '—'],
-    [remainingText('Bounced / At Risk'), a ? fmtAed(a.bouncedAmount) : '—', b ? fmtAed(b.bouncedAmount) : '—'],
-    [remainingText('Bounce Rate'), a && a.bounceRatePct !== null && a.bounceRatePct !== undefined ? a.bounceRatePct.toFixed(1) + '%' : '—', b && b.bounceRatePct !== null && b.bounceRatePct !== undefined ? b.bounceRatePct.toFixed(1) + '%' : '—'],
-    [compareLabel(netCollectedLabel, compareSel.a, compareSel.b), a ? fmtAed(a.netCollected) : '—', b ? fmtAed(b.netCollected) : '—'],
   ];
+  if(compareActiveMetrics.has('collected')) rows.push([compareLabel(totalCollectedLabel, compareSel.a, compareSel.b), a ? fmtAed(a.totalCollected) : '—', b ? fmtAed(b.totalCollected) : '—']);
+  if(compareActiveMetrics.has('bounced')) rows.push([remainingText('Bounced / At Risk'), a ? fmtAed(a.bouncedAmount) : '—', b ? fmtAed(b.bouncedAmount) : '—']);
+  if(compareActiveMetrics.has('rate')) rows.push([remainingText('Bounce Rate'), a && a.bounceRatePct !== null && a.bounceRatePct !== undefined ? a.bounceRatePct.toFixed(1) + '%' : '—', b && b.bounceRatePct !== null && b.bounceRatePct !== undefined ? b.bounceRatePct.toFixed(1) + '%' : '—']);
+  if(compareActiveMetrics.has('net')) rows.push([compareLabel(netCollectedLabel, compareSel.a, compareSel.b), a ? fmtAed(a.netCollected) : '—', b ? fmtAed(b.netCollected) : '—']);
   if(a) rows.push([`${nameA} — ${a.extraLabel}`, a.extraValueFormatted, '']);
   if(b) rows.push([`${nameB} — ${b.extraLabel}`, '', b.extraValueFormatted]);
   downloadCsv(`compare-${compareSel.a}-vs-${compareSel.b}-${new Date().toISOString().slice(0,10)}.csv`, header, rows);
@@ -5218,8 +5291,12 @@ function renderCompare(){
   const bouncedBadges = badge(a && a.bouncedAmount, b && b.bouncedAmount, fmtAed);
   const netBadges = badge(a && a.netCollected, b && b.netCollected, fmtAed);
 
+  // #575: bounce-rate delta line is specifically about the 'rate' metric, so
+  // it's gated behind that chip too - showing it while the Bounce Rate row
+  // itself is hidden would read as a stray sentence about a number the
+  // viewer just turned off.
   let deltaLine = '';
-  if(a && b && a.bounceRatePct !== null && b.bounceRatePct !== null){
+  if(compareActiveMetrics.has('rate') && a && b && a.bounceRatePct !== null && b.bounceRatePct !== null){
     const diff = b.bounceRatePct - a.bounceRatePct;
     if(Math.abs(diff) < 0.05){
       deltaLine = `<div class="compare-delta-row">${esc(t('compare.sameRate','Both portfolios have about the same bounce rate this period.'))}</div>`;
@@ -5247,10 +5324,11 @@ function renderCompare(){
     ${periodMismatch}
     <div class="compare-card">
       ${headRow}
-      ${metricRow('collected', compareLabel(totalCollectedLabel, compareSel.a, compareSel.b), a ? fmtAed(a.totalCollected) : '—', a && a.totalCollectedSub, b ? fmtAed(b.totalCollected) : '—', b && b.totalCollectedSub, collectedBadges.aBadge, collectedBadges.bBadge, a && a.totalCollectedDaily, b && b.totalCollectedDaily, 'var(--accent)', 'var(--accent2)')}
-      ${metricRow('bounced', t('compare.bouncedAtRisk','Bounced / At Risk'), a ? fmtAed(a.bouncedAmount) : '—', a && `${a.bouncedCount.toLocaleString()} ${pluralize(a.bouncedCount, t('compare.cheque.singular','cheque'), t('compare.cheque.plural','cheques'))}`, b ? fmtAed(b.bouncedAmount) : '—', b && `${b.bouncedCount.toLocaleString()} ${pluralize(b.bouncedCount, t('compare.cheque.singular','cheque'), t('compare.cheque.plural','cheques'))}`, bouncedBadges.aBadge, bouncedBadges.bBadge, a && a.bouncedDaily, b && b.bouncedDaily, 'var(--amber)', 'var(--accent2)')}
-      ${metricRow('rate', t('compare.bounceRate','Bounce Rate'), a ? (a.bounceRatePct !== null ? a.bounceRatePct.toFixed(1) + '%' : '—') : '—', t('compare.bouncedOf','bounced ÷ {ratioWord}').replace('{ratioWord}', collectedRatioWord(compareSel.a)), b ? (b.bounceRatePct !== null ? b.bounceRatePct.toFixed(1) + '%' : '—') : '—', t('compare.bouncedOf','bounced ÷ {ratioWord}').replace('{ratioWord}', collectedRatioWord(compareSel.b)), '', '', null, null, null, null)}
-      ${metricRow('net', compareLabel(netCollectedLabel, compareSel.a, compareSel.b), a ? fmtAed(a.netCollected) : '—', '', b ? fmtAed(b.netCollected) : '—', '', netBadges.aBadge, netBadges.bBadge, null, null, null, null)}
+      ${compareActiveMetrics.has('collected') ? metricRow('collected', compareLabel(totalCollectedLabel, compareSel.a, compareSel.b), a ? fmtAed(a.totalCollected) : '—', a && a.totalCollectedSub, b ? fmtAed(b.totalCollected) : '—', b && b.totalCollectedSub, collectedBadges.aBadge, collectedBadges.bBadge, a && a.totalCollectedDaily, b && b.totalCollectedDaily, 'var(--accent)', 'var(--accent2)') : ''}
+      ${compareActiveMetrics.has('bounced') ? metricRow('bounced', t('compare.bouncedAtRisk','Bounced / At Risk'), a ? fmtAed(a.bouncedAmount) : '—', a && `${a.bouncedCount.toLocaleString()} ${pluralize(a.bouncedCount, t('compare.cheque.singular','cheque'), t('compare.cheque.plural','cheques'))}`, b ? fmtAed(b.bouncedAmount) : '—', b && `${b.bouncedCount.toLocaleString()} ${pluralize(b.bouncedCount, t('compare.cheque.singular','cheque'), t('compare.cheque.plural','cheques'))}`, bouncedBadges.aBadge, bouncedBadges.bBadge, a && a.bouncedDaily, b && b.bouncedDaily, 'var(--amber)', 'var(--accent2)') : ''}
+      ${compareActiveMetrics.has('rate') ? metricRow('rate', t('compare.bounceRate','Bounce Rate'), a ? (a.bounceRatePct !== null ? a.bounceRatePct.toFixed(1) + '%' : '—') : '—', t('compare.bouncedOf','bounced ÷ {ratioWord}').replace('{ratioWord}', collectedRatioWord(compareSel.a)), b ? (b.bounceRatePct !== null ? b.bounceRatePct.toFixed(1) + '%' : '—') : '—', t('compare.bouncedOf','bounced ÷ {ratioWord}').replace('{ratioWord}', collectedRatioWord(compareSel.b)), '', '', null, null, null, null) : ''}
+      ${compareActiveMetrics.has('net') ? metricRow('net', compareLabel(netCollectedLabel, compareSel.a, compareSel.b), a ? fmtAed(a.netCollected) : '—', '', b ? fmtAed(b.netCollected) : '—', '', netBadges.aBadge, netBadges.bBadge, null, null, null, null) : ''}
+      ${compareActiveMetrics.size === 0 ? `<div class="compare-delta-row">${esc(t('compare.noMetricsSelected','No metrics selected - choose at least one above.'))}</div>` : ''}
       ${deltaLine}
     </div>
     <div class="compare-specific-grid">
@@ -5333,10 +5411,11 @@ function renderCompareMonth(){
         <div style="text-align:right;">${esc(name)}<span>${esc(monthA.period || monthA.periodKey)}</span></div>
         <div style="text-align:right;">${esc(name)}<span>${esc(monthB.period || monthB.periodKey)}</span></div>
       </div>
-      ${row(totalCollectedLabel(portfolio), fmtAed(monthA.totalCollected), fmtAed(monthB.totalCollected), momDeltaText(monthB.totalCollected, monthA.totalCollected, true))}
-      ${row(t('compare.bouncedAtRisk','Bounced / At Risk'), `${fmtAed(monthA.bouncedAmount)} (${(monthA.bouncedCount||0).toLocaleString()} ${chequeUnitA})`, `${fmtAed(monthB.bouncedAmount)} (${(monthB.bouncedCount||0).toLocaleString()} ${chequeUnitB})`, momDeltaText(monthB.bouncedAmount, monthA.bouncedAmount, true))}
-      ${row(t('compare.bounceRate','Bounce Rate'), (monthA.bounceRatePct !== null && monthA.bounceRatePct !== undefined) ? monthA.bounceRatePct.toFixed(1) + '%' : '—', (monthB.bounceRatePct !== null && monthB.bounceRatePct !== undefined) ? monthB.bounceRatePct.toFixed(1) + '%' : '—', momDeltaPct(monthB.bounceRatePct, monthA.bounceRatePct))}
-      ${row(netCollectedLabel(portfolio), fmtAed(monthA.netCollected), fmtAed(monthB.netCollected), momDeltaText(monthB.netCollected, monthA.netCollected, true))}
+      ${compareActiveMetrics.has('collected') ? row(totalCollectedLabel(portfolio), fmtAed(monthA.totalCollected), fmtAed(monthB.totalCollected), momDeltaText(monthB.totalCollected, monthA.totalCollected, true)) : ''}
+      ${compareActiveMetrics.has('bounced') ? row(t('compare.bouncedAtRisk','Bounced / At Risk'), `${fmtAed(monthA.bouncedAmount)} (${(monthA.bouncedCount||0).toLocaleString()} ${chequeUnitA})`, `${fmtAed(monthB.bouncedAmount)} (${(monthB.bouncedCount||0).toLocaleString()} ${chequeUnitB})`, momDeltaText(monthB.bouncedAmount, monthA.bouncedAmount, true)) : ''}
+      ${compareActiveMetrics.has('rate') ? row(t('compare.bounceRate','Bounce Rate'), (monthA.bounceRatePct !== null && monthA.bounceRatePct !== undefined) ? monthA.bounceRatePct.toFixed(1) + '%' : '—', (monthB.bounceRatePct !== null && monthB.bounceRatePct !== undefined) ? monthB.bounceRatePct.toFixed(1) + '%' : '—', momDeltaPct(monthB.bounceRatePct, monthA.bounceRatePct)) : ''}
+      ${compareActiveMetrics.has('net') ? row(netCollectedLabel(portfolio), fmtAed(monthA.netCollected), fmtAed(monthB.netCollected), momDeltaText(monthB.netCollected, monthA.netCollected, true)) : ''}
+      ${compareActiveMetrics.size === 0 ? `<div class="compare-row"><div class="compare-metric">${esc(t('compare.noMetricsSelected','No metrics selected - choose at least one above.'))}</div></div>` : ''}
     </div>
     ${extraRow ? `<div class="compare-card">${extraRow}</div>` : ''}
     ${sameMonth ? `<div class="compare-month-note">${esc(t('compare.sameMonthNote','Both columns are showing the same saved month right now - pick two different months above to see a real change.'))}</div>` : ''}
