@@ -326,6 +326,12 @@
   }
   .hm-modal-total .n{font-size:22px; font-weight:800; color:var(--text);}
   .hm-modal-total .l{font-size:12px; color:var(--sub); flex:1;}
+  /* #571: single-activity-type day detail used to be just the hero total
+     above with nothing to judge it against ("is 22 a lot?"). This line adds
+     that comparison - vs. this period's average active day, or a call-out
+     when the clicked day is this period's peak - computed from the same
+     per-day dict the hero count already reads, no new data source needed. */
+  .hm-modal-context{font-size:12px; color:var(--sub); margin-top:-6px; margin-bottom:14px; padding:0 2px; line-height:1.4;}
   .hm-modal-export-btn{
     background:var(--card); border:1px solid var(--border); color:var(--text);
     font-size:11.5px; font-weight:600; padding:6px 10px; border-radius:7px; cursor:pointer;
@@ -5864,8 +5870,34 @@ function showHeatmapDayDetail(iso){
       // completely, so the second block was pure redundancy at best and
       // confusing at worst. Dropped it; _hmModalData / CSV export are
       // unaffected since they never read metaName.
+      //
+      // #571: a bare number with no basis for comparison ("is 22 a lot?")
+      // is what the user flagged as "not informative." Record-level detail
+      // (property/tenant/contract) would need a new window-level API added
+      // to every embedded report, which none currently expose - so this
+      // adds real, honest context instead using data already loaded right
+      // here in `daily` (the same per-day dict the hero count comes from):
+      // how this day compares to the average active day this period, and
+      // whether it's this period's single busiest day for this type.
+      const dailyCounts = Object.values(daily);
+      const activeDayCount = dailyCounts.filter(v => v > 0).length;
+      const periodTotal = dailyCounts.reduce((a, b) => a + b, 0);
+      const avgPerActiveDay = activeDayCount ? periodTotal / activeDayCount : 0;
+      const peakCount = dailyCounts.length ? Math.max(...dailyCounts) : 0;
+      let contextLine = '';
+      if(count === 0){
+        contextLine = t('overview.hm.dayContextZero', 'No {unit} this day.').replace('{unit}', heatmapTypeUnit(activeType));
+      } else if(peakCount > 0 && count === peakCount){
+        contextLine = t('overview.hm.dayContextPeak', 'Busiest day this period for {type} — average active day is {avg}.').replace('{type}', typeLabel).replace('{avg}', avgPerActiveDay.toFixed(1));
+      } else if(avgPerActiveDay > 0){
+        const vsAvgPct = Math.round(((count - avgPerActiveDay) / avgPerActiveDay) * 100);
+        const pctText = (vsAvgPct >= 0 ? '+' : '') + vsAvgPct + '%';
+        contextLine = t('overview.hm.dayContextVsAvg', '{pct} vs. this period\'s {avg}/day average for {type}.').replace('{pct}', pctText).replace('{avg}', avgPerActiveDay.toFixed(1)).replace('{type}', typeLabel);
+      }
+      const contextHtml = contextLine ? `<div class="hm-modal-context">${esc(contextLine)}</div>` : '';
       body.innerHTML = `
-        <div class="hm-modal-total"><span class="n">${count.toLocaleString()}</span><span class="l">${esc(unitLabel)}</span><button class="hm-modal-export-btn" type="button" onclick="exportHeatmapDayDetail()">&#8681; ${esc(t('overview.hm.exportCsv','Export CSV'))}</button></div>`;
+        <div class="hm-modal-total"><span class="n">${count.toLocaleString()}</span><span class="l">${esc(unitLabel)}</span><button class="hm-modal-export-btn" type="button" onclick="exportHeatmapDayDetail()">&#8681; ${esc(t('overview.hm.exportCsv','Export CSV'))}</button></div>
+        ${contextHtml}`;
     }
   }
 
