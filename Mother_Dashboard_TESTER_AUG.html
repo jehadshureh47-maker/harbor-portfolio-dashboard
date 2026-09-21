@@ -5815,14 +5815,23 @@ function showHeatmapDayDetail(iso){
       // unchanged regardless of count (e.g. "1 request(s) logged").
       const unitLabel = pluralize(count, heatmapTypeUnitSingular(activeType), heatmapTypeUnit(activeType));
       _hmModalData = { iso, rows: [{ name: typeLabel, count, unit: unitLabel }], total: count };
+      // #547: this single-type branch used to render a second block below
+      // the hero total - a "row" repeating the exact same count and unit
+      // label a second time, labeled with the INTERNAL source report's name
+      // (metaName). For most types that source report isn't the one a user
+      // would expect from the type name itself - e.g. Renewals' count comes
+      // from the Cheque Count report's renewal_lease_daily field (that's
+      // genuinely where the data lives, see HEATMAP_TYPE_CONFIG above), so
+      // clicking a "Renewals" cell showed a row reading "Cheque Count / 22"
+      // right under a "22 renewal lease contracts" total - same number
+      // twice, plus a report name that reads as a mismatch to anyone who
+      // doesn't already know the field's storage location. The hero total
+      // above already states the count and its unit once, correctly and
+      // completely, so the second block was pure redundancy at best and
+      // confusing at worst. Dropped it; _hmModalData / CSV export are
+      // unaffected since they never read metaName.
       body.innerHTML = `
-        <div class="hm-modal-total"><span class="n">${count.toLocaleString()}</span><span class="l">${esc(unitLabel)}</span><button class="hm-modal-export-btn" type="button" onclick="exportHeatmapDayDetail()">&#8681; ${esc(t('overview.hm.exportCsv','Export CSV'))}</button></div>
-        <div class="hm-modal-rows">
-          <div class="hm-modal-row${count===0 ? ' zero' : ''}">
-            <span class="rname">${esc(metaName)}<br><span class="runit">${esc(unitLabel)}</span></span>
-            <span class="rcount">${count.toLocaleString()}</span>
-          </div>
-        </div>`;
+        <div class="hm-modal-total"><span class="n">${count.toLocaleString()}</span><span class="l">${esc(unitLabel)}</span><button class="hm-modal-export-btn" type="button" onclick="exportHeatmapDayDetail()">&#8681; ${esc(t('overview.hm.exportCsv','Export CSV'))}</button></div>`;
     }
   }
 
