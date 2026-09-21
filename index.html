@@ -827,6 +827,17 @@
   .dq-issue.info .dq-severity-label{color:var(--info);}
   .dq-metric{font-size:11.5px; color:var(--sub); margin-top:2px;}
   .dq-metric strong{color:var(--text); font-weight:600;}
+  /* #576: severity legend - static, sits under the pane description so a
+     first-time viewer knows what Critical/Warning/Information actually mean
+     before scanning the list, instead of only being documented in code
+     comments no viewer ever sees. Reuses the exact icon-circle colors from
+     .dq-issue above so the legend visually matches the rows it explains. */
+  .dq-legend{display:flex; flex-wrap:wrap; gap:14px; margin:10px 0 16px; font-size:11.5px; color:var(--sub);}
+  .dq-legend-item{display:flex; align-items:center; gap:6px;}
+  .dq-legend-dot{width:14px; height:14px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:8.5px; font-weight:700; flex-shrink:0;}
+  .dq-legend-item.critical .dq-legend-dot{background:rgba(239,106,139,0.18); color:var(--bad);}
+  .dq-legend-item.warning .dq-legend-dot{background:rgba(245,166,35,0.18); color:var(--amber);}
+  .dq-legend-item.info .dq-legend-dot{background:rgba(94,198,255,0.18); color:var(--info);}
   .dq-clean{padding:13px 16px; color:var(--ok); font-size:13px; background:var(--card); border:1px solid var(--border); border-radius:12px;}
   .dq-empty{padding:13px 16px; color:var(--sub); font-size:13px; background:var(--card); border:1px solid var(--border); border-radius:12px;}
   .dq-summary-bar{display:flex; align-items:center; gap:8px; margin-bottom:16px; font-size:13px; color:var(--sub);}
@@ -1528,6 +1539,7 @@ const TRANSLATIONS = {
     'dh.itemReviewRequired': '{name}: cross-report relationship requires review',
     'dh.itemStaleSnapshot': '{name}: showing a {n}-day-old snapshot',
     'dh.itemAlNaserCrossSheetMismatch': 'Bounced Cheque List vs Cheque Clearance: mismatch found',
+    'dh.itemAlNaserCrossSheetClean': 'Bounced Cheque List vs Cheque Clearance: all entries matched',
     'dh.statusGood': 'GOOD',
     'dh.statusWarn': 'NEEDS ATTENTION',
     'dh.statusBad': 'CRITICAL ISSUES FOUND',
@@ -1560,6 +1572,9 @@ const TRANSLATIONS = {
     'na.detailStaleSnapshot': 'Still showing the bundled snapshot from {date} ({n} days old).',
     'cc.sectionNote': 'Automatic consistency checks between reports that overlap (e.g. New Lease counts, bounced-cheque contracts). Updates as each report finishes loading.',
     'dq.paneDesc': 'Anything worth double-checking in the source files — whatever a report\'s own parser had to skip, guess at, or normalize — grouped by which sheet it came from. Updates as each report tab finishes loading.',
+    'dq.legend.critical': 'Critical — a required column could not be detected; that report\'s totals may be wrong',
+    'dq.legend.warning': 'Warning — some rows were skipped or normalized; remaining totals are still usable',
+    'dq.legend.info': 'Information — a non-blocking note; nothing here changes a total',
     'dq.waitingReports': 'Waiting for reports to finish loading…',
     'dq.severity.critical': 'Critical',
     'dq.severity.warning': 'Warning',
@@ -2032,6 +2047,7 @@ const TRANSLATIONS = {
     'dh.itemReviewRequired': '{name}: العلاقة بين التقارير تتطلب المراجعة',
     'dh.itemStaleSnapshot': '{name}: يعرض لقطة عمرها {n} يوم',
     'dh.itemAlNaserCrossSheetMismatch': 'قائمة الشيكات المرتجعة مقابل تحصيل الشيكات: وُجد عدم تطابق',
+    'dh.itemAlNaserCrossSheetClean': 'قائمة الشيكات المرتجعة مقابل تحصيل الشيكات: جميع الإدخالات متطابقة',
     'dh.statusGood': 'جيد',
     'dh.statusWarn': 'يتطلب الانتباه',
     'dh.statusBad': 'مشاكل حرجة موجودة',
@@ -2064,6 +2080,9 @@ const TRANSLATIONS = {
     'na.detailStaleSnapshot': 'لا يزال يعرض اللقطة المرفقة من {date} (عمرها {n} يوم).',
     'cc.sectionNote': 'فحوصات اتساق تلقائية بين التقارير المتداخلة (مثل أعداد الإيجار الجديد، وعقود الشيكات المرتجعة). يتم التحديث فور انتهاء تحميل كل تقرير.',
     'dq.paneDesc': 'أي أمر يستحق التحقق منه مرة أخرى في الملفات المصدر — أي شيء اضطر المحلل الخاص بالتقرير إلى تجاوزه أو تخمينه أو توحيده — مجمّعًا حسب الورقة التي جاء منها. يتم التحديث فور انتهاء تحميل كل علامة تبويب تقرير.',
+    'dq.legend.critical': 'حرج — تعذّر اكتشاف عمود مطلوب؛ قد تكون إجماليات هذا التقرير غير صحيحة',
+    'dq.legend.warning': 'تحذير — تم تجاوز أو توحيد بعض الصفوف؛ الإجماليات المتبقية لا تزال قابلة للاستخدام',
+    'dq.legend.info': 'معلومة — ملاحظة غير معيقة؛ لا شيء هنا يغيّر أي إجمالي',
     'dq.waitingReports': 'بانتظار انتهاء تحميل التقارير…',
     'dq.severity.critical': 'حرج',
     'dq.severity.warning': 'تحذير',
@@ -6169,6 +6188,11 @@ function buildDataQualityTab(){
   pane.innerHTML = `
     <h2><span class="h2-dot"></span><span data-i18n="section.dataQuality">Data Quality</span></h2>
     <div class="pane-desc" data-i18n="dq.paneDesc">Anything worth double-checking in the source files — whatever a report's own parser had to skip, guess at, or normalize — grouped by which sheet it came from. Updates as each report tab finishes loading.</div>
+    <div class="dq-legend">
+      <span class="dq-legend-item critical"><span class="dq-legend-dot">✕</span><span data-i18n="dq.legend.critical">${esc(t('dq.legend.critical','Critical — a required column could not be detected; that report\'s totals may be wrong'))}</span></span>
+      <span class="dq-legend-item warning"><span class="dq-legend-dot">!</span><span data-i18n="dq.legend.warning">${esc(t('dq.legend.warning','Warning — some rows were skipped or normalized; remaining totals are still usable'))}</span></span>
+      <span class="dq-legend-item info"><span class="dq-legend-dot">i</span><span data-i18n="dq.legend.info">${esc(t('dq.legend.info','Information — a non-blocking note; nothing here changes a total'))}</span></span>
+    </div>
     <div id="dataQualityWrap"><div class="overview-loading" data-i18n="dq.waitingReports">Waiting for reports to finish loading…</div></div>
   `;
   panesWrap.appendChild(pane);
@@ -6214,12 +6238,20 @@ function renderDataQuality(){
   const wrap = document.getElementById('dataQualityWrap');
   if(!wrap) return;
   let totalIssues = 0;
-  const groups = REPORTS.map(r => {
+  const reportGroups = REPORTS.map(r => {
     const win = embeddedWindows[r.id];
     const issues = (win && win.__dataIssues) ? win.__dataIssues : null;
     if(issues) totalIssues += issues.length;
     return { report: r, issues };
   });
+  // #576: `groups` (used for rendering) can include the Al Naser cross-sheet
+  // pseudo-entry below, but `reportGroups` (used for every "X of Y reports"
+  // count in the summary copy) stays real-reports-only. Previously the
+  // pseudo-entry was folded into the same array used for both, so once both
+  // feeding reports loaded this tab could literally say "of 5 reports" for
+  // a 4-report portfolio - the cross-sheet check isn't a report a viewer
+  // loaded, it's a check the shell derives from two of them.
+  const groups = [...reportGroups];
   if(currentPortfolio === 'al-naser'){
     const crossIssues = computeAlNaserCrossSheetIssues();
     if(crossIssues !== null){
@@ -6231,7 +6263,7 @@ function renderDataQuality(){
   if(groups.length === 0){ wrap.innerHTML = `<div class="dq-clean">${esc(t('dq.noReportsYet','This portfolio has no reports with per-record data yet, so there\'s nothing to check here. Once a workbook export comes in, its parser will flag anything worth double-checking.'))}</div>`; return; }
   if(!anyLoaded) return;
 
-  const withIssues = groups.filter(g => g.issues && g.issues.length > 0).length;
+  const withIssues = reportGroups.filter(g => g.issues && g.issues.length > 0).length;
   const criticalCount = groups.reduce((n,g) => n + (g.issues||[]).filter(i=>i.severity==='critical').length, 0);
   const warningCount = groups.reduce((n,g) => n + (g.issues||[]).filter(i=>i.severity==='warning').length, 0);
   const infoCount = groups.reduce((n,g) => n + (g.issues||[]).filter(i=>i.severity==='info').length, 0);
@@ -6240,13 +6272,13 @@ function renderDataQuality(){
   // confirmation ("nothing to flag"), not as the awkward, technically-true-
   // but-flat "0 issues... 0 critical, 0 warning, 0 information" the summary
   // bar used to always render even when there was genuinely nothing to see.
-  const loadedGroupCount = groups.filter(g => g.issues !== null).length;
+  const loadedGroupCount = reportGroups.filter(g => g.issues !== null).length;
   const dqReportUnit = currentLang === 'ar' ? t('dq.unit.loadedReport','loaded report') : pluralize(loadedGroupCount, t('dq.unit.loadedReport','loaded report'));
   const dqNoteUnit = currentLang === 'ar' ? t('dq.unit.note','note') : pluralize(totalIssues, t('dq.unit.note','note'));
   const dqNoteBadge = `${totalIssues} ${dqNoteUnit}`;
   const summaryHtml = totalIssues === 0
     ? `<div class="dq-clean">${esc(t('dq.cleanAll','Nothing flagged across {n} {unit} — every parser read its file cleanly.').replace('{n}', loadedGroupCount).replace('{unit}', dqReportUnit))}</div>`
-    : `<div class="dq-summary-bar">${esc(t('dq.summaryBar','{n} {noteUnit} across {a} of {b} reports — {c} critical, {w} warning, {i} information').replace('{n} {noteUnit}', '¤BADGE¤').replace('{a}', withIssues).replace('{b}', groups.length).replace('{c}', criticalCount).replace('{w}', warningCount).replace('{i}', infoCount)).replace('¤BADGE¤', `<span class="dq-summary-badge">${esc(dqNoteBadge)}</span>`)}</div>`;
+    : `<div class="dq-summary-bar">${esc(t('dq.summaryBar','{n} {noteUnit} across {a} of {b} reports — {c} critical, {w} warning, {i} information').replace('{n} {noteUnit}', '¤BADGE¤').replace('{a}', withIssues).replace('{b}', reportGroups.length).replace('{c}', criticalCount).replace('{w}', warningCount).replace('{i}', infoCount)).replace('¤BADGE¤', `<span class="dq-summary-badge">${esc(dqNoteBadge)}</span>`)}</div>`;
 
   const groupsHtml = groups.map(g => {
     let body;
@@ -6359,7 +6391,13 @@ function computeDataHealthStatus(){
   if(currentPortfolio === 'al-naser'){
     const crossIssues = computeAlNaserCrossSheetIssues();
     if(crossIssues){
+      // #576: the clean-confirmation case (severity 'info' - "all entries
+      // matched") was previously dropped here entirely, so this status panel
+      // and the Data Quality tab could disagree about whether there was
+      // anything to report for the exact same portfolio state, breaking the
+      // "these sources can never disagree" guarantee documented above.
       crossIssues.filter(iss => iss.severity === 'warning').forEach(() => warningItems.push(t('dh.itemAlNaserCrossSheetMismatch', 'Bounced Cheque List vs Cheque Clearance: mismatch found')));
+      crossIssues.filter(iss => iss.severity === 'info').forEach(() => infoItems.push(t('dh.itemAlNaserCrossSheetClean', 'Bounced Cheque List vs Cheque Clearance: all entries matched')));
     }
   }
 
@@ -6520,6 +6558,15 @@ function renderNeedsAttention(){
     issues.filter(iss => iss.severity === 'warning').forEach(iss => {
       items.push({ severity: 'medium', category: t('na.catDataQuality','Data Quality'), title: rName, detail: iss.message, cta: t('na.ctaOpenDataQuality','Open Data Quality'), goto: () => selectTab('dataquality'), dl: { t: 'dataquality' } });
     });
+    // #576: info-severity Data Quality notes were already counted into
+    // computeDataHealthStatus()'s totalItemCount (and so could make the
+    // Data Status panel's "Review details" button appear), but never
+    // actually became an item here - clicking that button could land on
+    // this panel with nothing on it that matched. Now every info-severity
+    // note that gets counted also gets a real row to click through to.
+    issues.filter(iss => iss.severity === 'info').forEach(iss => {
+      items.push({ severity: 'info', category: t('na.catDataQuality','Data Quality'), title: rName, detail: iss.message, cta: t('na.ctaOpenDataQuality','Open Data Quality'), goto: () => selectTab('dataquality'), dl: { t: 'dataquality' } });
+    });
   });
 
   // Data-freshness: every report is manually Excel-uploaded, so nothing
@@ -6553,6 +6600,12 @@ function renderNeedsAttention(){
     if(crossIssues){
       crossIssues.filter(iss => iss.severity === 'warning').forEach(iss => {
         items.push({ severity: 'medium', category: t('na.catDataQuality','Data Quality'), title: t('na.titleCrossSheetCheck','Cross-sheet check'), detail: iss.message, cta: t('na.ctaOpenDataQuality','Open Data Quality'), goto: () => selectTab('dataquality'), dl: { t: 'dataquality' } });
+      });
+      // #576: same parity fix as the per-report info issues above - this
+      // clean-confirmation note is counted into Data Status's infoItems now,
+      // so it needs a matching row here too.
+      crossIssues.filter(iss => iss.severity === 'info').forEach(iss => {
+        items.push({ severity: 'info', category: t('na.catDataQuality','Data Quality'), title: t('na.titleCrossSheetCheck','Cross-sheet check'), detail: iss.message, cta: t('na.ctaOpenDataQuality','Open Data Quality'), goto: () => selectTab('dataquality'), dl: { t: 'dataquality' } });
       });
     }
   }
