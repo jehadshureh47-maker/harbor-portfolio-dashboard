@@ -3743,6 +3743,44 @@ function renderOverviewCards(wrap, cards, extraHtml){
     const numEl = wrap.querySelector(`.overview-card[data-goto="${a.id}"] .oc-big-num`);
     if(numEl) animateNumericSpan(numEl, a.prevBig, a.big);
   });
+  // The 4 cards can each carry a different amount of pre-sparkline content
+  // (an alert pill, a one- vs two-line subtitle), so with align-items:start
+  // (see #490 above) they land at different heights and their Details
+  // toggles end up at different vertical positions across the row - looks
+  // misaligned even though nothing is actually broken. Equalize per-row
+  // after paint; wire a ResizeObserver once so the 4/2/1-column @container
+  // breakpoints re-equalize on their own too.
+  requestAnimationFrame(() => equalizeOverviewCardHeights(wrap));
+  if(!wrap.dataset.ocEqObserved){
+    wrap.dataset.ocEqObserved = '1';
+    new ResizeObserver(() => requestAnimationFrame(() => equalizeOverviewCardHeights(wrap))).observe(wrap);
+  }
+}
+// Floats every card in a row up to match that row's tallest COLLAPSED
+// sibling via min-height, so the Details toggle sits at a consistent Y
+// position across the row regardless of how much alert/subtitle text a
+// given card has above its sparkline. Deliberately excludes any card whose
+// Details panel is currently open from the "tallest" measurement (and
+// leaves that card's own min-height as a no-op) so expanding or collapsing
+// one card - the exact scenario #490 fixed - still never touches its
+// siblings; only the shared collapsed-state floor is affected.
+function equalizeOverviewCardHeights(wrap){
+  const cards = Array.from(wrap.querySelectorAll('.overview-grid > .overview-card'));
+  if(!cards.length) return;
+  cards.forEach(c => { c.style.minHeight = ''; });
+  const rows = new Map();
+  cards.forEach(c => {
+    const top = c.offsetTop;
+    if(!rows.has(top)) rows.set(top, []);
+    rows.get(top).push(c);
+  });
+  rows.forEach(rowCards => {
+    if(rowCards.length < 2) return;
+    const collapsed = rowCards.filter(c => !c.querySelector('.oc-details.open'));
+    const measureFrom = collapsed.length ? collapsed : rowCards;
+    const maxH = Math.max(...measureFrom.map(c => c.offsetHeight));
+    rowCards.forEach(c => { c.style.minHeight = maxH + 'px'; });
+  });
 }
 // Condensed, C-level-facing view: a handful of large headline numbers
 // (collected / bounced-at-risk / net collected / one operational headline)
