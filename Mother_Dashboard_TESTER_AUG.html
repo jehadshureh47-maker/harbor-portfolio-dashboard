@@ -6192,7 +6192,7 @@ function renderNeedsAttention(){
         severity: 'info',
         category: t('na.catDataFreshness','Data Freshness'),
         title: rName,
-        detail: t('na.detailStaleSnapshot','Still showing the bundled snapshot from {date} ({n} days old).').replace('{date}', fresh.snapshotDate).replace('{n}', ageDays),
+        detail: t('na.detailStaleSnapshot','Still showing the bundled snapshot from {date} ({n} days old).').replace('{date}', fmtFreshnessDate(fresh.snapshotDate)).replace('{n}', ageDays),
         cta: t('na.ctaLoadNewer','Load a newer {name} export').replace('{name}', rName),
         goto: () => selectTab(r.id),
         dl: { t: r.id },
@@ -7824,6 +7824,22 @@ function monthLabel(code){
 function updateFooterNote(){
   const el = document.getElementById('footerNote');
   if(el) el.innerHTML = esc(monthLabel(currentMonth)) + ' reports &middot; Jehad Shureh';
+}
+// Each embedded report bakes in its own SNAPSHOT_BUILT_DATE constant at
+// splice time, and those weren't all written in the same format - some are
+// human-readable ("06 Aug 2026"), some are still raw ISO ("2026-08-06")
+// left over from an earlier splice. That showed up as two adjacent Needs
+// Attention freshness cards with visibly different date formats. Reformat
+// only the ISO ones here so every card reads the same way, without
+// touching the underlying constants or their Date-parsing (age-in-days is
+// computed separately and is unaffected by this).
+function fmtFreshnessDate(dateStr){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr);
+  if(!m) return dateStr;
+  const months = (typeof currentLang !== 'undefined' && currentLang === 'ar')
+    ? ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+    : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${m[3]} ${months[parseInt(m[2],10)-1]} ${m[1]}`;
 }
 
 function renderOverview(){
