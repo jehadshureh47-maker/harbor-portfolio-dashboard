@@ -1112,7 +1112,7 @@
 
     <div id="panes"></div>
 
-    <div class="footer-note">July 2026 reports &middot; Jehad Shureh</div>
+    <div class="footer-note" id="footerNote">July 2026 reports &middot; Jehad Shureh</div>
 
   </div>
 </div>
@@ -7816,6 +7816,15 @@ function monthLabel(code){
   const table = (typeof currentLang !== 'undefined' && currentLang === 'ar') ? MONTH_LABELS_AR : MONTH_LABELS;
   return table[code] || code;
 }
+// Keep the page footer's "<month> reports" line in sync with whichever
+// month is actually selected - it used to be hardcoded to "July 2026" and
+// stayed that way even after switching to August. Called from
+// doSwitchPortfolio() so it re-runs on every portfolio switch, month
+// switch, and the initial page load alike.
+function updateFooterNote(){
+  const el = document.getElementById('footerNote');
+  if(el) el.innerHTML = esc(monthLabel(currentMonth)) + ' reports &middot; Jehad Shureh';
+}
 
 function renderOverview(){
   const cfg = PORTFOLIOS[currentPortfolio];
@@ -7832,6 +7841,7 @@ function tryRunCrossChecks(){
 
 function doSwitchPortfolio(key){
   currentPortfolio = key;
+  updateFooterNote();
   const tabBar = document.getElementById('tabBar');
   const panesWrap = document.getElementById('panes');
   const overallIcon = document.getElementById('overallIcon');
