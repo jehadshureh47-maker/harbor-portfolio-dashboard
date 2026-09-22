@@ -470,6 +470,7 @@
   .overview-card .oc-row .oc-label{color:var(--sub);}
   .overview-card .oc-row .oc-value{font-weight:600;}
   .oc-bar{height:3px; border-radius:2px; background:var(--card2); margin:2px 0 5px; overflow:hidden;}
+  .oc-row-delta{font-size:11px; color:var(--sub); text-align:right; margin:-2px 0 6px;}
   .oc-spark{margin:2px 0 7px; color:var(--accent);}
   .oc-spark-svg{display:block; width:100%; height:22px;}
   .overview-card:nth-child(4n+2) .oc-spark{color:var(--amber);}
@@ -3995,6 +3996,17 @@ function saveMonthlyHistory(portfolioKey, snap){
       // always had one. Stored the same way as renewalLeaseContracts above so
       // a real delta can appear there too once a second month is on record.
       totalRequests: (snap.totalRequests === null || snap.totalRequests === undefined) ? null : snap.totalRequests,
+      // Round 15 (Sept 22): Lease Activity's Section 3 ("Renewal / New
+      // Lease — Requests") never had these two split out individually -
+      // only the broad totalRequests figure above (every request type, not
+      // just renewal/new lease) was ever saved. Adding them here means this
+      // section gains a real MoM delta the same way the other two sections
+      // just did, starting from the next period saved after this fix ships
+      // - same "null until a second real month exists" rule as every other
+      // field on this object, nothing retroactive or invented for past
+      // months that never recorded it.
+      rcRenewalRequests: (snap.rcRenewalRequests === null || snap.rcRenewalRequests === undefined) ? null : snap.rcRenewalRequests,
+      rcNewRequests: (snap.rcNewRequests === null || snap.rcNewRequests === undefined) ? null : snap.rcNewRequests,
       // Identity keys (contract number, or tenant|chequeNo) for every bounced
       // cheque this month, straight from that report's own cross-check
       // export - not recomputed here. Lets us diff "which ones are new /
@@ -7258,6 +7270,33 @@ function renderLeaseActivity(){
   const rcNew = (rc.type_counts && rc.type_counts['New Lease']) || 0;
   const rcLeaseTotal = rcRenewal + rcNew;
 
+  // Round 15 (Sept 22): MoM deltas for this tab, same real-prior-period-only
+  // lookup already proven in renderOverviewAwqaf's leaseCurrSnap/
+  // leasePriorSnap (~line 7020) - recomputed here rather than hoisted to a
+  // shared scope since these are two independent render functions and this
+  // lookup is cheap (one array filter + a handful of momDeltaText calls).
+  // Only cc/nl/rc dates feed the period key here (bc isn't loaded by this
+  // tab's 3 sources), which matches LEASE_ACTIVITY_SOURCE_IDS above.
+  const laLivePeriodKey = latestMonthKeyFromDates([cc.date_min, cc.date_max, nl.date_min, nl.date_max, rc.date_min, rc.date_max]);
+  const laPriorHistory = getMonthlyHistory('awqaf').filter(h => h.periodKey && laLivePeriodKey && h.periodKey < laLivePeriodKey);
+  const laPriorSnap = laPriorHistory.length ? laPriorHistory[laPriorHistory.length - 1] : null;
+  const dNewLeaseContracts = laPriorSnap ? momDeltaText(ccNewLease, laPriorSnap.newLeaseContracts, false) : null;
+  const dRenewalContracts = laPriorSnap ? momDeltaText(ccRenewal, laPriorSnap.renewalLeaseContracts, false) : null;
+  const dClassifiedTotal = (laPriorSnap && typeof laPriorSnap.newLeaseContracts === 'number' && typeof laPriorSnap.renewalLeaseContracts === 'number')
+    ? momDeltaText(ccClassified, laPriorSnap.newLeaseContracts + laPriorSnap.renewalLeaseContracts, false) : null;
+  const dRentValue = laPriorSnap ? momDeltaText(nl.rent_value_total || 0, laPriorSnap.leaseRentValue, true) : null;
+  // rcRenewalRequests/rcNewRequests were only added to the saved snapshot in
+  // this same round - laPriorSnap.rcRenewalRequests will be null/undefined
+  // for every period saved before today, same as any other field gaining
+  // history tracking for the first time. momDeltaText already returns null
+  // for a non-number prior, so this naturally stays quiet (no delta shown)
+  // until a second month is saved with the new fields, then works exactly
+  // like the other two sections from then on - nothing fabricated for the
+  // gap.
+  const dRcRenewal = laPriorSnap ? momDeltaText(rcRenewal, laPriorSnap.rcRenewalRequests, false) : null;
+  const dRcNew = laPriorSnap ? momDeltaText(rcNew, laPriorSnap.rcNewRequests, false) : null;
+  const withLaDelta = (sub, delta) => delta ? `${sub} · ${delta}` : sub;
+
   // Section 7 (Phase 3 FINAL pass): a bespoke, always-expanded, 3-section
   // stacked layout rather than reusing renderOverviewCards()'s generic
   // 3-column KPI-tile grid with a click-to-expand "Details" toggle. That
@@ -7272,15 +7311,15 @@ function renderLeaseActivity(){
     {
       id:'count-report', title:t('leaseActivity.s1.title','Renewal vs New Lease — Contracts'), icon:'doc',
       big: (cc.total_contracts || 0).toLocaleString() + ' ' + t('leaseActivity.s1.unit','contracts'),
-      sub: t('leaseActivity.s1.sub','Source: Cheque Count — leaseType, contract-level (validated)'), spark: sparklineSvg(cc.daily),
+      sub: withLaDelta(t('leaseActivity.s1.sub','Source: Cheque Count — leaseType, contract-level (validated)'), dClassifiedTotal), spark: sparklineSvg(cc.daily),
       donut: ccClassified ? { centerText: ccClassified.toLocaleString(), segments: [
         {label:t('leaseActivity.donut.renewal','Renewal'), pct: (ccRenewal/ccClassified)*100, color:'var(--accent)'},
         {label:t('leaseActivity.donut.new','New'), pct: (ccNewLease/ccClassified)*100, color:'var(--accent2)'},
       ]} : null,
       rows: [
         [t('term.renewalShare', 'Renewal Share of Lease Activity'), withPct(ccRenewal, cc.total_contracts)],
-        [t('leaseActivity.s1.rowNewLease','New Lease contracts'), withPct(ccNewLease, cc.total_contracts)],
-        [t('leaseActivity.s1.rowRenewal','Renewal Lease contracts'), withPct(ccRenewal, cc.total_contracts)],
+        [t('leaseActivity.s1.rowNewLease','New Lease contracts'), withPct(ccNewLease, cc.total_contracts), false, dNewLeaseContracts],
+        [t('leaseActivity.s1.rowRenewal','Renewal Lease contracts'), withPct(ccRenewal, cc.total_contracts), false, dRenewalContracts],
         ...(ccUnclassified ? [[t('leaseActivity.s1.rowOther','Other / unclassified contracts'), withPct(ccUnclassified, cc.total_contracts)]] : []),
       ],
       period: fmtPeriod(cc.date_min, cc.date_max)
@@ -7291,9 +7330,9 @@ function renderLeaseActivity(){
       sub: t('leaseActivity.s2.sub','Source: New Lease report — Summary-linked distinct contracts'), spark: sparklineSvg(nl.daily),
       donut: null,
       rows: [
-        [t('leaseActivity.s2.rowRent','Total rent value'), fmtAed(nl.rent_value_total)],
+        [t('leaseActivity.s2.rowRent','Total rent value'), fmtAed(nl.rent_value_total), false, dRentValue],
         [t('leaseActivity.s2.rowFees','Total fees'), fmtAed(nl.total_amount)],
-        [t('leaseActivity.s2.rowCcCross','Cheque Count new-lease contracts (separate source — see Cross-checks)'), (cc.new_lease_contracts||0).toLocaleString()],
+        [t('leaseActivity.s2.rowCcCross','Cheque Count new-lease contracts (separate source — see Cross-checks)'), (cc.new_lease_contracts||0).toLocaleString(), false, dNewLeaseContracts],
       ],
       period: fmtPeriod(nl.date_min, nl.date_max)
     },
@@ -7306,8 +7345,8 @@ function renderLeaseActivity(){
         {label:t('leaseActivity.donut.new','New'), pct: (rcNew/rcLeaseTotal)*100, color:'var(--accent2)'},
       ]} : null,
       rows: [
-        [t('leaseActivity.s3.rowRenewal','Renewal Lease requests'), withPct(rcRenewal, rc.total_requests)],
-        [t('leaseActivity.s3.rowNew','New Lease requests'), withPct(rcNew, rc.total_requests)],
+        [t('leaseActivity.s3.rowRenewal','Renewal Lease requests'), withPct(rcRenewal, rc.total_requests), false, dRcRenewal],
+        [t('leaseActivity.s3.rowNew','New Lease requests'), withPct(rcNew, rc.total_requests), false, dRcNew],
       ],
       period: fmtPeriod(rc.date_min, rc.date_max)
     },
@@ -7319,7 +7358,7 @@ function renderLeaseActivity(){
         <div class="oc-icon-badge la-icon-${i % 4}">${cardIcon(s.icon)}</div>
         <div class="la-section-headtext">
           <div class="la-section-title">${esc(s.title)}</div>
-          <div class="la-section-source">${esc(s.sub)}</div>
+          <div class="la-section-source">${s.sub}</div>
         </div>
         ${s.period ? `<div class="la-section-period bidi-ltr">${esc(s.period)}</div>` : ''}
       </div>
@@ -7330,9 +7369,9 @@ function renderLeaseActivity(){
         </div>
         ${s.donut ? `<div class="la-section-donut">${miniDonut(s.donut.segments, s.donut.centerText)}</div>` : ''}
         <div class="la-section-rows">
-          ${s.rows.map(([label,value,raw]) => {
+          ${s.rows.map(([label,value,raw,delta]) => {
             const pct = rowPct(value, raw);
-            return `<div class="oc-row"><span class="oc-label">${esc(label)}</span><span class="oc-value bidi-ltr">${raw ? value : esc(value)}</span></div>${pct !== null ? `<div class="oc-bar"><div class="oc-bar-fill" style="width:${pct}%"></div></div>` : ''}`;
+            return `<div class="oc-row"><span class="oc-label">${esc(label)}</span><span class="oc-value bidi-ltr">${raw ? value : esc(value)}</span></div>${pct !== null ? `<div class="oc-bar"><div class="oc-bar-fill" style="width:${pct}%"></div></div>` : ''}${delta ? `<div class="oc-row-delta">${delta}</div>` : ''}`;
           }).join('')}
         </div>
       </div>
@@ -7447,6 +7486,10 @@ function renderExecSummaryAwqaf(){
     // #issue-2: feeds the Operations exec-stat row's MoM delta below, same
     // way renewalLeaseContracts feeds Leasing's.
     totalRequests: rc.total_requests || 0,
+    // Round 15: feeds Lease Activity's Section 3 delta (see the matching
+    // comment on the read side above).
+    rcRenewalRequests: (rc.type_counts && rc.type_counts['Renewal Lease']) || 0,
+    rcNewRequests: (rc.type_counts && rc.type_counts['New Lease']) || 0,
   };
   saveMonthlyHistory('awqaf', portfolioSnapshot['awqaf']);
   if(typeof renderCompare === 'function') renderCompare();
