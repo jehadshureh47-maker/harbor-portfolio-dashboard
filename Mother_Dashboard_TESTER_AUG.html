@@ -4469,7 +4469,7 @@ function renderMonthlyTrend(){
     const prevEntry = recent.length >= 2 ? recent[recent.length - 2] : null;
     const lastEntry = recent[recent.length - 1];
     const totalDelta = prevEntry ? momDeltaText(lastEntry.totalCollected || 0, prevEntry.totalCollected, true) : null;
-    const bouncedDelta = prevEntry ? momDeltaText(lastEntry.bouncedAmount || 0, prevEntry.bouncedAmount, true) : null;
+    const bouncedDelta = prevEntry ? momDeltaText(lastEntry.bouncedAmount || 0, prevEntry.bouncedAmount, true, true) : null;
     crossfadeInnerHTML(wrap, `
       <div class="section-title" style="margin-top:0;"><span class="h2-dot"></span>Monthly Trend</div>
       <div class="section-note">Real totals from every month you've loaded so far (last ${recent.length} shown) — nothing projected or estimated.</div>
@@ -5404,11 +5404,15 @@ function renderCompare(){
 // figure run through momDeltaText's money formatter would read nonsensically
 // (e.g. "AED 3" for a 3-point swing). Reuses the same compare.point.* i18n
 // keys the old cross-portfolio bounce-rate delta line already used.
-function momDeltaPct(currPct, priorPct){
+// isInverse: same meaning as on momDeltaText above - Bounce Rate is the
+// only caller that passes true (a rising bounce rate is worsening risk,
+// not an improvement), Occupancy Rate stays at the default false.
+function momDeltaPct(currPct, priorPct, isInverse){
   if(typeof priorPct !== 'number' || isNaN(priorPct) || typeof currPct !== 'number' || isNaN(currPct)) return null;
   const diff = currPct - priorPct;
   if(Math.abs(diff) < 0.05) return t('metric.noChange', 'No change vs last period');
-  const arrow = momArrowHtml(diff > 0 ? 'up' : 'down');
+  const dir = diff > 0 ? 'up' : 'down';
+  const arrow = momArrowHtml(dir, isInverse ? (dir === 'up' ? 'down' : 'up') : dir);
   const pointWord = pluralize(Math.abs(diff), t('compare.point.singular','point'), t('compare.point.plural','points'));
   return `${arrow} ${Math.abs(diff).toFixed(1)} ${pointWord} ${t('metric.vsLastPeriod', 'vs last period')}`;
 }
@@ -5486,10 +5490,10 @@ function renderCompareMonth(){
         <div style="text-align:right;">${esc(name)}<span>${esc(monthB.period || monthB.periodKey)}</span></div>
       </div>
       ${compareActiveMetrics.has('collected') ? row(totalCollectedLabel(portfolio), fmtAed(monthA.totalCollected), fmtAed(monthB.totalCollected), momDeltaText(monthB.totalCollected, monthA.totalCollected, true)) : ''}
-      ${compareActiveMetrics.has('bounced') ? row(t('compare.bouncedAtRisk','Bounced / At Risk'), `${fmtAed(monthA.bouncedAmount)} (${(monthA.bouncedCount||0).toLocaleString()} ${chequeUnitA})`, `${fmtAed(monthB.bouncedAmount)} (${(monthB.bouncedCount||0).toLocaleString()} ${chequeUnitB})`, momDeltaText(monthB.bouncedAmount, monthA.bouncedAmount, true)) : ''}
-      ${compareActiveMetrics.has('rate') ? row(t('compare.bounceRate','Bounce Rate'), (monthA.bounceRatePct !== null && monthA.bounceRatePct !== undefined) ? monthA.bounceRatePct.toFixed(1) + '%' : '—', (monthB.bounceRatePct !== null && monthB.bounceRatePct !== undefined) ? monthB.bounceRatePct.toFixed(1) + '%' : '—', momDeltaPct(monthB.bounceRatePct, monthA.bounceRatePct)) : ''}
+      ${compareActiveMetrics.has('bounced') ? row(t('compare.bouncedAtRisk','Bounced / At Risk'), `${fmtAed(monthA.bouncedAmount)} (${(monthA.bouncedCount||0).toLocaleString()} ${chequeUnitA})`, `${fmtAed(monthB.bouncedAmount)} (${(monthB.bouncedCount||0).toLocaleString()} ${chequeUnitB})`, momDeltaText(monthB.bouncedAmount, monthA.bouncedAmount, true, true)) : ''}
+      ${compareActiveMetrics.has('rate') ? row(t('compare.bounceRate','Bounce Rate'), (monthA.bounceRatePct !== null && monthA.bounceRatePct !== undefined) ? monthA.bounceRatePct.toFixed(1) + '%' : '—', (monthB.bounceRatePct !== null && monthB.bounceRatePct !== undefined) ? monthB.bounceRatePct.toFixed(1) + '%' : '—', momDeltaPct(monthB.bounceRatePct, monthA.bounceRatePct, true)) : ''}
       ${compareActiveMetrics.has('net') ? row(netCollectedLabel(portfolio), fmtAed(monthA.netCollected), fmtAed(monthB.netCollected), momDeltaText(monthB.netCollected, monthA.netCollected, true)) : ''}
-      ${compareActiveMetrics.has('count') ? row(t('compare.bouncedCount','Bounced Cheque Count'), (monthA.bouncedCount||0).toLocaleString(), (monthB.bouncedCount||0).toLocaleString(), momDeltaText(monthB.bouncedCount||0, monthA.bouncedCount, false)) : ''}
+      ${compareActiveMetrics.has('count') ? row(t('compare.bouncedCount','Bounced Cheque Count'), (monthA.bouncedCount||0).toLocaleString(), (monthB.bouncedCount||0).toLocaleString(), momDeltaText(monthB.bouncedCount||0, monthA.bouncedCount, false, true)) : ''}
       ${compareActiveMetrics.size === 0 ? `<div class="compare-row"><div class="compare-metric">${esc(t('compare.noMetricsSelected','No metrics selected - choose at least one above.'))}</div></div>` : ''}
     </div>
     ${(extraRows.length && compareActiveMetrics.has('highlight')) ? `<div class="compare-card">${extraRows.join('')}</div>` : ''}
@@ -6902,11 +6906,22 @@ function describePeriodMismatch(entries){
 // compare against (first month ever saved for this portfolio, or an older
 // history entry saved before this field existed). A genuine zero-change is
 // still real information, so that case returns actual text, not null.
-function momDeltaText(curr, prior, isMoney){
+// isInverse (Sept 22, round 11): true for metrics where a lower number is
+// the good outcome (Bounced Amount, Bounced Cheque Count, Bounce Rate) -
+// the glyph (▲/▼) always reports the actual arithmetic direction of the
+// change, unchanged by this flag, but the color now reflects whether that
+// movement is good or bad news for that specific metric. Defaults to false
+// so every existing call site (collections, occupancy, lease value, request
+// counts - all genuinely "up is good") keeps its exact prior behavior with
+// no changes needed. See the isInverse note on momArrowHtml() just below
+// for why this replaces the #549 "keep it consistent, don't invert"
+// decision rather than sitting alongside it.
+function momDeltaText(curr, prior, isMoney, isInverse){
   if(typeof prior !== 'number' || isNaN(prior)) return null;
   const diff = curr - prior;
   if(diff === 0) return t('metric.noChange', 'No change vs last period');
-  const arrow = momArrowHtml(diff > 0 ? 'up' : 'down');
+  const dir = diff > 0 ? 'up' : 'down';
+  const arrow = momArrowHtml(dir, isInverse ? (dir === 'up' ? 'down' : 'up') : dir);
   const diffFmt = isMoney ? fmtAed(Math.abs(diff)) : Math.abs(diff).toLocaleString();
   const pctPart = prior !== 0 ? ` (${diff > 0 ? '+' : '−'}${Math.abs((diff/prior)*100).toFixed(0)}%)` : '';
   return `${arrow} ${diffFmt}${pctPart} ${t('metric.vsLastPeriod', 'vs last period')}`;
@@ -6918,8 +6933,27 @@ function momDeltaText(curr, prior, isMoney){
 // treats its own output as trusted markup (splitBig, badges, etc. do the
 // same throughout this file), so this doesn't introduce a new trust
 // boundary.
-function momArrowHtml(dir){
-  return `<span class="mom-arrow mom-${dir}">${dir === 'up' ? '▲' : '▼'}</span>`;
+//
+// isInverse fix (Sept 22, round 11): `dir` is the glyph - it always shows
+// which way the number actually moved (▲ = went up, ▼ = went down), never
+// changes. `sentiment` is a separate, optional second argument that picks
+// the color class (mom-up=green/good, mom-down=red/bad) and defaults to
+// `dir` when omitted, so every pre-existing single-argument call
+// (computeLeaseKeyChanges, momDeltaPct's default case, etc.) is byte-for-
+// byte unchanged. The #549 comment on the Monthly Trend chart above
+// originally chose NOT to invert Bounced Amount's color, reasoning that
+// the same number shouldn't read as "improving" in one place and
+// "worsening" in another. Splitting glyph from sentiment actually satisfies
+// that same goal *and* fixes the correctness problem: Bounced Amount now
+// consistently gets sentiment-inverted everywhere it's shown (Monthly
+// Trend, Compare tab's Bounced/At Risk, Bounced Cheque Count, Bounce Rate),
+// so a viewer glancing at red/green anywhere on this dashboard can trust
+// red=bad, green=good - which wasn't true before this fix for any bounce-
+// related figure (a rising bounce amount, i.e. worsening risk, previously
+// rendered in green because it was numerically "up").
+function momArrowHtml(dir, sentiment){
+  const s = sentiment || dir;
+  return `<span class="mom-arrow mom-${s}">${dir === 'up' ? '▲' : '▼'}</span>`;
 }
 // "Key Changes This Period" - a short, leasing-scoped list of movements
 // worth a second glance vs the last real saved month for Awqaf, shown only
@@ -7431,12 +7465,12 @@ function renderExecSummaryAwqaf(){
   // instead of being repeated as a whole separate row further down.
   const awqafPriorHistory = getMonthlyHistory('awqaf').filter(h => h.periodKey && awqafPeriodKey && h.periodKey < awqafPeriodKey);
   const priorSnap = awqafPriorHistory.length ? awqafPriorHistory[awqafPriorHistory.length - 1] : null;
-  const heroDelta = (curr, prevKey, isAed) => priorSnap ? momDeltaText(curr, priorSnap[prevKey], isAed) : null;
+  const heroDelta = (curr, prevKey, isAed, isInverse) => priorSnap ? momDeltaText(curr, priorSnap[prevKey], isAed, isInverse) : null;
   const withHeroDelta = (sub, delta) => delta ? `${sub} · ${delta}` : sub;
 
   renderExecCards(heroWrap, [
     {label: totalCollectedLabel('awqaf'), value: fmtAed(cc.total_amount), sub: withHeroDelta(t('execsum.heroTotalSub','Cheque Count, this month — recorded ledger sum, not confirmed bank clearance'), heroDelta(cc.total_amount, 'totalCollected', true))},
-    {label: currentLang === 'ar' ? 'قيمة الشيكات المرتجعة المسجلة' : 'Reported bounced value', value: fmtAed(bc.total_amount), sub: withHeroDelta(`${bc.total_count.toLocaleString()} ${chequeUnit} · ${currentLang === 'ar' ? 'كل الحالات، بما فيها المدفوعة؛ ليست رصيداً مستحقاً' : 'all statuses, including Paid; not outstanding exposure'}`, heroDelta(bc.total_amount, 'bouncedAmount', true))},
+    {label: currentLang === 'ar' ? 'قيمة الشيكات المرتجعة المسجلة' : 'Reported bounced value', value: fmtAed(bc.total_amount), sub: withHeroDelta(`${bc.total_count.toLocaleString()} ${chequeUnit} · ${currentLang === 'ar' ? 'كل الحالات، بما فيها المدفوعة؛ ليست رصيداً مستحقاً' : 'all statuses, including Paid; not outstanding exposure'}`, heroDelta(bc.total_amount, 'bouncedAmount', true, true))},
     {label: netCollectedLabel('awqaf'), value: fmtAed(netCollected), sub: withHeroDelta(t('execsum.heroNetSub','Recorded value minus bounced'), heroDelta(netCollected, 'netCollected', true))},
     {label: t('execsum.heroNewLeaseLabel','New Lease Value'), value: fmtAed(nl.rent_value_total), sub: withHeroDelta(t('execsum.heroNewLeaseSub','{n} new {unit} — new-lease value only').replace('{n}', nl.total_new_leases.toLocaleString()).replace('{unit}', leaseUnitHero), heroDelta(nl.rent_value_total || 0, 'leaseRentValue', true))},
   ]);
