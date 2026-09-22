@@ -7232,6 +7232,15 @@ function renderLeaseActivity(){
   if(!wrap) return;
   const ready = LEASE_ACTIVITY_SOURCE_IDS.every(id => embeddedWindows[id] && embeddedWindows[id].__crossCheckData);
   if(!ready){ renderLoadingState('leaseActivityWrap', LEASE_ACTIVITY_SOURCE_IDS, 'overview-grid'); return; }
+  // Fix (Sept 22, round 12): 'lease-activity' is a synthetic tab id, not a
+  // real REPORTS entry, so it was never covered by updateTabIcon(r.id, ...)
+  // in the main report-polling loop below (~line 3447-3542) - every one of
+  // its 3 source tabs (Request Count, New Lease Detail, Cheque Count) turns
+  // to a checkmark once loaded, but Lease Activity itself sat on the
+  // pending dash forever, permanently, even once fully rendered. Set it
+  // explicitly here, the one place that already knows all 3 sources are
+  // actually ready.
+  updateTabIcon('lease-activity', 'ok');
 
   const cc = embeddedWindows['count-report'].__crossCheckData;
   const nl = embeddedWindows['new-lease'].__crossCheckData;
