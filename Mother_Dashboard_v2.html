@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%232f3542'/%3E%3Crect x='5' y='13' width='3.2' height='6' rx='1' fill='%2360a5fa'/%3E%3Crect x='10.4' y='9' width='3.2' height='10' rx='1' fill='%2334d399'/%3E%3Crect x='15.8' y='5' width='3.2' height='14' rx='1' fill='%23fbbf24'/%3E%3C/svg%3E">
+<meta name="description" content="Interactive portfolio reporting dashboard. Runs entirely in your browser — no server, no data upload.">
 <title>Mother Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -9540,5 +9542,59 @@ const PORTFOLIO_ACCESS = {
 })();
 </script>
 
+<footer id="mdFooter" style="padding:14px 20px 18px; text-align:center; font-size:11.5px; color:var(--sub); border-top:1px solid var(--border); margin-top:8px;">
+  Internal portfolio reporting tool &mdash; runs entirely in your browser.
+  <button type="button" id="privacyLinkBtn" style="background:none;border:none;color:var(--accent);text-decoration:underline;cursor:pointer;font-size:11.5px;padding:0;margin-left:6px;">Privacy &amp; data</button>
+</footer>
+<script>
+(function(){
+  let pvTriggerEl = null;
+  function ensurePrivacyModal(){
+    let dlg = document.getElementById('privacyModalOverlay');
+    if(dlg) return dlg;
+    dlg = document.createElement('dialog');
+    dlg.id = 'privacyModalOverlay';
+    dlg.className = 'hm-modal';
+    dlg.setAttribute('aria-labelledby', 'privacyModalTitle');
+    dlg.innerHTML = `
+      <div class="hm-modal-head">
+        <div>
+          <div class="hm-modal-title" id="privacyModalTitle">Privacy &amp; data</div>
+          <div class="hm-modal-sub">How this tool handles what you load into it</div>
+        </div>
+        <button class="hm-modal-close" type="button" aria-label="Close">&#10005;</button>
+      </div>
+      <div style="font-size:13px; line-height:1.6; color:var(--text);">
+        <p>Everything on this page runs in your browser. There's no server and no database behind it &mdash; a file you load is read, parsed, and rendered on your device, and it is never sent anywhere.</p>
+        <p><strong>What's saved on this device</strong> (browser storage only, never transmitted): your theme and language choice, a few display preferences and alert thresholds, which onboarding tips and update notes you've already seen, and, if you load a report file, a cached copy so it's still there the next time you open this on the same browser. All of it stays local and clears if you clear this site's browser data.</p>
+        <p>No analytics, no tracking, no cookies.</p>
+        <p>One external resource is loaded from a public library (used to read Excel files); it never receives your file or its contents.</p>
+        </div>`;
+    dlg.querySelector('.hm-modal-close').addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (ev) => {
+      if(ev.target !== dlg) return;
+      const rect = dlg.getBoundingClientRect();
+      const inside = rect.top <= ev.clientY && ev.clientY <= rect.bottom && rect.left <= ev.clientX && ev.clientX <= rect.right;
+      if(!inside) dlg.close();
+    });
+    dlg.addEventListener('close', () => {
+      if(pvTriggerEl && typeof pvTriggerEl.focus === 'function') pvTriggerEl.focus();
+      pvTriggerEl = null;
+    });
+    document.body.appendChild(dlg);
+    return dlg;
+  }
+  function openPrivacyModal(){
+    pvTriggerEl = document.activeElement;
+    const dlg = ensurePrivacyModal();
+    if(!dlg.open) dlg.showModal();
+    const closeBtn = dlg.querySelector('.hm-modal-close');
+    if(closeBtn) closeBtn.focus();
+  }
+  const pvBtn = document.getElementById('privacyLinkBtn');
+  if(pvBtn) pvBtn.addEventListener('click', openPrivacyModal);
+  window.__mdOpenPrivacy = openPrivacyModal;
+})();
+</script>
 </body>
 </html>
