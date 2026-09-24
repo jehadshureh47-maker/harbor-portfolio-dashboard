@@ -7345,8 +7345,19 @@ function renderLeaseActivity(){
         {label:t('leaseActivity.donut.new','New'), pct: (rcNew/rcLeaseTotal)*100, color:'var(--accent2)'},
       ]} : null,
       rows: [
-        [t('leaseActivity.s3.rowRenewal','Renewal Lease requests'), withPct(rcRenewal, rc.total_requests), false, dRcRenewal],
-        [t('leaseActivity.s3.rowNew','New Lease requests'), withPct(rcNew, rc.total_requests), false, dRcNew],
+        // Round 16 (Sept 24) fix: this section's big number (316) and donut
+        // are both framed against rcLeaseTotal (renewal+new only) - these two
+        // rows used to divide by rc.total_requests instead (ALL request
+        // types, including non-lease ones), which silently produced a
+        // different, smaller percentage than the donut right next to it
+        // (e.g. donut showing 97%/3% while the row text showed 87%/3% for
+        // the same counts, spotted live on the deployed site). Overview's
+        // Request Count card correctly pairs rc.total_requests with its own
+        // rc.total_requests-based big number/donut - this section's rows
+        // just never got updated to match ITS own (different) big number
+        // when the Lease Activity tab was built.
+        [t('leaseActivity.s3.rowRenewal','Renewal Lease requests'), withPct(rcRenewal, rcLeaseTotal), false, dRcRenewal],
+        [t('leaseActivity.s3.rowNew','New Lease requests'), withPct(rcNew, rcLeaseTotal), false, dRcNew],
       ],
       period: fmtPeriod(rc.date_min, rc.date_max)
     },
