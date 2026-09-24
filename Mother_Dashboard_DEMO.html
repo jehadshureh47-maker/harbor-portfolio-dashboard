@@ -1644,7 +1644,6 @@ const TRANSLATIONS = {
     'shell.navChequeCount': 'Cheque Count',
     'shell.portfolioNotSetUpDesc': "No reports have been loaded for this portfolio yet. Once its workbooks come in, they'll get their own tabs here, matched to however that portfolio's exports are actually structured, same as was done for Meridian and Bayline Properties.",
     'shell.notSetUpYet': 'Not set up yet',
-    'pin.enterFor': 'Enter the PIN for {label}.',
     'execsum.printBtnTitle': 'Print or save this Executive Summary as a PDF',
     'execsum.printBtnLabel': 'Print / Export PDF',
     'execsum.paneDesc': 'One page with the headline numbers, a plain-English summary, and a quick health check — built for a fast read, not a click-through.',
@@ -2154,7 +2153,6 @@ const TRANSLATIONS = {
     'shell.navChequeCount': 'عدد الشيكات',
     'shell.portfolioNotSetUpDesc': 'لم يتم تحميل أي تقارير لهذه المحفظة بعد. عند وصول ملفات البيانات الخاصة بها، ستحصل على تبويباتها الخاصة هنا، بما يتوافق مع طريقة تنظيم تصديرات تلك المحفظة فعليًا، تمامًا كما جرى مع ميريديان والناصر كلوب.',
     'shell.notSetUpYet': 'لم يتم إعدادها بعد',
-    'pin.enterFor': 'أدخل الرمز الخاص بـ {label}.',
     'execsum.printBtnTitle': 'طباعة أو حفظ هذا الملخص التنفيذي كملف PDF',
     'execsum.printBtnLabel': 'طباعة / تصدير PDF',
     'execsum.paneDesc': 'صفحة واحدة بالأرقام الرئيسية، وملخص بلغة واضحة، وفحص سريع للحالة العامة — مصممة لقراءة سريعة، وليست للتنقل التفصيلي.',
@@ -8139,117 +8137,7 @@ function doSwitchPortfolio(key){
   if(typeof window.refreshPortfolioUpdatesDots === 'function') window.refreshPortfolioUpdatesDots();
 }
 
-// ---------- Per-portfolio PIN gate ----------
-// The dashboard link itself is public for now (Cloudflare Access set to
-// bypass, until Rahul sets up proper hosting) - this PIN is a client-side
-// speed bump, not real access control. It stops someone from idly clicking
-// through portfolios they weren't given a code for, but the PINs and any
-// data already baked into this file (e.g. Police's static figures) still
-// ship in the page source to anyone who loads it. Share each PIN only with
-// the people who should see that portfolio.
-const PORTFOLIO_PINS = {
-  'meridian': '6776',
-  'bayline': '6776',
-  'rta': '6776',
-  'police': '6776',
-};
-const PIN_VERIFIED_PREFIX = 'motherDashboardPinVerified_';
-
-function isPortfolioPinVerified(key){
-  try{ return localStorage.getItem(PIN_VERIFIED_PREFIX + key) === 'true'; }
-  catch(e){ return false; }
-}
-function markPortfolioPinVerified(key){
-  try{ localStorage.setItem(PIN_VERIFIED_PREFIX + key, 'true'); }catch(e){}
-}
-
-let pinTriggerEl = null;
-function ensurePinModal(){
-  let dlg = document.getElementById('pinModalOverlay');
-  if(dlg) return dlg;
-  dlg = document.createElement('dialog');
-  dlg.id = 'pinModalOverlay';
-  dlg.className = 'hm-modal';
-  dlg.setAttribute('aria-labelledby', 'pinModalTitle');
-  dlg.innerHTML = `
-    <div class="hm-modal-head">
-      <div>
-        <div class="hm-modal-title" id="pinModalTitle">Enter PIN</div>
-        <div class="hm-modal-sub" id="pinModalSub"></div>
-      </div>
-      <button class="hm-modal-close" type="button" aria-label="Close" data-i18n-aria-label="utility.close">&#10005;</button>
-    </div>
-    <div style="display:flex; flex-direction:column; gap:10px;">
-      <input type="password" inputmode="numeric" autocomplete="off" id="pinModalInput" placeholder="PIN"
-        style="background:var(--card2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:10px 12px; font-size:16px; letter-spacing:3px; text-align:center;" />
-      <div id="pinModalError" style="color:var(--bad); font-size:12.5px; min-height:16px;"></div>
-      <button type="button" id="pinModalSubmit" style="background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 12px; font-size:14px; font-weight:600; cursor:pointer;">Unlock</button>
-    </div>`;
-  const input = dlg.querySelector('#pinModalInput');
-  const errEl = dlg.querySelector('#pinModalError');
-  const submit = () => {
-    const key = dlg.dataset.portfolioKey;
-    const val = input.value.trim();
-    if(val && val === PORTFOLIO_PINS[key]){
-      markPortfolioPinVerified(key);
-      errEl.textContent = '';
-      dlg.close('ok');
-      doSwitchPortfolio(key);
-    } else {
-      errEl.textContent = 'Wrong PIN \u2014 try again.';
-      input.value = '';
-      input.focus();
-    }
-  };
-  dlg.querySelector('#pinModalSubmit').addEventListener('click', submit);
-  input.addEventListener('keydown', (ev) => { if(ev.key === 'Enter') submit(); });
-  dlg.querySelector('.hm-modal-close').addEventListener('click', () => dlg.close('cancel'));
-  dlg.addEventListener('click', (ev) => {
-    if(ev.target !== dlg) return;
-    const rect = dlg.getBoundingClientRect();
-    const inside = rect.top <= ev.clientY && ev.clientY <= rect.bottom && rect.left <= ev.clientX && ev.clientX <= rect.right;
-    if(!inside) dlg.close('cancel');
-  });
-  dlg.addEventListener('close', () => {
-    if(dlg.returnValue !== 'ok' && portfolioSelectEl){
-      // Cancelled or dismissed without the right PIN - revert the dropdown
-      // to whichever portfolio was actually showing before this attempt.
-      portfolioSelectEl.value = currentPortfolio;
-    }
-    if(pinTriggerEl && typeof pinTriggerEl.focus === 'function') pinTriggerEl.focus();
-    pinTriggerEl = null;
-  });
-  document.body.appendChild(dlg);
-  return dlg;
-}
-
-function promptPortfolioPin(key){
-  pinTriggerEl = document.activeElement;
-  const dlg = ensurePinModal();
-  dlg.dataset.portfolioKey = key;
-  // PORTFOLIO_PINS only has entries for keys that exist in PORTFOLIOS (see
-  // switchPortfolio below), so PORTFOLIOS[key].label is always safe here -
-  // this deliberately avoids PORTFOLIO_LABELS, which is declared further
-  // down the script and isn't initialized yet on the very first (bootstrap)
-  // call to switchPortfolio.
-  const label = (PORTFOLIOS[key] && PORTFOLIOS[key].label) || key;
-  dlg.querySelector('#pinModalSub').textContent = t('pin.enterFor', 'Enter the PIN for {label}.').replace('{label}', label);
-  dlg.querySelector('#pinModalError').textContent = '';
-  dlg.querySelector('#pinModalInput').value = '';
-  applyI18n(dlg);
-    if(!dlg.open) dlg.showModal();
-  dlg.querySelector('#pinModalInput').focus();
-}
-
-function switchPortfolio(key){
-  const needsPin = Object.prototype.hasOwnProperty.call(PORTFOLIO_PINS, key);
-  if(needsPin && !isPortfolioPinVerified(key)){
-    promptPortfolioPin(key);
-    return;
-  }
-  doSwitchPortfolio(key);
-}
-
+function switchPortfolio(key){ doSwitchPortfolio(key); }
 switchPortfolio('meridian');
 
 // If a report tab's own file-upload swaps in a different workbook (e.g. testing
