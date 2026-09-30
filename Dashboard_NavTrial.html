@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mother Dashboard</title>
+<title>Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   :root{
@@ -686,7 +686,7 @@
 <div class="app-shell">
   <div class="sidebar" id="sidebar">
     <div class="sidebar-top">
-      <div class="sidebar-logo"><span class="sidebar-dot"></span>Mother Dashboard</div>
+      <div class="sidebar-logo"><span class="sidebar-dot"></span>Dashboard</div>
       <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Collapse sidebar" title="Collapse sidebar">&#9664;</button>
     </div>
     <div class="sidebar-search-wrap">
@@ -702,7 +702,7 @@
 
     <header>
       <div>
-        <h1>Mother Dashboard</h1>
+        <h1>Dashboard</h1>
         <div class="sub">Portfolio and month selectors are in place below; each report tab supports loading a different workbook directly, and the Overview refreshes automatically when one does.</div>
       </div>
       <div class="header-actions">
@@ -2154,7 +2154,7 @@ function saveMonthlyHistory(portfolioKey, snap){
     hist.sort((a,b) => a.periodKey < b.periodKey ? -1 : (a.periodKey > b.periodKey ? 1 : 0));
     if(hist.length > MONTHLY_HISTORY_CAP) hist = hist.slice(hist.length - MONTHLY_HISTORY_CAP);
     localStorage.setItem(key, JSON.stringify(hist));
-  } catch(e){ console.warn('Mother Dashboard: could not save monthly history', e); }
+  } catch(e){ console.warn('Dashboard: could not save monthly history', e); }
 }
 function getMonthlyHistory(portfolioKey){
   try{
@@ -2564,7 +2564,7 @@ function buildCompareTab(){
   const portfolioOpts = Object.keys(PORTFOLIOS).map(k => `<option value="${k}">${esc(PORTFOLIOS[k].label || k)}</option>`).join('');
   pane.innerHTML = `
     <div class="print-only-header" id="comparePrintHeader">
-      <div class="p-title">Mother Dashboard — Portfolio Comparison</div>
+      <div class="p-title">Dashboard — Portfolio Comparison</div>
       <div class="p-sub" id="comparePrintHeaderSub"></div>
     </div>
     <div class="exec-header-row">
@@ -2659,7 +2659,7 @@ function buildBoardPackHeader(){
   const label = (typeof PORTFOLIO_LABELS !== 'undefined' && PORTFOLIO_LABELS[currentPortfolio]) || currentPortfolio;
   const dateLabel = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
   header.innerHTML = `
-    <div class="p-title">Mother Dashboard — Board Pack</div>
+    <div class="p-title">Dashboard — Board Pack</div>
     <div class="p-sub">${esc(label)} — generated ${dateLabel}</div>`;
   panes.insertBefore(header, panes.firstChild);
   return header;
@@ -2957,7 +2957,7 @@ function buildExecSummaryTab(){
   pane.style.display = 'none';
   pane.innerHTML = `
     <div class="print-only-header" id="execPrintHeader">
-      <div class="p-title">Mother Dashboard — Executive Summary</div>
+      <div class="p-title">Dashboard — Executive Summary</div>
       <div class="p-sub" id="execPrintHeaderSub"></div>
     </div>
     <div class="exec-header-row">
@@ -4209,7 +4209,7 @@ const WHATS_NEW = [
 // link straight to a specific tab/filter); always reopenable from the header
 // Tour button regardless of the "seen" flag.
 const TOUR_STEPS = [
-  { title: 'Welcome to the Mother Dashboard', body: "This dashboard pulls each portfolio's monthly reports into one place, checks them for issues automatically, and gives you both a detailed and an executive-level view. This short tour covers the main pieces - skip it anytime, and reopen it later from the Tour button in the header." },
+  { title: 'Welcome to the Dashboard', body: "This dashboard pulls each portfolio's monthly reports into one place, checks them for issues automatically, and gives you both a detailed and an executive-level view. This short tour covers the main pieces - skip it anytime, and reopen it later from the Tour button in the header." },
   { title: 'Sidebar & report tabs', body: 'Each report type for the current portfolio (Bounced Cheques, Collections, Occupancy, and so on) has its own tab in the sidebar. Click the arrow at the top of the sidebar to collapse it and free up screen space.' },
   { title: 'Search', body: 'The search box above the tab list jumps straight to a report tab - useful once a portfolio has several reports loaded at once.' },
   { title: 'Portfolio & month', body: 'The Portfolio and Month dropdowns above the summary bar switch between portfolios once their reports are loaded. Each report tab has its own upload button to load a workbook directly - nothing loads automatically.' },

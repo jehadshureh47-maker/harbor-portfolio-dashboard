@@ -62,11 +62,11 @@
 <body>
 
 <h1>Data Quality Validator</h1>
-<div class="sub">Standalone tool &middot; flags likely data-entry issues before a report reaches the dashboard &middot; does not modify the Mother Dashboard or any existing files</div>
+<div class="sub">Standalone tool &middot; flags likely data-entry issues before a report reaches the dashboard &middot; does not modify the Dashboard or any existing files</div>
 
 <div class="card">
   <h2>1. Choose portfolio &amp; report type</h2>
-  <div class="desc">Pick the portfolio first, same as the Mother Dashboard, the report type dropdown then only shows that portfolio's reports. Each report type has a different column layout and different checks that make sense for it. Uploading a file in step 2 auto-detects both from its filename and columns, you only need to touch these if you want to look at a config before uploading, or if the auto-detect gets it wrong.</div>
+  <div class="desc">Pick the portfolio first, same as the Dashboard, the report type dropdown then only shows that portfolio's reports. Each report type has a different column layout and different checks that make sense for it. Uploading a file in step 2 auto-detects both from its filename and columns, you only need to touch these if you want to look at a config before uploading, or if the auto-detect gets it wrong.</div>
   <div class="row">
     <div>
       <label>Portfolio</label>
@@ -320,7 +320,7 @@ const DEFAULT_CONFIGS = {
   }
 };
 
-// Same grouping as the Mother Dashboard's portfolio selector, so the report-type
+// Same grouping as the Dashboard's portfolio selector, so the report-type
 // dropdown only ever shows the handful of reports that actually belong to whichever
 // portfolio is picked, instead of one flat list of every report type at once.
 const PORTFOLIOS = {
