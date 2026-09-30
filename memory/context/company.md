@@ -2,7 +2,7 @@
 
 **Company:** Harbor Property Management.
 
-**Jehad's initiative:** Built an internal dashboard tool (Mother Dashboard) originally for two portfolios, now being scaled company-wide with backing from leadership (Haider), who connected him to Harbor's Head of IT.
+**Jehad's initiative:** Built an internal dashboard tool (Dashboard) originally for two portfolios, now being scaled company-wide with backing from leadership (Haider), who connected him to Harbor's Head of IT.
 
 **Portfolios referenced across the project:** Awqaf, Al Naser Club (both live), plus RTA, National Bonds, VIP, Dubai Court, and Dubai Police as prospective/in-progress portfolios, each with a specific point of contact (see memory/people/).
 
