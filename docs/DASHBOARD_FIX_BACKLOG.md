@@ -16,6 +16,17 @@ CORRECTIONS to earlier notes: the "Click to filter: RAK" tooltip is the browser'
 PASS 2 (also applied locally): empty portfolios now say "(no data yet)" in the dropdown; the month you picked is remembered when you visit a July-only portfolio and return to Awqaf; x-axis first/last date labels centred under their own points; ownership legend and bounce status labels shown in consistent case (display only); lighter table row dividers in light theme.
 NOT fixed (needs your decision or a bigger change): weekend gaps in daily charts (skipped days are plotted evenly - by design of the data); bounce-status shares summing to 101% (rounding); RTL for report iframes; print preview; 375px phone check; replacing native chart tooltips with custom ones.
 
+## PASS 3 (2026-10-04, after owner's screenshots of Request Count and Lease Activity)
+Done locally: all donut charts (report pages, main-page charts, the small Lease Activity donuts) now have an outer and inner border ring in both themes; Executive Summary "changed records" table no longer has its own scrollbar (full table flows with the page).
+## LEASE ACTIVITY - owner wants to change it (details still to come)
+Things already noticed there, to fold into the redesign:
+- "Renewal Share of Lease Activity 501 (97%)" and "Renewal Lease contracts 501 (97%)" show the same number twice in one card.
+- The 515-contracts and 380-requests sparklines look the same; check they use different data.
+- New Lease - Contract Detail card has no donut, so its rows start further left than the other two cards.
+- "Total fees" row has no change-vs-last-period line while the rows around it do.
+- Big number + sparkline column is much narrower than the detail column; large empty space under the 515 number.
+- Owner's own change requests: TO BE ADDED.
+
 # Original backlog (kept for reference)
 
 Source: code-assisted audit of live site, Awqaf Sept 2026, all 9 tabs, light + dark. Plus items the owner sends (screenshots) - append below.
