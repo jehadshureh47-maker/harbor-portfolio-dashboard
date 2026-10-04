@@ -1,0 +1,16 @@
+
+  /* ---- UX polish pass (Oct 2026) ---- */
+  .grid + .grid, .card + .grid, .grid + .card,
+  .grid + .kpis, .grid + .kpis-split, .grid + .kpis-support, .grid + .metric-grid, .grid + .stat-strip,
+  .card + .kpis, .card + .kpis-split, .card + .kpis-support, .card + .metric-grid, .card + .stat-strip,
+  .kpis + .card, .kpis-split + .card, .kpis-support + .card, .metric-grid + .card{margin-top:14px;}
+  .stat-strip .stat-label{min-height:2.5em;}
+  .kpis .kpi, .kpis-split .kpi{display:flex; flex-direction:column;}
+  .kpis .kpi .label, .kpis-split .kpi .label{flex:1 0 auto;}
+  button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible,
+  .metric-card:focus-visible, .accordion-header:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  [data-theme="light"] .quality-note.quality-ok, [data-theme="light"] .kpi.paid .value{color:var(--ok);}
+  [data-theme="light"] .kpi.legal .value{color:var(--bad);}
+  [data-theme="light"] .status-pill.legal{background:#fce4ea; color:#b2334f;}
+  [data-theme="light"] .status-pill.paid{background:#e3f5ea; color:#1f6f3c;}
+  [data-theme="light"] .status-pill.process{background:#fdf1dc; color:#8a5a00;}
