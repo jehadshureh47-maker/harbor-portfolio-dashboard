@@ -1109,6 +1109,394 @@
   @media (max-width:900px){
     html[dir="rtl"] .sidebar .tab-btn .tab-icon{ margin-left:0; margin-right:4px; }
   }
+
+  /* ================= TRIAL v3 ================= */
+  /* ---- Executive Summary: segmented one-screen views ---- */
+  .exec-seg{display:none;}
+  @media screen and (min-width:1100px) and (min-height:700px){
+    body.exec-focus .summary-bar, body.exec-focus .footer-note, body.exec-focus #mdFooter{display:none !important;}
+    #pane-execsummary.exec-fit:not([style*="none"]){display:grid !important; grid-template-columns:1fr 1fr; grid-template-rows:auto auto auto minmax(0,1fr); gap:8px 12px; height:var(--exec-h); overflow:hidden; padding:10px 12px; align-content:start;}
+    .exec-fit > .print-only-header, .exec-fit > .period-note{display:none !important;}
+    .exec-fit > .exec-header-row{grid-column:1 / -1; grid-row:1; margin:0;}
+    .exec-fit .exec-header-row .pane-desc{display:none;}
+    .exec-fit > .selector-bar{grid-column:1; grid-row:2; margin:0 !important;}
+    .exec-fit > .exec-seg{display:inline-flex; grid-column:2; grid-row:2; justify-self:end; align-self:center; gap:4px; background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:3px;}
+    .exec-seg-btn{background:transparent; border:none; color:var(--sub); font-size:12.5px; font-weight:600; padding:6px 14px; border-radius:7px; cursor:pointer;}
+    .exec-seg-btn:hover{color:var(--text);}
+    .exec-seg-btn.active{background:var(--accent); color:#fff;}
+    .exec-seg-btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+    .exec-fit > [data-exec-view]:not(.exec-on){display:none !important;}
+    .exec-fit[data-exec-active="summary"] > #execHeroWrap{grid-column:1 / -1; grid-row:3;}
+    .exec-fit[data-exec-active="summary"] > .exec-sec-perf{grid-column:1; grid-row:4; min-height:0; overflow:auto;}
+    .exec-fit[data-exec-active="summary"] > .exec-sec-risk{grid-column:2; grid-row:4; min-height:0; overflow:auto;}
+    .exec-fit[data-exec-active="trend"] > #monthlyTrendWrap{grid-column:1 / -1; grid-row:3;}
+    .exec-fit[data-exec-active="trend"] > .exec-sec-fwd{grid-column:1 / -1; grid-row:4; min-height:0; overflow:auto;}
+    .exec-fit[data-exec-active="changes"] > #changedRecordsWrap:not([style*="none"]){grid-column:1 / -1; grid-row:3 / 5; display:flex !important; flex-direction:column; min-height:0;}
+    .exec-fit .changed-table-scroll{flex:1; max-height:none; min-height:0;}
+    .exec-fit .exec-sec .section-note{display:none;}
+    .exec-fit .exec-sec .section-title{margin:0 0 6px;}
+    .exec-fit .exec-card{padding:8px 12px;}
+    .exec-fit .exec-card .exec-sub{display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; font-size:11.5px;}
+    .exec-fit .exec-card .exec-value{font-size:20px;}
+  }
+
+  /* ---- Lease Activity v2 ---- */
+  .la2{display:flex; flex-direction:column; gap:14px;}
+  .la2-agree{display:inline-flex; align-items:center; gap:8px; font-size:12px; padding:6px 12px; border-radius:999px; border:1px solid var(--border); background:var(--card2); color:var(--sub); align-self:flex-start;}
+  .la2-agree b{color:var(--text);}
+  .la2-agree .dot{width:8px; height:8px; border-radius:50%; background:var(--ok);}
+  .la2-agree.warn .dot{background:var(--amber);}
+  .la2-tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px;}
+  .la2-tile{background:linear-gradient(180deg,var(--card2),var(--card)); border:1px solid var(--border); border-top:3px solid var(--accent); border-radius:14px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; min-width:0;}
+  .la2-tile:nth-child(2){border-top-color:var(--accent2);}
+  .la2-tile:nth-child(3){border-top-color:var(--ok);}
+  .la2-tile:nth-child(4){border-top-color:var(--amber);}
+  .la2-tile-label{font-size:11.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--sub);}
+  .la2-tile-big{font-size:26px; font-weight:700; line-height:1.15; overflow-wrap:anywhere;}
+  .la2-tile-sub{font-size:11.5px; color:var(--sub);}
+  .la2-tile-delta{font-size:11.5px; color:var(--sub); min-height:1.3em;}
+  .la2-tile .oc-spark{margin-top:auto; padding-top:6px; color:var(--accent); height:30px;}
+  .la2-tile .oc-spark svg{width:100%; height:100%; display:block;}
+  .la2-mix{display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:14px;}
+  .la2-card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px 16px; min-width:0;}
+  .la2-card-head{display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:10px;}
+  .la2-card-title{font-size:14px; font-weight:700;}
+  .la2-card-source{font-size:11.5px; color:var(--sub); margin-top:2px;}
+  .la2-card-period{font-size:10.5px; color:var(--sub); white-space:nowrap; padding-top:2px;}
+  .la2-donut{display:flex; align-items:center; gap:22px; flex-wrap:wrap;}
+  .la2-donut svg{flex-shrink:0;}
+  .la2-donut-num{font-size:24px; font-weight:700; fill:var(--text);}
+  .la2-donut-sub{font-size:10.5px; fill:var(--sub); text-transform:uppercase; letter-spacing:.5px;}
+  .la2-legend{display:flex; flex-direction:column; gap:8px; flex:1; min-width:150px;}
+  .la2-leg-row{display:flex; align-items:center; gap:8px; font-size:13px;}
+  .la2-dot{width:10px; height:10px; border-radius:3px; flex-shrink:0;}
+  .la2-leg-label{color:var(--text); flex:1;}
+  .la2-leg-val{font-weight:600; text-align:right;}
+  .la2-leg-val em{font-style:normal; color:var(--sub); font-weight:500;}
+  .la2-trends{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px;}
+  .la2-trend-head{display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:6px;}
+  .la2-trend-peak{font-size:11.5px; color:var(--sub); text-align:right;}
+  .la2-trend-peak b{color:var(--text);}
+  .la2-trend-svg{width:100%; height:auto; display:block;}
+  .la2-axis{display:flex; justify-content:space-between; font-size:10.5px; color:var(--sub); margin-top:2px;}
+  .la2-empty{font-size:12px; color:var(--sub); padding:18px 0;}
+  .la2-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  .la2-table th{font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--sub); font-weight:600; text-align:left; padding:8px 10px; border-bottom:1px solid var(--border);}
+  .la2-table td{padding:10px; border-bottom:1px solid rgba(128,140,170,0.22);}
+  .la2-table tr:last-child td{border-bottom:none;}
+  .la2-table .num{text-align:right; font-variant-numeric:tabular-nums;}
+  .la2-table th.num{text-align:right;}
+  .la2-table .src{font-weight:600;}
+  .la2-table .grain{color:var(--sub); font-size:11.5px;}
+  .la2-note{font-size:11.5px; color:var(--sub); margin-top:8px;}
+  html[dir="rtl"] .la2-table th, html[dir="rtl"] .la2-table td{text-align:right;}
+  html[dir="rtl"] .la2-table .num, html[dir="rtl"] .la2-table th.num{text-align:left;}
+
+  /* ================= TRIAL v4 ================= */
+  /* Shared: hairline cards, quiet labels, tabular numbers */
+  .la4, .exec-fit{font-variant-numeric:tabular-nums;}
+
+  /* ---- Executive Summary: fill the screen, no dead space, no cut-off notes ---- */
+  @media screen and (min-width:1100px) and (min-height:700px){
+    .exec-fit .exec-card{display:flex; flex-direction:column; padding:14px 16px 12px; border-radius:14px;}
+    .exec-fit .exec-card .exec-label{min-height:0; margin-bottom:6px; font-size:11px; letter-spacing:.7px;}
+    .exec-fit .exec-card .exec-value{font-size:clamp(22px,2.1vw,30px); letter-spacing:-.4px;}
+    .exec-fit .exec-card .exec-sub{display:block; -webkit-line-clamp:unset; overflow:visible; font-size:12px; line-height:1.45; margin-top:6px; color:var(--sub);}
+    .exec-fit .exec-card .exec-delta{display:block; margin-top:auto; padding-top:8px; font-size:12px; font-weight:600; color:var(--text);}
+    .exec-fit[data-exec-active="summary"] > .exec-sec-perf,
+    .exec-fit[data-exec-active="summary"] > .exec-sec-risk{display:flex !important; flex-direction:column; min-height:0; overflow:visible;}
+    .exec-fit .exec-sec-perf > #execPerformanceWrap, .exec-fit .exec-sec-risk > #execRiskWrap{flex:1; min-height:0; display:flex; flex-direction:column; gap:10px;}
+    .exec-fit .exec-sec-risk .kpi-row{margin-bottom:0;}
+    .exec-fit .kpi-pill{padding:10px 14px;}
+    .exec-fit .dh-panel{flex:1; margin:0; flex-direction:column; align-items:stretch; gap:10px; padding:14px 16px; min-height:0; overflow:auto;}
+    .exec-fit .dh-status-block{text-align:start; min-width:0;}
+    .exec-fit .dh-explanation{max-width:none; margin:3px 0 0;}
+    .exec-fit .dh-panel.dh-warn{background:rgba(240,185,58,.10); border-color:rgba(240,185,58,.55);}
+    .exec-fit .dh-panel.dh-good{background:rgba(79,208,122,.10); border-color:rgba(79,208,122,.55);}
+    .exec-fit .dh-panel.dh-bad{background:rgba(239,106,139,.10); border-color:rgba(239,106,139,.55);}
+    .exec-fit .dh-counts{gap:8px;}
+    .exec-fit .dh-count-item{background:var(--card2); border:1px solid var(--border); border-radius:999px; padding:3px 10px; font-size:12px;}
+  }
+  .x4-stats{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .x4-stat{background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; display:flex; flex-direction:column; gap:3px; min-width:0;}
+  .x4-stat-group{font-size:10.5px; text-transform:uppercase; letter-spacing:.7px; color:var(--sub); font-weight:700;}
+  .x4-stat-name{font-size:12.5px; color:var(--text); font-weight:600; line-height:1.3;}
+  .x4-stat-value{font-size:clamp(24px,2.4vw,32px); font-weight:800; line-height:1.1; margin-top:4px; letter-spacing:-.4px; unicode-bidi:isolate; direction:ltr;}
+  .x4-stat-delta{font-size:12px; color:var(--sub); margin-top:2px;}
+  .x4-comp{background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; display:flex; flex-direction:column; gap:8px;}
+  .x4-comp-head{display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--sub);}
+  .x4-comp-head b{color:var(--text);}
+  .x4-bar{display:flex; height:12px; border-radius:7px; overflow:hidden; border:1px solid var(--border); background:var(--card); gap:2px;}
+  .x4-bar i{display:block; min-width:3px;}
+  .x4-comp-legend{display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--sub);}
+  .x4-comp-legend i{display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:6px; vertical-align:baseline;}
+  .x4-comp-legend b{color:var(--text);}
+  .x4-caveat{font-size:11.5px; line-height:1.5; color:var(--sub); margin-top:auto;}
+  .exec-fit .x4-caveat{display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
+
+  /* ---- Lease Activity v4 ---- */
+  .la4{gap:16px;}
+  .la2-table td.bidi-ltr, .la4 .la2-table td{display:table-cell;}
+  .la4-sub{font-size:11.5px; color:var(--sub);}
+  .la4-tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;}
+  .la4-tile{background:linear-gradient(180deg,var(--card2),var(--card)); border:1px solid var(--border); border-radius:14px; padding:14px 16px; display:flex; flex-direction:column; gap:2px; min-width:0;}
+  .la4-tile-label{font-size:11px; text-transform:uppercase; letter-spacing:.7px; color:var(--sub); font-weight:700;}
+  .la4-tile-big{font-size:clamp(24px,2.3vw,32px); font-weight:800; line-height:1.12; margin-top:6px; letter-spacing:-.4px; overflow-wrap:anywhere;}
+  .la4-tile-sub{font-size:12px; color:var(--sub); margin-top:2px;}
+  .la4-tile-delta{font-size:12px; color:var(--text); font-weight:600; margin-top:6px; min-height:1.3em;}
+  .la4-tile-vis{margin-top:auto; padding-top:12px;}
+  .la4-bar{display:flex; gap:2px; height:10px; border-radius:6px; overflow:hidden; border:1px solid var(--border); background:var(--card);}
+  .la4-bar i{display:block; min-width:3px;}
+  .la4-gauge{height:10px; border-radius:6px; border:1px solid var(--border); background:var(--card); overflow:hidden;}
+  .la4-gauge i{display:block; height:100%; border-radius:5px;}
+  .la4-main{display:grid; grid-template-columns:minmax(300px,1fr) minmax(0,2fr); gap:14px; align-items:stretch;}
+  @media (max-width:980px){ .la4-main{grid-template-columns:1fr;} }
+  .la4-card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px 18px; min-width:0;}
+  .la4-card-title{font-size:14px; font-weight:700;}
+  .la4-card-note{margin:2px 0 12px;}
+  .la4-mixcard{display:flex; flex-direction:column;}
+  .la4-mix-row{padding:14px 0; border-top:1px solid var(--border);}
+  .la4-mix-row:first-of-type{border-top:none; padding-top:6px;}
+  .la4-mix-head{display:flex; justify-content:space-between; align-items:flex-end; gap:10px; margin-bottom:10px;}
+  .la4-mix-title{font-size:13px; font-weight:700;}
+  .la4-mix-total{font-size:22px; font-weight:800; letter-spacing:-.3px;}
+  .la4-mix-legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:10px; font-size:12.5px; color:var(--sub);}
+  .la4-mix-legend i{display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:6px;}
+  .la4-mix-legend b{color:var(--text);}
+  .la4-mix-legend em{font-style:normal;}
+  .la4-trendcard{display:flex; flex-direction:column;}
+  .la4-chips{display:flex; gap:6px; flex-wrap:wrap; margin:10px 0 8px;}
+  .la4-chip{display:inline-flex; align-items:center; gap:7px; background:transparent; border:1px solid var(--border); border-radius:999px; color:var(--sub); font:inherit; font-size:12.5px; font-weight:600; padding:5px 12px; cursor:pointer;}
+  .la4-chip:hover{color:var(--text);}
+  .la4-chip.on{background:var(--card2); color:var(--text); border-color:var(--accent);}
+  .la4-chip:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .la4-chip-dot{width:9px; height:9px; border-radius:50%;}
+  .la4-chart-meta{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; font-size:12.5px; color:var(--sub); margin-bottom:4px;}
+  .la4-chart-meta b{color:var(--text);}
+  .la4-chart-box{position:relative; flex:1;}
+  .la4-svg{width:100%; height:auto; display:block;}
+  .la4-ax{font-size:10.5px; fill:var(--sub);}
+  .la4-tip{position:absolute; pointer-events:none; background:var(--card2); border:1px solid var(--border); border-radius:8px; padding:6px 10px; font-size:12px; line-height:1.4; box-shadow:0 6px 18px rgba(0,0,0,.25); z-index:3; white-space:nowrap;}
+  .la4-tip[hidden]{display:none;}
+  .la2-table .chg{white-space:nowrap;}
+  .la2-table td.src{width:30%;}
+
+  /* ---- Other tabs: legibility floor (audit found 9-10.5px text in Overview and Data Quality) ---- */
+  .heatmap-cell{font-size:10.5px !important;}
+  .check-badge, .na-severity, .preview-badge, .dh-status-label, .dq-severity-label{font-size:10.5px !important;}
+  .na-category, .dq-icon{font-size:11px !important;}
+
+  /* ================= TRIAL v5: Executive Summary briefing ================= */
+  .exec-has-briefing .exec-sec-perf, .exec-has-briefing .exec-sec-risk, .exec-has-briefing #execDataAsOf{display:none !important;}
+  .exec-fit.exec-has-briefing[data-exec-active="summary"] > .exec-sec-perf,
+  .exec-fit.exec-has-briefing[data-exec-active="summary"] > .exec-sec-risk,
+  .exec-fit.exec-has-briefing[data-exec-active="summary"] > #execDataAsOf{display:none !important;}
+  .eb{display:flex; flex-direction:column; gap:12px; min-height:0; height:100%;}
+  .eb-headline{font-size:14.5px; line-height:1.6; color:var(--sub); background:var(--card2); border:1px solid var(--border); border-radius:14px; padding:12px 18px;}
+  .eb-headline b{color:var(--text); font-weight:700;}
+  .eb-ok, .eb-headline b.eb-ok{color:var(--ok) !important;}
+  .eb-bad, .eb-headline b.eb-bad{color:var(--bad) !important;}
+  .eb-warn{color:var(--amber);} .eb-warn b{color:var(--amber) !important;}
+  .la4-tile-big.eb-bad{color:var(--bad);} .la4-tile-big.eb-ok{color:var(--ok);}
+  .eb-tiles{grid-template-columns:repeat(4,minmax(0,1fr));}
+  @media (max-width:1100px){ .eb-tiles{grid-template-columns:repeat(2,minmax(0,1fr));} }
+  @media (max-width:640px){ .eb-tiles{grid-template-columns:1fr;} }
+  .eb-tile .la4-tile-big{font-size:clamp(17px,1.5vw,24px); white-space:nowrap; margin-top:4px;}
+  .eb-leg{display:flex; flex-wrap:wrap; gap:4px 14px; margin-top:8px; font-size:11.5px; color:var(--sub);}
+  .eb-leg i{display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:5px;}
+  .eb-leg b{color:var(--text);}
+  .eb-gauge{position:relative; height:10px; border-radius:6px; border:1px solid var(--border); background:var(--card); overflow:hidden;}
+  .eb-gauge i{display:block; height:100%;}
+  .eb-gauge u{position:absolute; top:-2px; bottom:-2px; width:2px; background:var(--text); opacity:.7; text-decoration:none;}
+  .eb-mid{display:grid; grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr); gap:12px; min-height:0;}
+  @media (max-width:980px){ .eb-mid{grid-template-columns:1fr;} }
+  .eb-chart{display:flex; flex-direction:column; min-height:0;}
+  .eb-chart #ebChartHost{display:flex; flex-direction:column; flex:1; min-height:0;}
+  .eb-chart .la4-chart-box{min-height:0;}
+  .eb-chart .la4-chart-svg{height:auto;}
+  .eb-chart .la4-svg{height:auto; max-height:230px;}
+  .eb-side{display:flex; flex-direction:column; gap:10px; min-height:0;}
+  .eb-side .x4-comp{padding:10px 12px;}
+  .eb-attn{display:grid; grid-template-columns:auto auto minmax(0,1fr); gap:18px; align-items:center; border:1px solid var(--border); border-radius:14px; padding:12px 18px;}
+  @media (max-width:980px){ .eb-attn{grid-template-columns:1fr;} }
+  .eb-attn.dh-warn{background:rgba(240,185,58,.10); border-color:rgba(240,185,58,.55);}
+  .eb-attn.dh-good{background:rgba(79,208,122,.10); border-color:rgba(79,208,122,.55);}
+  .eb-attn.dh-bad{background:rgba(239,106,139,.10); border-color:rgba(239,106,139,.55);}
+  .eb-attn.dh-warn .dh-status{color:var(--amber);} .eb-attn.dh-good .dh-status{color:var(--ok);} .eb-attn.dh-bad .dh-status{color:var(--bad);}
+  .eb-attn .dh-status{font-size:20px; font-weight:800; line-height:1.2;}
+  .eb-attn-pills{display:flex; gap:10px;}
+  .eb-pill{display:flex; flex-direction:column; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:7px 14px; min-width:96px;}
+  .eb-pill-n{font-size:20px; font-weight:800; line-height:1.15;} .eb-pill-n small{font-size:13px; font-weight:700; color:var(--sub);}
+  .eb-pill-l{font-size:10.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--sub); font-weight:700;}
+  .eb-attn-list ul{margin:0; padding-left:18px; font-size:12px; color:var(--sub);} .eb-attn-list li{margin:1px 0;}
+  @media screen and (min-width:1100px) and (min-height:700px){
+    .exec-fit[data-exec-active="summary"] > #execHeroWrap{grid-column:1 / -1; grid-row:3 / 5; min-height:0; display:block;}
+    #pane-execsummary.exec-fit.exec-has-briefing:not([style*="none"]){height:auto !important; min-height:0; overflow:visible !important; grid-template-rows:auto !important; padding:18px 20px 20px !important; row-gap:14px;}
+    #pane-execsummary.exec-fit.exec-has-briefing[data-exec-active="trend"]:not([style*="none"]), #pane-execsummary.exec-fit.exec-has-briefing[data-exec-active="changes"]:not([style*="none"]){height:var(--exec-h) !important; overflow:hidden !important; grid-template-rows:auto auto auto minmax(0,1fr) !important; padding:10px 12px !important; row-gap:8px;}
+    .exec-fit.exec-has-briefing[data-exec-active="summary"] > #execHeroWrap{grid-row:3 !important; height:auto; overflow:visible;}
+    .exec-fit .eb{height:auto;}
+    .exec-fit .eb-mid{flex:0 0 auto; min-height:260px;}
+    .exec-fit .eb-chart .la4-chart-box{flex:1 1 0; min-height:170px; position:relative;}
+    .exec-fit .eb-chart .la4-chart-svg{position:absolute; inset:0;}
+    .exec-fit .eb-chart .la4-svg{max-height:none; height:100%; width:100%;}
+    .exec-fit[data-exec-active="trend"] .trend-grid{margin-bottom:6px;}
+    .exec-fit[data-exec-active="trend"] .trend-box{padding:12px 16px;}
+    .exec-fit[data-exec-active="trend"] .trend-box svg{display:block; margin:0 auto; width:100%; height:auto; max-height:170px;}
+    .exec-fit .eb-chart .la4-ax{font-size:10.5px;}
+    .exec-fit .eb-mid{min-height:0;}
+    .exec-fit .eb-side .x4-stat-value{font-size:clamp(18px,1.5vw,22px); margin-top:2px;}
+    .exec-fit .eb-side .x4-stat{padding:8px 12px;}
+    .exec-fit .eb-side{gap:8px;}
+    .exec-fit .eb-side .x4-comp{padding:8px 12px; gap:6px;}
+    .exec-fit .eb-headline{padding:10px 16px; font-size:14px; line-height:1.5;}
+    .exec-fit .eb{gap:10px;}
+    .exec-fit .eb-tile{padding:12px 14px;}
+    .exec-fit .eb-tile .la4-tile-vis{padding-top:8px;}
+    .exec-fit .eb-chart .la4-chips{margin:6px 0;}
+  }
+
+  /* ================= TRIAL v6: Overview briefing ================= */
+  .ov6{display:flex; flex-direction:column; gap:14px;}
+  .ov6-tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px;}
+  .ov6-tile{display:flex; flex-direction:column; gap:2px; min-width:0; padding:16px 18px; border:1px solid var(--border); border-radius:14px; background:linear-gradient(180deg,var(--card2),var(--card)); cursor:pointer; transition:border-color .15s, transform .15s;}
+  .ov6-tile:hover{border-color:var(--accent); transform:translateY(-1px);}
+  .ov6-tile:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .ov6-tile.has-alert{border-color:rgba(239,106,139,.6);}
+  .ov6-top{display:flex; justify-content:space-between; align-items:baseline; gap:8px;}
+  .ov6-label{font-size:11px; text-transform:uppercase; letter-spacing:.7px; color:var(--sub); font-weight:700;}
+  .ov6-go{font-size:11.5px; color:var(--sub); opacity:0; transition:opacity .15s;}
+  .ov6-tile:hover .ov6-go, .ov6-tile:focus-visible .ov6-go{opacity:1; color:var(--accent);}
+  .ov6-big{font-size:clamp(24px,2.4vw,34px); font-weight:800; letter-spacing:-.4px; line-height:1.12; margin-top:8px; white-space:nowrap; unicode-bidi:isolate; direction:ltr;}
+  .ov6-big small{font-size:.45em; font-weight:600; color:var(--sub); letter-spacing:0;}
+  .ov6-sub{font-size:12.5px; color:var(--sub); margin-top:3px; min-height:1.4em;}
+  .ov6-sub b.eb-ok{color:var(--ok);} .ov6-sub b.eb-bad{color:var(--bad);}
+  .ov6-vis{margin-top:12px; min-height:34px;}
+  .ov6-spark{margin-top:auto; padding-top:12px;}
+  .ov6-spark svg{display:block; width:100%; height:48px;}
+  .ov6-foot{display:flex; flex-direction:column; gap:3px; margin-top:12px; padding-top:10px; border-top:1px solid var(--border); font-size:12px; color:var(--sub);}
+  .ov6-foot b{color:var(--text);}
+  .ov6-spark{position:relative;}
+  .ov6-spark svg{height:60px; cursor:crosshair;}
+  .ov6-tip{pointer-events:none; z-index:4;}
+
+  /* ---- ES Trend & Outlook ---- */
+  .v6t-grid{display:grid; grid-template-columns:minmax(0,1.8fr) minmax(280px,1fr); gap:14px; margin-top:8px;}
+  @media (max-width:980px){ .v6t-grid{grid-template-columns:1fr;} }
+  .v6t-chartcard{display:flex; flex-direction:column;}
+  .v6t-box{position:relative;}
+  .v6t-svg svg{display:block; max-width:100%;}
+  .v6t-val{font-weight:700; fill:var(--text); font-size:11.5px;}
+  .v6d{font-size:12px; font-weight:600; color:var(--sub); white-space:nowrap;}
+  .v6d.good{color:var(--ok);} .v6d.bad{color:var(--bad);}
+  .v6t-rows{display:flex; flex-direction:column; gap:5px; margin-top:10px;}
+  .v6t-row{display:grid; grid-template-columns:minmax(0,1fr) auto auto; align-items:center; gap:10px; background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:7px 12px; color:var(--text); font:inherit; font-size:12.5px; cursor:pointer; text-align:start;}
+  .v6t-row:hover{border-color:var(--accent);}
+  .v6t-row.on{border-color:var(--accent); background:var(--card);}
+  .v6t-row:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .v6t-rl{display:flex; align-items:center; gap:8px; min-width:0; color:var(--sub);}
+  .v6t-rl i{display:inline-block; width:8px; height:8px; border-radius:50%; flex:none;}
+  .v6t-rv{font-weight:700; color:var(--text);}
+  @media screen and (min-width:1100px) and (min-height:700px){
+    .exec-fit .v6t .section-note{display:none;}
+    .exec-fit .v6t-momnote{display:none;}
+  }
+
+  /* ---- ES Forward View ---- */
+  .v6w{border:1px solid var(--border); border-radius:14px; padding:14px 18px; background:var(--card2);}
+  .v6w-head{display:flex; align-items:center; gap:10px; font-size:14px;}
+  .v6w-count{background:rgba(240,185,58,.16); color:var(--amber); border:1px solid rgba(240,185,58,.5); border-radius:999px; padding:1px 10px; font-weight:800; font-size:12.5px;}
+  .v6w-sub{color:var(--sub); font-size:12.5px;}
+  .v6w-list{list-style:none; margin:10px 0 0; padding:0; display:flex; flex-direction:column; gap:6px; font-size:13px;}
+  .v6w-list li{display:flex; gap:10px; align-items:flex-start;}
+  .v6w-dot{flex:none; width:8px; height:8px; border-radius:50%; background:var(--amber); margin-top:6px;}
+  .v6w-more{margin-top:6px; font-size:12px; color:var(--sub);}
+  .v6w-ok{background:rgba(79,208,122,.08); border-color:rgba(79,208,122,.45);}
+  .v6w-ok .v6w-dot{background:var(--ok); margin-top:0;}
+
+  /* ---- ES Changes ---- */
+  .chg6-stats{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:10px 0 12px;}
+  @media (max-width:760px){ .chg6-stats{grid-template-columns:1fr;} }
+  .chg6-tile{display:flex; flex-direction:column; gap:2px; text-align:start; background:linear-gradient(180deg,var(--card2),var(--card)); border:1px solid var(--border); border-radius:12px; padding:12px 16px; color:var(--text); font:inherit; cursor:pointer;}
+  .chg6-tile.static{cursor:default;}
+  .chg6-tile:not(.static):hover{border-color:var(--accent);}
+  .chg6-tile.on{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset;}
+  .chg6-tile:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .chg6-l{font-size:11px; text-transform:uppercase; letter-spacing:.7px; color:var(--sub); font-weight:700;}
+  .chg6-b{font-size:clamp(22px,2vw,28px); font-weight:800; letter-spacing:-.3px; line-height:1.15;}
+  .chg6-tile.bad .chg6-b{color:var(--bad);} .chg6-tile.good .chg6-b{color:var(--ok);}
+  .chg6-s{font-size:12px; color:var(--sub);}
+  .changed-records-table tbody tr:hover{background:var(--card2);}
+  .changed-records-table thead th{position:sticky; top:0; background:var(--card); z-index:1;}
+
+  /* ================= TRIAL v7: Compare + Data Quality ================= */
+  /* ---- Compare ---- */
+  .cmp7-headline{margin:0 0 14px; padding:14px 18px; border:1px solid var(--border); border-radius:14px; background:linear-gradient(180deg,var(--card2),var(--card)); font-size:14.5px; line-height:1.5; color:var(--sub);}
+  .cmp7-headline b{color:var(--text);} .cmp7-headline b.ok{color:var(--ok);} .cmp7-headline b.bad{color:var(--bad);}
+  #compareWrap .compare-card{border-radius:14px; background:linear-gradient(180deg,var(--card2),var(--card));}
+  #compareWrap .compare-row{padding:14px 20px; gap:18px;}
+  #compareWrap .compare-row.compare-head{padding:12px 20px; position:sticky; top:0; z-index:1;}
+  #compareWrap .compare-metric{font-weight:600; font-size:13.5px;}
+  #compareWrap .compare-val{font-size:clamp(15px,1.45vw,19px); font-weight:800; letter-spacing:-.2px; text-align:right; min-width:0; unicode-bidi:isolate; direction:ltr;}
+  #compareWrap .compare-val .compare-sub{font-size:11.5px; font-weight:500; letter-spacing:0; color:var(--sub); margin-top:2px;}
+  #compareWrap .compare-row.compare-clickable:hover{background:var(--card2); box-shadow:inset 3px 0 0 var(--accent);}
+  /* values start on the same line in both columns; bars pin to the bottom of each cell */
+  #compareWrap .compare-row:not(.compare-head):not(.single-col){align-items:stretch;}
+  #compareWrap .compare-row:not(.compare-head) .compare-metric{align-self:center;}
+  #compareWrap .compare-row:not(.compare-head):not(.single-col) .compare-val{display:flex; flex-direction:column; align-items:flex-end; justify-content:flex-start;}
+  #compareWrap .compare-row .compare-val .cmp7-bar{margin-top:auto; align-self:stretch;}
+  #compareWrap .compare-row .compare-val .compare-sub{margin-bottom:8px;}
+  #compareWrap .compare-specific-grid .exec-card .exec-value{font-size:clamp(20px,1.6vw,26px);}
+  .cmp7-bar{height:5px; border-radius:99px; background:rgba(127,140,170,.16); margin-top:8px; overflow:hidden;}
+  .cmp7-bar i{display:block; height:100%; border-radius:99px; opacity:.55; transition:width .35s ease;}
+  .cmp7-lead .cmp7-bar i{opacity:1;}
+  #compareWrap .compare-delta-badge{border-radius:99px; padding:2px 9px; font-size:11px;}
+  #compareWrap .compare-delta-row{padding:12px 20px; font-size:13px; color:var(--sub); border-top:1px solid var(--border);}
+  #compareWrap .compare-expand{padding:14px 20px 16px;}
+  #compareWrap .compare-specific-grid .exec-card{border-radius:14px;}
+  .compare-mode-toggle{border-radius:999px;}
+  .compare-selectors select{border-radius:10px; padding:8px 12px;}
+  /* pickers: stacked label over select, equal widths, sit right under the mode toggle */
+  .compare-selectors{padding:14px 16px; border:1px solid var(--border); border-radius:14px; background:var(--card2); gap:16px; align-items:flex-end;}
+  .compare-selectors label{flex:1 1 220px; flex-direction:column; align-items:stretch; gap:6px; min-width:0; font-size:11px; text-transform:uppercase; letter-spacing:.7px; font-weight:700;}
+  .compare-selectors select{width:100%; font-size:14px; font-weight:600; text-transform:none; letter-spacing:0; background:var(--card);}
+  #cmpPortfolioSelectors label:first-child::after{content:none;}
+  .compare-mode-toggle{margin-bottom:12px;}
+  .compare-selectors{margin-bottom:12px;}
+
+  .compare-mismatch.cmp7-note{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; border-radius:14px; padding:12px 16px;}
+  .cmp7-load{appearance:none; border:1px solid var(--amber); background:rgba(240,185,58,.14); color:var(--amber); font:inherit; font-size:12.5px; font-weight:700; padding:7px 16px; border-radius:999px; cursor:pointer; transition:background .15s, color .15s;}
+  .cmp7-load:hover:not(:disabled){background:var(--amber); color:#1a1a1a;}
+  .cmp7-load:disabled{opacity:.7; cursor:default;}
+  .cmp7-load:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+  /* portfolio highlight cards: one tile row, same look as the other tiles (no amber top bar) */
+  #compareWrap .compare-specific-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px;}
+  #compareWrap .compare-specific-col{display:contents;}
+  #compareWrap .compare-specific-grid .exec-card{border-top:1px solid var(--border); padding:16px 20px; display:flex; flex-direction:column; min-width:0;}
+  #compareWrap .compare-specific-grid .exec-card .exec-label{min-height:0; margin-bottom:6px; font-size:11px; letter-spacing:.7px;}
+  #compareWrap .compare-specific-grid .exec-card .exec-value{font-size:clamp(24px,2.2vw,32px); letter-spacing:-.4px; white-space:nowrap;}
+  #compareWrap .compare-specific-grid .exec-card .exec-sub{margin-top:6px; line-height:1.45;}
+
+  /* ---- Data Quality ---- */
+  .dq7-tiles{display:grid; grid-template-columns:1.5fr repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:18px;}
+  @media (max-width:860px){ .dq7-tiles{grid-template-columns:1fr 1fr;} }
+  .dq7-tile{display:flex; flex-direction:column; gap:2px; padding:14px 18px; border:1px solid var(--border); border-radius:14px; background:linear-gradient(180deg,var(--card2),var(--card));}
+  .dq7-l{font-size:11px; text-transform:uppercase; letter-spacing:.7px; font-weight:700; color:var(--sub);}
+  .dq7-b{font-size:clamp(22px,2vw,30px); font-weight:800; letter-spacing:-.3px; line-height:1.15; margin-top:4px;}
+  .dq7-s{font-size:12px; color:var(--sub);}
+  .dq7-tile.verdict .dq7-b{font-size:clamp(18px,1.6vw,24px);}
+  .dq7-tile.verdict.ok{border-color:rgba(79,208,122,.5);} .dq7-tile.verdict.ok .dq7-b{color:var(--ok);}
+  .dq7-tile.verdict.warn{border-color:rgba(240,185,58,.55);} .dq7-tile.verdict.warn .dq7-b{color:var(--amber);}
+  .dq7-tile.verdict.bad{border-color:rgba(239,106,139,.6);} .dq7-tile.verdict.bad .dq7-b{color:var(--bad);}
+  .dq7-tile.bad .dq7-b{color:var(--bad);} .dq7-tile.warn .dq7-b{color:var(--amber);} .dq7-tile.info .dq7-b{color:var(--info);} .dq7-tile.mute .dq7-b{color:var(--sub);}
+  #dataQualityWrap .dq-list, #dataQualityWrap .dq-clean, #dataQualityWrap .dq-empty{border-radius:14px; background:linear-gradient(180deg,var(--card2),var(--card));}
+  #dataQualityWrap .dq-report-name{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:12px; letter-spacing:.6px; color:var(--sub);}
+  .dq7-chips{display:inline-flex; gap:6px; text-transform:none; letter-spacing:0;}
+  .dq7-chip{font-size:11px; font-weight:700; padding:1px 9px; border-radius:99px; border:1px solid var(--border);}
+  .dq7-chip.ok{color:var(--ok); border-color:rgba(79,208,122,.45);} .dq7-chip.warn{color:var(--amber); border-color:rgba(240,185,58,.5);}
+  .dq7-chip.bad{color:var(--bad); border-color:rgba(239,106,139,.55);} .dq7-chip.info{color:var(--info); border-color:rgba(94,198,255,.45);} .dq7-chip.mute{color:var(--sub);}
+  #dataQualityWrap .dq-issue{padding:13px 18px; transition:background .15s;}
+  #dataQualityWrap .dq-issue:hover{background:var(--card2);}
 </style>
 </head>
 <body>
@@ -3134,6 +3522,7 @@ function selectTab(id){
   });
   document.querySelectorAll('.report-pane').forEach(p => p.style.display = (p.dataset.report === id) ? 'block' : 'none');
   replayEntranceAnimations(id);
+  if(typeof execFitUpdate === 'function') execFitUpdate();
 }
 
 // ---------- Global search: jump to a tab by name, or straight to a specific
@@ -4507,7 +4896,168 @@ function crossfadeInnerHTML(el, html){
     el.animate([{opacity:0},{opacity:1}], {duration:180, easing:'ease-out'});
   };
 }
+// ================= TRIAL v6: Executive Summary — Trend & Outlook + Changes =================
+// Month-by-month interactive chart, "latest vs previous" panel, watch-list, and a stats strip on Changes.
+const V6_TREND_METRICS = [
+  {key: 'totalCollected', label: 'Total recorded value', color: 'var(--accent)', kind: 'aed'},
+  {key: 'bouncedAmount', label: 'Bounced / at risk', color: 'var(--bad)', kind: 'aed', inverse: true},
+  {key: 'netCollected', label: 'Net recorded value', color: 'var(--ok)', kind: 'aed'},
+  {key: 'bounceRatePct', label: 'Bounce rate', color: 'var(--amber)', kind: 'pct', inverse: true},
+  {key: 'renewalLeaseContracts', label: 'Renewal contracts', color: 'var(--accent)', kind: 'n'},
+  {key: 'newLeaseContracts', label: 'New-lease contracts', color: 'var(--accent2)', kind: 'n'},
+  {key: 'totalRequests', label: 'Requests', color: 'var(--accent2)', kind: 'n'},
+];
+function v6Month(h){
+  const k = h.periodKey || '', m = +k.slice(5, 7);
+  return TREND_MONTH_NAMES[m] ? TREND_MONTH_NAMES[m] + " '" + k.slice(2, 4) : (h.period || k);
+}
+function v6Fmt(kind, v){
+  if(v === null || v === undefined || isNaN(v)) return '—';
+  if(kind === 'aed') return fmtAed(v);
+  if(kind === 'pct') return v.toFixed(1) + '%';
+  return Math.round(v).toLocaleString();
+}
+function v6FmtC(kind, v){
+  if(kind === 'aed') return fmtAedCompact(v);
+  if(kind === 'pct') return v.toFixed(1) + '%';
+  return Math.round(v).toLocaleString();
+}
+function v6Delta(m, cur, prev){
+  if(prev === null || prev === undefined || cur === null || cur === undefined) return '';
+  const d = cur - prev;
+  if(Math.abs(d) < 1e-9) return '<span class="v6d">no change</span>';
+  const up = d > 0, bad = m.inverse ? up : !up;
+  const arrow = up ? '&#9650;' : '&#9660;', sign = up ? '+' : '&minus;', a = Math.abs(d);
+  let txt;
+  if(m.kind === 'pct') txt = sign + a.toFixed(1) + ' pts';
+  else {
+    const pct = prev ? ' (' + sign + Math.round(a / Math.abs(prev) * 100) + '%)' : '';
+    txt = sign + (m.kind === 'aed' ? fmtAedCompact(a) : Math.round(a).toLocaleString()) + pct;
+  }
+  return `<span class="v6d ${bad ? 'bad' : 'good'}">${arrow} ${txt}</span>`;
+}
+function v6TrendBuild(wrap, history){
+  const avail = V6_TREND_METRICS.filter(m => history.filter(h => h[m.key] !== null && h[m.key] !== undefined).length >= 2);
+  if(!avail.length) return false;
+  let cur = 0;
+  const chips = avail.map((m, i) => `<button type="button" class="la4-chip${i === 0 ? ' on' : ''}" data-i="${i}"><span class="la4-chip-dot" style="background:${m.color}"></span>${esc(m.label)}</button>`).join('');
+  const last = history[history.length - 1], prev = history[history.length - 2];
+  const rows = avail.map((m, i) => `<button type="button" class="v6t-row${i === 0 ? ' on' : ''}" data-i="${i}">
+      <span class="v6t-rl"><i style="background:${m.color}"></i>${esc(m.label)}</span>
+      <span class="v6t-rv bidi-ltr">${esc(v6Fmt(m.kind, last[m.key]))}</span>
+      <span class="v6t-rd">${v6Delta(m, last[m.key], prev ? prev[m.key] : null)}</span></button>`).join('');
+  wrap.innerHTML = `<div class="v6t">
+    <div class="section-title" style="margin-top:0;"><span class="h2-dot"></span>Monthly Trend</div>
+    <div class="section-note">Real totals from the ${history.length} months loaded so far — nothing projected or estimated.</div>
+    <div class="v6t-grid">
+      <div class="la4-card v6t-chartcard">
+        <div class="la4-chips" role="tablist">${chips}</div>
+        <div class="la4-chart-meta v6t-meta"></div>
+        <div class="v6t-box"><div class="v6t-svg"></div><div class="la4-tip" hidden></div></div>
+      </div>
+      <div class="la4-card v6t-mom">
+        <div class="la4-card-title">${esc(v6Month(last))} vs ${prev ? esc(v6Month(prev)) : 'previous'}</div>
+        <div class="la4-sub v6t-momnote">Select a row to chart it</div>
+        <div class="v6t-rows">${rows}</div>
+      </div>
+    </div></div>`;
+  const meta = wrap.querySelector('.v6t-meta'), box = wrap.querySelector('.v6t-svg'), tip = wrap.querySelector('.la4-tip'), boxWrap = wrap.querySelector('.v6t-box');
+  let lastW = 0;
+  function draw(){
+    const m = avail[cur];
+    const pts = history.map((h, i) => ({h: h, i: i, v: h[m.key]})).filter(p => p.v !== null && p.v !== undefined);
+    const W = Math.max(Math.round(box.clientWidth) || 560, 300), H = Math.min(Math.max(Math.round(W * 0.25), 190), 240);
+    lastW = W;
+    const pl = 52, pr = 18, pt = 24, pb = 30;
+    const max = Math.max(...pts.map(p => p.v), 1) * (m.kind === 'pct' ? 1.25 : 1.12);
+    const n = history.length, gap = (W - pl - pr) / n, bw = Math.min(gap * 0.5, 96);
+    const cx = i => pl + gap * (i + 0.5), py = v => pt + (H - pt - pb) * (1 - v / max);
+    let grid = '';
+    for(let g = 0; g <= 4; g++){
+      const v = max * g / 4, y = py(v);
+      grid += `<line x1="${pl}" y1="${y.toFixed(1)}" x2="${W - pr}" y2="${y.toFixed(1)}" stroke="var(--border)" stroke-width="${g === 0 ? 1 : 0.6}" opacity="${g === 0 ? 0.9 : 0.45}"/><text x="${pl - 8}" y="${(y + 4).toFixed(1)}" text-anchor="end" class="la4-ax">${esc(v6FmtC(m.kind, v))}</text>`;
+    }
+    const latestI = pts[pts.length - 1].i;
+    const bars = pts.map(p => `<rect x="${(cx(p.i) - bw / 2).toFixed(1)}" y="${py(p.v).toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(py(0) - py(p.v), 1).toFixed(1)}" rx="6" fill="${m.color}" opacity="${p.i === latestI ? 0.92 : 0.5}"/>`).join('');
+    const labels = pts.map(p => `<text x="${cx(p.i).toFixed(1)}" y="${(py(p.v) - 7).toFixed(1)}" text-anchor="middle" class="la4-ax v6t-val">${esc(v6FmtC(m.kind, p.v))}</text>`).join('');
+    const months = history.map((h, i) => `<text x="${cx(i).toFixed(1)}" y="${H - 9}" text-anchor="middle" class="la4-ax">${esc(v6Month(h))}</text>`).join('');
+    const line = pts.length > 1 ? `<polyline points="${pts.map(p => cx(p.i).toFixed(1) + ',' + py(p.v).toFixed(1)).join(' ')}" fill="none" stroke="var(--text)" stroke-opacity="0.55" stroke-width="1.6" stroke-linejoin="round"/>` + pts.map(p => `<circle cx="${cx(p.i).toFixed(1)}" cy="${py(p.v).toFixed(1)}" r="3.4" fill="var(--text)" fill-opacity="0.8"/>`).join('') : '';
+    const hits = history.map((h, i) => `<rect class="v6t-hit" data-i="${i}" x="${(pl + gap * i).toFixed(1)}" y="${pt}" width="${gap.toFixed(1)}" height="${H - pt - pb}" fill="transparent"/>`).join('');
+    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(m.label)} by month">${grid}${bars}${line}${labels}${months}<rect class="v6t-hl" x="0" y="${pt}" width="${gap.toFixed(1)}" height="${H - pt - pb}" fill="var(--text)" opacity="0"/>${hits}</svg>`;
+    const lastV = pts[pts.length - 1], prevV = pts.length > 1 ? pts[pts.length - 2] : null;
+    meta.innerHTML = `<span class="la4-meta-main"><b class="bidi-ltr">${esc(v6Fmt(m.kind, lastV.v))}</b> in ${esc(v6Month(lastV.h))} ${v6Delta(m, lastV.v, prevV ? prevV.v : null)}</span><span class="la4-meta-stats">${pts.length} months · hover a bar for detail</span>`;
+    const svg = box.querySelector('svg'), hl = svg.querySelector('.v6t-hl');
+    svg.querySelectorAll('.v6t-hit').forEach(r => {
+      r.addEventListener('mousemove', ev => {
+        const i = +r.dataset.i, h = history[i], pv = history.slice(0, i).reverse().find(x => x[m.key] !== null && x[m.key] !== undefined);
+        hl.setAttribute('x', (pl + gap * i).toFixed(1)); hl.setAttribute('opacity', '0.06');
+        tip.hidden = false;
+        tip.innerHTML = `<b>${esc(v6Month(h))}</b><br>${h[m.key] === null || h[m.key] === undefined ? '<span class="la4-sub">not recorded</span>' : '<b class="bidi-ltr">' + esc(v6Fmt(m.kind, h[m.key])) + '</b>' + (pv ? '<br>' + v6Delta(m, h[m.key], pv[m.key]) + ' <span class="la4-sub">vs ' + esc(v6Month(pv)) + '</span>' : '')}`;
+        const bx = boxWrap.getBoundingClientRect();
+        let left = ev.clientX - bx.left + 14; if(left > bx.width - 190) left = ev.clientX - bx.left - 190;
+        tip.style.left = Math.max(left, 4) + 'px'; tip.style.top = Math.max(ev.clientY - bx.top - 56, 2) + 'px';
+      });
+      r.addEventListener('mouseleave', () => { tip.hidden = true; hl.setAttribute('opacity', '0'); });
+    });
+  }
+  function select(i){
+    cur = i;
+    wrap.querySelectorAll('.la4-chip').forEach(x => x.classList.toggle('on', +x.dataset.i === i));
+    wrap.querySelectorAll('.v6t-row').forEach(x => x.classList.toggle('on', +x.dataset.i === i));
+    draw();
+  }
+  wrap.querySelectorAll('.la4-chip, .v6t-row').forEach(b => b.addEventListener('click', () => select(+b.dataset.i)));
+  draw();
+  if(typeof ResizeObserver !== 'undefined') new ResizeObserver(() => { const w = Math.round(box.clientWidth); if(w > 0 && Math.abs(w - lastW) > 3) draw(); }).observe(box);
+  return true;
+}
 function renderMonthlyTrend(){
+  const wrap = document.getElementById('monthlyTrendWrap');
+  if(!wrap) return;
+  if(selectedPeriod === 'monthly'){
+    const history = getMonthlyHistory(currentPortfolio);
+    if(history.length >= 2){
+      const recent = history.slice(-6);
+      wrap.style.display = 'block';
+      if(v6TrendBuild(wrap, recent)) return;
+    }
+  }
+  renderMonthlyTrendLegacy();
+}
+function v6Forward(items, depth, listHtml, noteHtml){
+  if(!items.length){
+    return `<div class="v6w v6w-ok"><div class="v6w-head"><span class="v6w-dot"></span><b>All clear</b><span class="v6w-sub">No items outstanding based on today's cross-checks, thresholds and data-quality status.</span></div></div>` + noteHtml;
+  }
+  const shown = items.slice(0, 8);
+  return `<div class="v6w"><div class="v6w-head"><b>Items to review next period</b><span class="v6w-count">${items.length}</span></div>
+    <ul class="v6w-list">${shown.map(txt => `<li><span class="v6w-dot"></span><span>${txt}</span></li>`).join('')}</ul>
+    ${items.length > 8 ? `<div class="v6w-more">+${items.length - 8} more</div>` : ''}</div>` + noteHtml;
+}
+function renderChangedRecords(){
+  renderChangedRecordsLegacy();
+  try{
+    const wrap = document.getElementById('changedRecordsWrap');
+    if(!wrap || wrap.style.display === 'none') return;
+    const diff = computeChangedRecords(currentPortfolio);
+    if(!diff || diff.unavailable) return;
+    const toggle = wrap.querySelector('.changed-toggle');
+    if(!toggle || wrap.querySelector('.chg6-stats')) return;
+    const sum = list => list.reduce((s, x) => s + ((x.record && Number(x.record.amount)) || 0), 0);
+    const addAmt = sum(diff.addedDetailed), resAmt = sum(diff.resolvedDetailed), net = addAmt - resAmt;
+    const tile = (id, cls, label, big, sub, on) => `<button type="button" class="chg6-tile ${cls}${on ? ' on' : ''}" data-click="${id}"><span class="chg6-l">${label}</span><span class="chg6-b bidi-ltr">${big}</span><span class="chg6-s">${sub}</span></button>`;
+    const addedOn = (typeof changedRecordsView === 'undefined') || changedRecordsView !== 'resolved';
+    const html = `<div class="chg6-stats">
+      ${tile('changedViewAdded', 'bad', 'New bounced cheques', diff.added.length, esc(fmtAedCompact(addAmt)) + ' AED added', addedOn)}
+      ${tile('changedViewResolved', 'good', 'No longer present', diff.resolved.length, esc(fmtAedCompact(resAmt)) + ' AED cleared', !addedOn)}
+      <div class="chg6-tile ${net > 0 ? 'bad' : 'good'} static"><span class="chg6-l">Net change in bounced value</span><span class="chg6-b bidi-ltr">${net > 0 ? '&#9650; +' : net < 0 ? '&#9660; &minus;' : ''}${esc(fmtAedCompact(Math.abs(net)))}</span><span class="chg6-s">vs ${esc(diff.prevPeriod)}</span></div>
+    </div>`;
+    toggle.insertAdjacentHTML('beforebegin', html);
+    toggle.style.display = 'none';
+    wrap.querySelectorAll('.chg6-tile[data-click]').forEach(b => b.addEventListener('click', () => { const t = document.getElementById(b.dataset.click); if(t) t.click(); }));
+  } catch(e){ console.warn('v6 changes stats', e); }
+}
+
+function renderMonthlyTrendLegacy(){
   const wrap = document.getElementById('monthlyTrendWrap');
   if(!wrap) return;
   const history = getMonthlyHistory(currentPortfolio);
@@ -4593,7 +5143,7 @@ let changedRecordsView = 'added';
 let changedRecordsSearch = '';
 let changedRecordsWasFocused = false;
 let changedRecordsCaret = null;
-function renderChangedRecords(){
+function renderChangedRecordsLegacy(){
   const wrap = document.getElementById('changedRecordsWrap');
   if(!wrap) return;
   const diff = computeChangedRecords(currentPortfolio);
@@ -4953,15 +5503,6 @@ function buildCompareTab(){
       <button type="button" class="compare-mode-btn" id="cmpModePortfolio" role="tab" data-mode="portfolio" data-i18n="compare.modePortfolio">${esc(t('compare.modePortfolio','Portfolio vs Portfolio'))}</button>
       <button type="button" class="compare-mode-btn" id="cmpModeMonth" role="tab" data-mode="month" data-i18n="compare.modeMonth">${esc(t('compare.modeMonth','Month vs Month'))}</button>
     </div>
-    <div class="compare-metric-chips" id="cmpMetricChips" role="group" aria-label="${esc(t('compare.metricsLabel','Metrics shown'))}">
-      <span class="compare-metric-chips-label" data-i18n="compare.metricsLabel">${esc(t('compare.metricsLabel','Metrics shown'))}</span>
-      <button type="button" class="compare-metric-chip" data-metric="collected" data-i18n="compare.metricChip.collected">${esc(t('compare.metricChip.collected','Total Collected'))}</button>
-      <button type="button" class="compare-metric-chip" data-metric="bounced" data-i18n="compare.metricChip.bounced">${esc(t('compare.metricChip.bounced','Bounced / At Risk'))}</button>
-      <button type="button" class="compare-metric-chip" data-metric="rate" data-i18n="compare.metricChip.rate">${esc(t('compare.metricChip.rate','Bounce Rate'))}</button>
-      <button type="button" class="compare-metric-chip" data-metric="net" data-i18n="compare.metricChip.net">${esc(t('compare.metricChip.net','Net Collected'))}</button>
-      <button type="button" class="compare-metric-chip" data-metric="count" data-i18n="compare.metricChip.count">${esc(t('compare.metricChip.count','Bounced Cheque Count'))}</button>
-      <button type="button" class="compare-metric-chip" data-metric="highlight" data-i18n="compare.metricChip.highlight">${esc(t('compare.metricChip.highlight','Portfolio Highlight'))}</button>
-    </div>
     <div class="compare-selectors" id="cmpPortfolioSelectors">
       <label><span data-i18n="compare.labelPortfolioA">${esc(t('compare.labelPortfolioA','Portfolio A'))}</span> <select id="cmpSelA">${portfolioOpts}</select></label>
       <label><span data-i18n="compare.labelPortfolioB">${esc(t('compare.labelPortfolioB','Portfolio B'))}</span> <select id="cmpSelB">${portfolioOpts}</select></label>
@@ -4970,6 +5511,15 @@ function buildCompareTab(){
       <label><span data-i18n="compare.labelPortfolioSingle">${esc(t('compare.labelPortfolioSingle','Portfolio'))}</span> <select id="cmpMonthPortfolio">${COMPARE_MONTH_PORTFOLIOS.map(k => `<option value="${k}">${esc((PORTFOLIOS[k] && PORTFOLIOS[k].label) || k)}</option>`).join('')}</select></label>
       <label><span data-i18n="compare.labelMonthA">${esc(t('compare.labelMonthA','Earlier month'))}</span> <select id="cmpMonthA"></select></label>
       <label><span data-i18n="compare.labelMonthB">${esc(t('compare.labelMonthB','Later month'))}</span> <select id="cmpMonthB"></select></label>
+    </div>
+    <div class="compare-metric-chips" id="cmpMetricChips" role="group" aria-label="${esc(t('compare.metricsLabel','Metrics shown'))}">
+      <span class="compare-metric-chips-label" data-i18n="compare.metricsLabel">${esc(t('compare.metricsLabel','Metrics shown'))}</span>
+      <button type="button" class="compare-metric-chip" data-metric="collected" data-i18n="compare.metricChip.collected">${esc(t('compare.metricChip.collected','Total Collected'))}</button>
+      <button type="button" class="compare-metric-chip" data-metric="bounced" data-i18n="compare.metricChip.bounced">${esc(t('compare.metricChip.bounced','Bounced / At Risk'))}</button>
+      <button type="button" class="compare-metric-chip" data-metric="rate" data-i18n="compare.metricChip.rate">${esc(t('compare.metricChip.rate','Bounce Rate'))}</button>
+      <button type="button" class="compare-metric-chip" data-metric="net" data-i18n="compare.metricChip.net">${esc(t('compare.metricChip.net','Net Collected'))}</button>
+      <button type="button" class="compare-metric-chip" data-metric="count" data-i18n="compare.metricChip.count">${esc(t('compare.metricChip.count','Bounced Cheque Count'))}</button>
+      <button type="button" class="compare-metric-chip" data-metric="highlight" data-i18n="compare.metricChip.highlight">${esc(t('compare.metricChip.highlight','Portfolio Highlight'))}</button>
     </div>
     <div id="compareWrap"><div class="overview-loading" data-i18n="compare.waitingNote">${esc(t('compare.waitingNote',"Visit each portfolio's Executive Summary tab at least once this session to include it here."))}</div></div>
   `;
@@ -5340,7 +5890,171 @@ function mdApplyDeepLink(){
 // here, since currentPortfolio/REPORTS/portfolioSelectEl don't exist yet
 // this early in the script's own execution order.
 
-function renderCompare(){
+
+// ================= TRIAL v7: Compare + Data Quality =================
+// Both tabs keep their original renderers (renamed *Legacy by build_trial_v7.py) so every
+// interaction, print rule and CSV export keeps working; v7 layers a headline, proportional
+// bars (Compare) and summary tiles (Data Quality) on top of the freshly rendered DOM.
+
+function v7PctChange(from, to){
+  if(typeof from !== 'number' || typeof to !== 'number' || !isFinite(from) || !isFinite(to) || from === 0) return null;
+  return (to - from) / Math.abs(from) * 100;
+}
+function v7Sign(p){ return (p > 0 ? '+' : p < 0 ? '−' : '') + Math.abs(p).toFixed(0) + '%'; }
+
+// metric key -> [valueA, valueB], in the exact order the legacy renderers emit rows
+const V7_CMP_KEYS = ['collected', 'bounced', 'rate', 'net', 'count'];
+function v7CmpValues(key, A, B){
+  const g = (o, k) => (o && typeof o[k] === 'number' && isFinite(o[k])) ? o[k] : null;
+  switch(key){
+    case 'collected': return [g(A,'totalCollected'), g(B,'totalCollected')];
+    case 'bounced':   return [g(A,'bouncedAmount'),  g(B,'bouncedAmount')];
+    case 'rate':      return [g(A,'bounceRatePct'),  g(B,'bounceRatePct')];
+    case 'net':       return [g(A,'netCollected'),   g(B,'netCollected')];
+    case 'count':     return [g(A,'bouncedCount'),   g(B,'bouncedCount')];
+  }
+  return [null, null];
+}
+
+function v7CompareEnhance(mode){
+  const wrap = document.getElementById('compareWrap');
+  if(!wrap) return;
+  const card = wrap.querySelector('.compare-card');
+  if(!card) return;
+  let A, B, nameA, nameB, headline = '';
+  if(mode === 'month'){
+    const hist = getMonthlyHistory(compareMonthSel.portfolio);
+    A = hist.find(h => h.periodKey === compareMonthSel.monthA) || null;
+    B = hist.find(h => h.periodKey === compareMonthSel.monthB) || null;
+    if(!A || !B) return;
+    const nm = (PORTFOLIOS[compareMonthSel.portfolio] && PORTFOLIOS[compareMonthSel.portfolio].label) || compareMonthSel.portfolio;
+    nameA = A.period || A.periodKey; nameB = B.period || B.periodKey;
+    const pc = v7PctChange(A.totalCollected, B.totalCollected);
+    const pb = v7PctChange(A.bouncedAmount, B.bouncedAmount);
+    if(A.periodKey !== B.periodKey){
+      headline = `<b>${esc(nm)}</b> · <b>${esc(nameB)}</b> vs <b>${esc(nameA)}</b>`
+        + (pc !== null ? `: recorded value <b class="${pc >= 0 ? 'ok' : 'bad'}">${v7Sign(pc)}</b>` : '')
+        + (pb !== null ? `, bounced value <b class="${pb <= 0 ? 'ok' : 'bad'}">${v7Sign(pb)}</b>` : '')
+        + (typeof B.bounceRatePct === 'number' ? `, bounce rate now <b>${B.bounceRatePct.toFixed(1)}%</b>` : '') + '.';
+    }
+  } else {
+    A = portfolioSnapshot[compareSel.a]; B = portfolioSnapshot[compareSel.b];
+    nameA = (PORTFOLIOS[compareSel.a] && PORTFOLIOS[compareSel.a].label) || compareSel.a;
+    nameB = (PORTFOLIOS[compareSel.b] && PORTFOLIOS[compareSel.b].label) || compareSel.b;
+    if(A && B){
+      const rate = o => (typeof o.bounceRatePct === 'number' ? o.bounceRatePct.toFixed(1) + '%' : '—');
+      headline = `<b>${esc(nameA)}</b> recorded <b>${esc(fmtAedCompact(A.totalCollected))}</b> (bounce rate ${rate(A)}) · <b>${esc(nameB)}</b> recorded <b>${esc(fmtAedCompact(B.totalCollected))}</b> (bounce rate ${rate(B)}).`;
+    }
+  }
+  // one-sided comparison: generic prompt + a button that loads the missing portfolio
+  if(mode !== 'month' && (!A || !B)){
+    const note = wrap.querySelector('.compare-mismatch');
+    const missing = !A ? compareSel.a : compareSel.b;
+    if(note && !note.querySelector('.cmp7-load')){
+      note.classList.add('cmp7-note');
+      note.innerHTML = '<span>Only one portfolio has been loaded this session. Choose a second portfolio to complete the comparison.</span>'
+        + `<button type="button" class="cmp7-load" data-key="${esc(missing)}">Load comparison</button>`;
+      note.querySelector('.cmp7-load').addEventListener('click', () => v7LoadComparison(missing));
+    }
+  }
+  if(headline && !wrap.querySelector('.cmp7-headline')){
+    card.insertAdjacentHTML('beforebegin', `<div class="cmp7-headline">${headline}</div>`);
+  }
+
+  // proportional bars - only when two value columns exist
+  const rows = Array.from(card.querySelectorAll(':scope > .compare-row:not(.compare-head)'));
+  const keys = V7_CMP_KEYS.filter(k => compareActiveMetrics.has(k));
+  rows.forEach((row, i) => {
+    const key = keys[i];
+    if(!key) return;
+    const vals = row.querySelectorAll(':scope > .compare-val');
+    if(vals.length !== 2) return;
+    const [va, vb] = v7CmpValues(key, A, B);
+    if(va === null || vb === null) return;
+    const max = Math.max(Math.abs(va), Math.abs(vb)) || 1;
+    [[vals[0], va, 'var(--accent)'], [vals[1], vb, 'var(--accent2)']].forEach(([cell, v, col]) => {
+      if(cell.querySelector('.cmp7-bar')) return;
+      const w = Math.max(2, Math.round(Math.abs(v) / max * 100));
+      cell.insertAdjacentHTML('beforeend', `<div class="cmp7-bar" aria-hidden="true"><i style="width:${w}%;background:${col}"></i></div>`);
+      if(Math.abs(v) === max && va !== vb) cell.classList.add('cmp7-lead');
+    });
+  });
+}
+
+// Opens the missing portfolio so its Executive Summary snapshot is captured, then returns to the
+// original portfolio's Compare tab. Uses the normal switchPortfolio(), so a PIN prompt still appears
+// where one is required; polling simply waits (up to ~25s) for the PIN to be entered.
+function v7LoadComparison(missing){
+  const orig = currentPortfolio;
+  const btn = document.querySelector('.cmp7-load');
+  const setBtn = (txt, dis) => { if(btn){ btn.textContent = txt; btn.disabled = !!dis; } };
+  if(!PORTFOLIOS[missing]){ setBtn('No reports for this portfolio yet', true); return; }
+  setBtn('Loading…', true);
+  if(missing !== orig) switchPortfolio(missing);
+  let ticks = 0;
+  const timer = setInterval(() => {
+    ticks++;
+    if(portfolioSnapshot[missing]){
+      clearInterval(timer);
+      if(currentPortfolio !== orig) switchPortfolio(orig);
+      selectTab('compare');
+      return;
+    }
+    if(ticks % 3 === 0){ try{ renderExecSummary(); }catch(e){} }
+    if(ticks > 50){ clearInterval(timer); setBtn('Could not load — open its Executive Summary tab', false); }
+  }, 500);
+}
+
+function renderCompare(){ renderCompareLegacy(); try{ v7CompareEnhance('portfolio'); }catch(e){ console.warn('v7 compare enhance', e); } }
+function renderCompareMonth(){ renderCompareMonthLegacy(); try{ v7CompareEnhance('month'); }catch(e){ console.warn('v7 compare-month enhance', e); } }
+
+// ---------------- Data Quality ----------------
+function renderDataQuality(){
+  renderDataQualityLegacy();
+  try{
+    const wrap = document.getElementById('dataQualityWrap');
+    if(!wrap || wrap.querySelector('.dq7-tiles')) return;
+    const groups = wrap.querySelectorAll('.dq-group');
+    if(!groups.length) return;
+    let loaded = 0;
+    groups.forEach(g => {
+      const crit = g.querySelectorAll('.dq-issue.critical').length;
+      const warn = g.querySelectorAll('.dq-issue.warning').length;
+      const info = g.querySelectorAll('.dq-issue.info').length;
+      const notLoaded = !!g.querySelector('.dq-empty');
+      if(!notLoaded) loaded++;
+      const nameEl = g.querySelector('.dq-report-name');
+      if(nameEl && !nameEl.querySelector('.dq7-chips')){
+        let chips = '';
+        if(notLoaded) chips = '<span class="dq7-chip mute">not loaded</span>';
+        else if(!crit && !warn && !info) chips = '<span class="dq7-chip ok">clean</span>';
+        else {
+          if(crit) chips += `<span class="dq7-chip bad">${crit} critical</span>`;
+          if(warn) chips += `<span class="dq7-chip warn">${warn} warning</span>`;
+          if(info) chips += `<span class="dq7-chip info">${info} info</span>`;
+        }
+        nameEl.insertAdjacentHTML('beforeend', `<span class="dq7-chips">${chips}</span>`);
+      }
+    });
+    const c = wrap.querySelectorAll('.dq-issue.critical').length;
+    const w = wrap.querySelectorAll('.dq-issue.warning').length;
+    const n = wrap.querySelectorAll('.dq-issue.info').length;
+    const state = c ? 'bad' : (w ? 'warn' : 'ok');
+    const verdict = c ? 'Critical issues found' : (w ? 'Needs a look' : (n ? 'Clean, with notes' : 'All clear'));
+    const tile = (cls, label, val, sub) => `<div class="dq7-tile ${cls}"><div class="dq7-l">${label}</div><div class="dq7-b">${val}</div><div class="dq7-s">${sub}</div></div>`;
+    const tiles = `<div class="dq7-tiles">
+      <div class="dq7-tile verdict ${state}"><div class="dq7-l">Data status</div><div class="dq7-b">${verdict}</div><div class="dq7-s">${loaded} of ${groups.length} checks loaded</div></div>
+      ${tile(c ? 'bad' : 'mute', 'Critical', c, 'required data missing')}
+      ${tile(w ? 'warn' : 'mute', 'Warnings', w, 'skipped or normalised')}
+      ${tile(n ? 'info' : 'mute', 'Information', n, 'worth knowing')}
+    </div>`;
+    const sb = wrap.querySelector('.dq-summary-bar');
+    if(sb) sb.style.display = 'none';
+    wrap.insertAdjacentHTML('afterbegin', tiles);
+  }catch(e){ console.warn('v7 dq enhance', e); }
+}
+
+function renderCompareLegacy(){
   const wrap = document.getElementById('compareWrap');
   if(!wrap) return;
   const a = portfolioSnapshot[compareSel.a];
@@ -5491,7 +6205,7 @@ function momDeltaPct(currPct, priorPct, isInverse){
 // both columns describe the same portfolio, so each metric's label is shown
 // once - not the A/B dual-wording trick renderCompare uses only because two
 // DIFFERENT portfolios can use different words for the same concept.
-function renderCompareMonth(){
+function renderCompareMonthLegacy(){
   const wrap = document.getElementById('compareWrap');
   if(!wrap) return;
   const portfolio = compareMonthSel.portfolio;
@@ -5571,6 +6285,46 @@ function renderCompareMonth(){
 // Its own dedicated page (not a toggle buried in Overview) - a fast read for
 // someone who just wants headline numbers, a plain-English summary, and a
 // pass/fail health check, without clicking into individual report tabs.
+// ---- Executive Summary: segmented, no-page-scroll views (desktop) ----
+// Each top-level block of the pane carries data-exec-view (summary | trend |
+// changes). On a big enough screen the pane is fixed to the viewport and only
+// the active view's blocks are shown; on small screens and in print everything
+// stacks and scrolls as before.
+function applyExecView(pane, view){
+  pane.dataset.execActive = view;
+  pane.querySelectorAll(':scope > [data-exec-view]').forEach(el => el.classList.toggle('exec-on', el.dataset.execView === view));
+  pane.querySelectorAll('.exec-seg-btn').forEach(b => {
+    const on = b.dataset.execPick === view;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+}
+function execFitUpdate(){
+  const pane = document.getElementById('pane-execsummary');
+  if(!pane) return;
+  const visible = pane.style.display !== 'none';
+  const big = window.matchMedia('(min-width:1100px) and (min-height:700px)').matches;
+  const on = visible && big;
+  document.body.classList.toggle('exec-focus', on);
+  pane.classList.toggle('exec-fit', on);
+  if(!on){ pane.style.removeProperty('--exec-h'); return; }
+  window.scrollTo(0, 0);
+  pane.style.removeProperty('--exec-h');
+  const top = pane.getBoundingClientRect().top;
+  let h = window.innerHeight - top - 12;
+  pane.style.setProperty('--exec-h', h + 'px');
+  const over = document.documentElement.scrollHeight - window.innerHeight;
+  if(over > 0 && !pane.classList.contains('exec-has-briefing')) pane.style.setProperty('--exec-h', (h - over) + 'px');
+}
+function initExecViews(pane){
+  pane.querySelectorAll('.exec-seg-btn').forEach(b => b.addEventListener('click', () => { applyExecView(pane, b.dataset.execPick); }));
+  applyExecView(pane, 'summary');
+  if(!window.__execFitWired){
+    window.__execFitWired = true;
+    window.addEventListener('resize', execFitUpdate);
+  }
+}
+
 function buildExecSummaryTab(){
   const tabBar = document.getElementById('tabBar');
   const panesWrap = document.getElementById('panes');
@@ -5628,30 +6382,46 @@ function buildExecSummaryTab(){
         <select id="execMonthSelect"></select>
       </div>
     </div>
-    <div id="periodNote" class="period-note" style="display:none;"></div>
-    <div id="monthlyTrendWrap" style="display:none;"></div>
-    <div id="changedRecordsWrap" style="display:none;"></div>
-    <div id="execDataAsOf" class="period-note" style="display:none;"></div>
-    <div id="execHeroWrap"><div class="overview-loading">${esc(t('execsum.waitingReports','Waiting for the 4 known reports to finish loading…'))}</div></div>
+    <div class="exec-seg" role="tablist" aria-label="Executive Summary views">
+      <button type="button" class="exec-seg-btn active" role="tab" aria-selected="true" data-exec-pick="summary">Summary</button>
+      <button type="button" class="exec-seg-btn" role="tab" aria-selected="false" data-exec-pick="trend">Trend &amp; Outlook</button>
+      <button type="button" class="exec-seg-btn" role="tab" aria-selected="false" data-exec-pick="changes">Changes</button>
+    </div>
+    <div id="periodNote" class="period-note" data-exec-view="summary" style="display:none;"></div>
+    <div id="monthlyTrendWrap" data-exec-view="trend" style="display:none;"></div>
+    <div id="changedRecordsWrap" data-exec-view="changes" style="display:none;"></div>
+    <div id="execDataAsOf" class="period-note" data-exec-view="summary" style="display:none;"></div>
+    <div id="execHeroWrap" data-exec-view="summary"><div class="overview-loading">${esc(t('execsum.waitingReports','Waiting for the 4 known reports to finish loading…'))}</div></div>
     ${currentPortfolio === 'awqaf' ? `
+    <div class="exec-sec exec-sec-perf" data-exec-view="summary">
     <div class="section-title"><span class="h2-dot"></span><span data-i18n="execsum.sectionPerformance">${esc(t('execsum.sectionPerformance','Performance'))}</span></div>
     <div class="section-note" data-i18n="execsum.sectionPerformanceNote">${esc(t('execsum.sectionPerformanceNote','Headline figures for this period, with a change vs the last real saved month where history exists.'))}</div>
     <div id="execPerformanceWrap" class="exec-narrative"><div class="overview-loading">${esc(t('dq.waitingReports','Waiting for reports to finish loading…'))}</div></div>
+    </div>
+    <div class="exec-sec exec-sec-risk" data-exec-view="summary">
     <div class="section-title"><span class="h2-dot"></span><span data-i18n="execsum.sectionRisk">${esc(t('execsum.sectionRisk','Risk & Attention'))}</span></div>
     <div class="section-note" data-i18n="execsum.sectionRiskNote">${esc(t('execsum.sectionRiskNote','A quick status read on the automatic cross-checks from the Overview tab, the bounce rate vs alert threshold, and the current Data Status.'))}</div>
     <div id="execRiskWrap"></div>
+    </div>
+    <div class="exec-sec exec-sec-fwd" data-exec-view="trend">
     <div class="section-title"><span class="h2-dot"></span><span data-i18n="execsum.sectionForward">${esc(t('execsum.sectionForward','Forward View'))}</span></div>
     <div class="section-note" data-i18n="execsum.sectionForwardNote">${esc(t('execsum.sectionForwardNote',"What's still open or trending the wrong way, based only on real cross-checks and saved history — not a forecast."))}</div>
     <div id="execForwardWrap"></div>
+    </div>
     ` : `
+    <div class="exec-sec exec-sec-perf" data-exec-view="summary">
     <div class="section-title"><span class="h2-dot"></span><span data-i18n="execsum.sectionSummary">${esc(t('execsum.sectionSummary','Summary'))}</span></div>
     <div id="execNarrative" class="exec-narrative"><div class="overview-loading">${esc(t('dq.waitingReports','Waiting for reports to finish loading…'))}</div></div>
+    </div>
+    <div class="exec-sec exec-sec-risk" data-exec-view="summary">
     <div class="section-title"><span class="h2-dot"></span><span data-i18n="execsum.sectionHealthSnapshot">${esc(t('execsum.sectionHealthSnapshot','Health Snapshot'))}</span></div>
     <div class="section-note" data-i18n="execsum.sectionHealthSnapshotNote">${esc(t('execsum.sectionHealthSnapshotNote','A quick status read on the automatic cross-checks from the Overview tab, plus the key rate for this portfolio.'))}</div>
     <div id="execHealthWrap"></div>
+    </div>
     `}
   `;
   panesWrap.appendChild(pane);
+  initExecViews(pane);
 
   const periodSelectEl = pane.querySelector('#periodSelect');
   if(periodSelectEl){
@@ -6360,7 +7130,7 @@ function dqSeverityLabel(sev){
 }
 const DQ_SEVERITY_ICON = { critical: '✕', warning: '!', info: 'i' };
 
-function renderDataQuality(){
+function renderDataQualityLegacy(){
   const wrap = document.getElementById('dataQualityWrap');
   if(!wrap) return;
   let totalIssues = 0;
@@ -7222,6 +7992,114 @@ function renderOverviewAwqaf(){
   ];
 
   renderOverviewCards(wrap, cards, keyChangesHtml);
+  // ---- TRIAL v6: Overview (Awqaf) as a briefing: headline, four report tiles, key changes ----
+  (function(){
+    const num = n => (n || 0).toLocaleString();
+    const aedC = v => {
+      const a = Math.abs(v || 0);
+      if(a >= 1e6) return 'AED ' + parseFloat((v / 1e6).toFixed(2)) + 'M';
+      if(a >= 1e3) return 'AED ' + Math.round(v / 1e3) + 'K';
+      return 'AED ' + Math.round(v || 0);
+    };
+    const period = fmtPeriod(cc.date_min, cc.date_max);
+    const rate = bounceRateAmt;
+    const rateOk = rate !== null && rate < BOUNCE_TARGET;
+    const renewShare = ccClassified ? Math.round((ccRenewal / ccClassified) * 100) : 0;
+    const headline = `<b>${esc(period)}</b> · ${num(cc.total_lines)} cheque lines worth <b>${aedC(cc.total_amount)}</b>; `
+      + `<b>${num(bc.total_count)}</b> bounced ` + (rate !== null ? `(<b class="${rateOk ? 'eb-ok' : 'eb-bad'}">${rate.toFixed(1)}%</b> of value, ${rateOk ? 'under' : 'over'} the ${BOUNCE_TARGET}% target). ` : '. ')
+      + `<b>${num(ccClassified)}</b> lease contracts (${renewShare}% renewals) and <b>${num(rc.total_requests)}</b> requests processed.`;
+
+    const leg = items => `<div class="eb-leg">${items.map(i => `<span><i style="background:${i.color}"></i>${esc(i.label)} <b>${i.text}</b></span>`).join('')}</div>`;
+    // Interactive daily line: real calendar x-axis (gaps for days with no data, weekends shaded),
+    // hover crosshair + tooltip with the exact date and value. Clicks on it don't open the tab.
+    const sparks = [];
+    const spark = (d, color, unit) => { sparks.push({daily: d, color: color, unit: unit}); return `<div class="ov6-spark" data-s="${sparks.length - 1}"></div>`; };
+    const WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const drawSpark = (host, o) => {
+      const e = Object.entries(o.daily || {}).sort((a, b) => a[0] < b[0] ? -1 : 1);
+      if(e.length < 2){ host.innerHTML = ''; return; }
+      const W = Math.max(Math.round(host.clientWidth) || 240, 120), H = 60, pl = 3, pr = 3, pt = 8, pb = 4;
+      host.dataset.w = W;
+      const f = laIsoParts(e[0][0]), l = laIsoParts(e[e.length - 1][0]);
+      const t0 = Date.UTC(f.y, f.m - 1, f.d), t1 = Date.UTC(l.y, l.m - 1, l.d), dayMs = 86400000, span = Math.max((t1 - t0) / dayMs, 1);
+      const max = Math.max(...e.map(x => x[1]), 1);
+      const px = k => pl + (W - pl - pr) * k / span, py = v => pt + (H - pt - pb) * (1 - v / max);
+      const dayIdx = iso => { const p = laIsoParts(iso); return (Date.UTC(p.y, p.m - 1, p.d) - t0) / dayMs; };
+      let bands = '';
+      for(let k = 0; k <= span; k++){ const dw = new Date(t0 + k * dayMs).getUTCDay(); if(dw === 6 || dw === 0){ const a = Math.max(px(k - 0.5), pl), b = Math.min(px(k + 0.5), W - pr); bands += `<rect x="${a.toFixed(1)}" y="0" width="${(b - a).toFixed(1)}" height="${H}" fill="var(--text)" opacity="0.05"/>`; } }
+      const pts = e.map(x => px(dayIdx(x[0])).toFixed(1) + ',' + py(x[1]).toFixed(1));
+      const area = `${px(dayIdx(e[0][0])).toFixed(1)},${H - pb} ${pts.join(' ')} ${px(dayIdx(e[e.length - 1][0])).toFixed(1)},${H - pb}`;
+      const pk = e.reduce((b, x, i) => x[1] > e[b][1] ? i : b, 0);
+      host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Daily trend, peak ${num(e[pk][1])} ${esc(o.unit)} on ${laShort(e[pk][0])}">${bands}<polygon points="${area}" fill="${o.color}" opacity="0.14"/><polyline points="${pts.join(' ')}" fill="none" stroke="${o.color}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${px(dayIdx(e[pk][0])).toFixed(1)}" cy="${py(e[pk][1]).toFixed(1)}" r="3.2" fill="${o.color}"/><line class="ov6-x" x1="0" x2="0" y1="0" y2="${H}" stroke="var(--text)" stroke-width="1" opacity="0"/><circle class="ov6-dot" r="3.6" cx="0" cy="0" fill="${o.color}" stroke="var(--card)" stroke-width="1.5" opacity="0"/></svg><div class="la4-tip ov6-tip" hidden></div>`;
+      const svg = host.querySelector('svg'), tip = host.querySelector('.ov6-tip'), xl = svg.querySelector('.ov6-x'), dot = svg.querySelector('.ov6-dot');
+      const byIso = new Map(e);
+      svg.addEventListener('mousemove', ev => {
+        const r = svg.getBoundingClientRect();
+        const k = Math.min(Math.max(Math.round(((ev.clientX - r.left) / r.width * W - pl) / (W - pl - pr) * span), 0), span);
+        const dt = new Date(t0 + k * dayMs);
+        const iso = dt.getUTCFullYear() + '-' + String(dt.getUTCMonth() + 1).padStart(2, '0') + '-' + String(dt.getUTCDate()).padStart(2, '0');
+        const v = byIso.get(iso), cx = px(k);
+        xl.setAttribute('x1', cx); xl.setAttribute('x2', cx); xl.setAttribute('opacity', '0.35');
+        if(v === undefined){ dot.setAttribute('opacity', '0'); } else { dot.setAttribute('cx', cx); dot.setAttribute('cy', py(v)); dot.setAttribute('opacity', '1'); }
+        tip.hidden = false;
+        tip.innerHTML = `<b>${WD[dt.getUTCDay()]} ${laShort(iso)}</b><br>${v === undefined ? '<span class="la4-sub">no activity recorded</span>' : '<b>' + num(v) + '</b> ' + esc(o.unit)}`;
+        const hb = host.getBoundingClientRect();
+        let left = ev.clientX - hb.left + 12; if(left > hb.width - 130) left = ev.clientX - hb.left - 130;
+        tip.style.left = Math.max(left, 0) + 'px'; tip.style.top = '-34px';
+      });
+      svg.addEventListener('mouseleave', () => { tip.hidden = true; xl.setAttribute('opacity', '0'); dot.setAttribute('opacity', '0'); });
+    };
+    const sumDaily = (a, b) => { if(!a && !b) return null; const o = {}; [a, b].forEach(m => Object.entries(m || {}).forEach(([k, v]) => { o[k] = (o[k] || 0) + v; })); return o; };
+    const tile = (o) => `<div class="ov6-tile${o.alert ? ' has-alert' : ''}" data-goto="${o.id}" role="link" tabindex="0">
+      <div class="ov6-top"><span class="ov6-label">${esc(o.label)}</span><span class="ov6-go" aria-hidden="true">Open &rsaquo;</span></div>
+      <div class="ov6-big">${o.big}</div>
+      <div class="ov6-sub">${o.sub}</div>
+      <div class="ov6-vis">${o.vis || ''}</div>
+      ${o.spark || ''}
+      <div class="ov6-foot">${o.foot}</div>
+    </div>`;
+
+    const bcN = k => (bc.status && bc.status[k]) || 0;
+    const rcRen = (rc.type_counts && rc.type_counts['Renewal Lease']) || 0;
+    const rcNew = (rc.type_counts && rc.type_counts['New Lease']) || 0;
+    const laId = leaseActivityAvailable() ? 'lease-activity' : 'new-lease';
+
+    const tiles = [
+      tile({id: 'count-report', label: 'Cheque Count', big: num(cc.total_lines) + ' <small>lines</small>', sub: aedC(cc.total_amount) + ' recorded',
+        spark: spark(cc.daily, 'var(--accent)', 'cheque lines'),
+        foot: `<span><b>${num(cc.contracts_with_installments)}</b> contracts on installments</span><span><b>${num(cc.installments_total)}</b> installments · ${aedC(cc.install_amount)}</span>`}),
+      tile({id: 'bounced-cheques', label: 'Bounced Cheques', big: num(bc.total_count) + ' <small>cheques</small>', alert: rate !== null && rate >= BOUNCE_TARGET,
+        sub: aedC(bc.total_amount) + (rate !== null ? ` · <b class="${rateOk ? 'eb-ok' : 'eb-bad'}">${rate.toFixed(1)}%</b> of recorded value` : ''),
+        vis: laStackBar([{label: 'Under Legal Action', value: bcN('Under Legal Action'), color: 'var(--bad)'}, {label: 'Under Process', value: bcN('Under Process'), color: 'var(--amber)'}, {label: 'Paid', value: bcN('PAID'), color: 'var(--ok)'}])
+          + leg([{label: 'Legal', text: num(bcN('Under Legal Action')), color: 'var(--bad)'}, {label: 'Process', text: num(bcN('Under Process')), color: 'var(--amber)'}, {label: 'Paid', text: num(bcN('PAID')), color: 'var(--ok)'}]),
+        spark: spark(bc.daily, 'var(--bad)', 'bounced cheques'),
+        foot: `<span>Target &lt; <b>${BOUNCE_TARGET}%</b></span><span>${rateOk ? 'Within target' : 'Above target'}</span>`}),
+      tile({id: laId, label: 'Lease Activity', big: num(ccClassified) + ' <small>contracts</small>', sub: `${renewShare}% renewals · ${num(ccNewLease)} new`,
+        vis: laStackBar([{label: 'Renewal', value: ccRenewal, color: 'var(--accent)'}, {label: 'New', value: ccNewLease, color: 'var(--accent2)'}])
+          + leg([{label: 'Renewal', text: num(ccRenewal), color: 'var(--accent)'}, {label: 'New', text: num(ccNewLease), color: 'var(--accent2)'}]),
+        spark: (cc.new_lease_daily || cc.renewal_lease_daily) ? spark(sumDaily(cc.new_lease_daily, cc.renewal_lease_daily), 'var(--accent2)', 'lease contracts') : spark(cc.daily, 'var(--accent2)', 'cheque lines'),
+        foot: `<span>New-lease rent <b>${aedC(nl.rent_value_total)}</b></span><span>Fees collected <b>${aedC(nl.total_amount)}</b></span>`}),
+      tile({id: 'request-count', label: 'Request Count', big: num(rc.total_requests) + ' <small>requests</small>', sub: aedC(rc.total_amount),
+        vis: laStackBar([{label: 'Renewal Lease', value: rcRen, color: 'var(--accent)'}, {label: 'New Lease', value: rcNew, color: 'var(--accent2)'}, {label: 'Other', value: rcOtherCount, color: 'var(--sub)'}])
+          + leg([{label: 'Renewal', text: num(rcRen), color: 'var(--accent)'}, {label: 'New', text: num(rcNew), color: 'var(--accent2)'}, {label: 'Other', text: num(rcOtherCount), color: 'var(--sub)'}]),
+        spark: spark(rc.daily, 'var(--accent)', 'requests'),
+        foot: rcOtherEntries.length ? `<span>Largest other: <b>${esc(rcOtherEntries[0][0])}</b> (${num(rcOtherEntries[0][1])})</span>` : '<span>No other request types</span>'}),
+    ].join('');
+
+    wrap.innerHTML = `<div class="ov6"><div class="eb-headline">${headline}</div><div class="ov6-tiles">${tiles}</div>${keyChangesHtml || ''}</div>`;
+    sparks.forEach((o, i) => {
+      const host = wrap.querySelector('.ov6-spark[data-s="' + i + '"]');
+      if(!host) return;
+      host.addEventListener('click', ev => ev.stopPropagation());
+      drawSpark(host, o);
+      if(typeof ResizeObserver !== 'undefined') new ResizeObserver(() => { const w = Math.round(host.clientWidth); if(w > 0 && Math.abs(w - (+host.dataset.w || 0)) > 3) drawSpark(host, o); }).observe(host);
+    });
+    wrap.querySelectorAll('.ov6-tile').forEach(el => {
+      const go = () => { if(document.getElementById('tab-' + el.dataset.goto)) selectTab(el.dataset.goto); };
+      el.addEventListener('click', go);
+      el.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); } });
+    });
+  })();
 }
 
 
@@ -7292,6 +8170,111 @@ function buildLeaseActivityTab(){
   else panesWrap.appendChild(pane);
   renderLeaseActivity();
 }
+// ---- Lease Activity v4 helpers ----
+function laStackBar(segs){
+  const total = segs.reduce((a, s) => a + s.value, 0) || 1;
+  const parts = segs.filter(s => s.value > 0).map(s => `<i style="flex:${Math.max(s.value / total, 0.012)} 1 0;background:${s.color}" title="${esc(s.label)}: ${s.value.toLocaleString()}"></i>`).join('');
+  return `<div class="la4-bar" role="img" aria-label="${esc(segs.map(s => s.label + ' ' + s.value.toLocaleString()).join(', '))}">${parts}</div>`;
+}
+function laIsoParts(iso){ const p = iso.split('-'); return {y:+p[0], m:+p[1], d:+p[2]}; }
+function laShort(iso){ const p = iso.split('-'); return p[2] + '/' + p[1]; }
+function laNiceMax(v){
+  if(v <= 5) return 5;
+  const pow = Math.pow(10, Math.floor(Math.log10(v)));
+  const n = v / pow;
+  const step = n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10;
+  return step * pow;
+}
+// One interactive daily chart for a list of series. Real calendar x-axis (days
+// with no data are gaps, weekends shaded), y ticks, average line, peak marker,
+// hover readout. Each series keeps its own scale so grains are never mixed.
+function laBuildChart(host, series){
+  const state = {i: 0};
+  let lastW = 0, lastH = 0;
+  const chipsHtml = series.map((s, i) => `<button type="button" class="la4-chip${i === 0 ? ' on' : ''}" data-i="${i}"><span class="la4-chip-dot" style="background:${s.color}"></span>${esc(s.label)}</button>`).join('');
+  host.innerHTML = `<div class="la4-chips" role="tablist">${chipsHtml}</div><div class="la4-chart-meta"></div><div class="la4-chart-box"><div class="la4-chart-svg"></div><div class="la4-tip" hidden></div></div>`;
+  const meta = host.querySelector('.la4-chart-meta');
+  const box = host.querySelector('.la4-chart-svg');
+  const tip = host.querySelector('.la4-tip');
+  function draw(){
+    const s = series[state.i];
+    const e = Object.entries(s.daily || {}).sort((a, b) => a[0] < b[0] ? -1 : 1);
+    if(e.length < 2){ box.innerHTML = '<div class="la2-empty">Not enough days to chart</div>'; meta.innerHTML = ''; return; }
+    const first = e[0][0], last = e[e.length - 1][0];
+    const f = laIsoParts(first), l = laIsoParts(last);
+    const t0 = Date.UTC(f.y, f.m - 1, f.d), t1 = Date.UTC(l.y, l.m - 1, l.d);
+    const dayMs = 86400000, span = Math.max((t1 - t0) / dayMs, 1);
+    const fill = !!host.closest('.eb-chart');
+    const W = Math.max(Math.round(box.clientWidth) || 760, 360);
+    const fillH = fill ? Math.round(box.clientHeight) : 0;
+    const H = fillH >= 150 ? Math.min(fillH, 420) : Math.min(Math.max(Math.round(W * 0.21), 170), 230);
+    const pl = 44, pr = 24, pt = 14, pb = 26;
+    lastW = W; lastH = fillH;
+    const vals = e.map(x => x[1]);
+    const rawMax = Math.max(...vals, 1);
+    const top = laNiceMax(rawMax);
+    const total = vals.reduce((a, b) => a + b, 0);
+    const avg = total / vals.length;
+    const px = iso => { const p = laIsoParts(iso); return pl + (W - pl - pr) * ((Date.UTC(p.y, p.m - 1, p.d) - t0) / dayMs) / span; };
+    const py = v => pt + (H - pt - pb) * (1 - v / top);
+    let bands = '';
+    for(let k = 0; k <= span; k++){
+      const dw = new Date(t0 + k * dayMs).getUTCDay();
+      if(dw === 6 || dw === 0){
+        const x0 = pl + (W - pl - pr) * (k - 0.5) / span, x1 = pl + (W - pl - pr) * (k + 0.5) / span;
+        const a = Math.max(x0, pl), b = Math.min(x1, W - pr);
+        bands += `<rect x="${a.toFixed(1)}" y="${pt}" width="${(b - a).toFixed(1)}" height="${H - pt - pb}" fill="var(--text)" opacity="0.05"/>`;
+      }
+    }
+    const nT = [4, 5, 3, 2].find(n => Number.isInteger(top / n)) || 4;
+    const ticks = Array.from({length: nT + 1}, (_, i) => i / nT).map(fr => {
+      const v = top * fr, y = py(v);
+      return `<line x1="${pl}" y1="${y.toFixed(1)}" x2="${W - pr}" y2="${y.toFixed(1)}" stroke="var(--border)" stroke-width="${fr === 0 ? 1 : 0.6}" opacity="${fr === 0 ? 0.9 : 0.45}"/><text x="${pl - 8}" y="${(y + 4).toFixed(1)}" text-anchor="end" class="la4-ax">${Math.round(v).toLocaleString()}</text>`;
+    }).join('');
+    const step = span > 20 ? 7 : span > 10 ? 3 : 1;
+    let xlabels = '';
+    for(let k = 0; k <= span; k += step){
+      const dt = new Date(t0 + k * dayMs);
+      xlabels += `<text x="${(pl + (W - pl - pr) * k / span).toFixed(1)}" y="${H - 8}" text-anchor="middle" class="la4-ax">${String(dt.getUTCDate()).padStart(2, '0')}/${String(dt.getUTCMonth() + 1).padStart(2, '0')}</text>`;
+    }
+    const pts = e.map(x => px(x[0]).toFixed(1) + ',' + py(x[1]).toFixed(1));
+    const area = `${px(first).toFixed(1)},${py(0)} ${pts.join(' ')} ${px(last).toFixed(1)},${py(0)}`;
+    const pk = vals.indexOf(rawMax);
+    const avgLine = `<line x1="${pl}" y1="${py(avg).toFixed(1)}" x2="${W - pr}" y2="${py(avg).toFixed(1)}" stroke="${s.color}" stroke-width="1" stroke-dasharray="4 4" opacity="0.7"/>`;
+    const dots = e.map(x => `<circle cx="${px(x[0]).toFixed(1)}" cy="${py(x[1]).toFixed(1)}" r="2.2" fill="${s.color}"/>`).join('');
+    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="la4-svg" role="img" aria-label="${esc(s.label)} per day, peak ${rawMax} on ${laShort(e[pk][0])}">${bands}${ticks}${xlabels}<polygon points="${area}" fill="${s.color}" opacity="0.13"/>${avgLine}<polyline points="${pts.join(' ')}" fill="none" stroke="${s.color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>${dots}<circle cx="${px(e[pk][0]).toFixed(1)}" cy="${py(rawMax).toFixed(1)}" r="5" fill="${s.color}" stroke="var(--card)" stroke-width="2"/><line class="la4-cross" x1="0" x2="0" y1="${pt}" y2="${H - pb}" stroke="var(--text)" stroke-width="1" opacity="0"/><rect class="la4-hit" x="${pl}" y="${pt}" width="${W - pl - pr}" height="${H - pt - pb}" fill="transparent"/></svg>`;
+    meta.innerHTML = `<span class="la4-meta-main"><b class="bidi-ltr">${total.toLocaleString()}</b> ${esc(s.unit)} · <span class="la4-sub">${esc(s.source)}</span></span><span class="la4-meta-stats">${t('leaseActivity.v2.peak','Peak')} <b class="bidi-ltr">${rawMax.toLocaleString()}</b> · ${laShort(e[pk][0])} &nbsp;|&nbsp; ${esc(t('leaseActivity.v4.avg','Avg / active day'))} <b class="bidi-ltr">${avg.toFixed(avg >= 10 ? 0 : 1)}</b> &nbsp;|&nbsp; <span class="la4-sub">${esc(t('leaseActivity.v4.weekendNote','shaded = weekend'))}</span></span>`;
+    const svg = box.querySelector('svg'), cross = svg.querySelector('.la4-cross'), hit = svg.querySelector('.la4-hit');
+    const byIso = new Map(e);
+    hit.addEventListener('mousemove', ev => {
+      const r = svg.getBoundingClientRect();
+      const vx = (ev.clientX - r.left) / r.width * W;
+      const dayIdx = Math.min(Math.max(Math.round((vx - pl) / (W - pl - pr) * span), 0), span);
+      const dt = new Date(t0 + dayIdx * dayMs);
+      const iso = dt.getUTCFullYear() + '-' + String(dt.getUTCMonth() + 1).padStart(2, '0') + '-' + String(dt.getUTCDate()).padStart(2, '0');
+      const v = byIso.get(iso);
+      const cx = pl + (W - pl - pr) * dayIdx / span;
+      cross.setAttribute('x1', cx); cross.setAttribute('x2', cx); cross.setAttribute('opacity', '0.35');
+      const wd = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][dt.getUTCDay()];
+      tip.hidden = false;
+      tip.innerHTML = `<b>${wd} ${laShort(iso)}</b><br>${v === undefined ? '<span class="la4-sub">' + esc(t('leaseActivity.v4.noData', 'no activity recorded')) + '</span>' : '<span class="bidi-ltr"><b>' + v.toLocaleString() + '</b></span> ' + esc(s.unit)}`;
+      const bx = box.getBoundingClientRect();
+      let left = ev.clientX - bx.left + 14; if(left > bx.width - 150) left = ev.clientX - bx.left - 150;
+      tip.style.left = Math.max(left, 4) + 'px'; tip.style.top = Math.max(ev.clientY - bx.top - 46, 2) + 'px';
+    });
+    hit.addEventListener('mouseleave', () => { tip.hidden = true; cross.setAttribute('opacity', '0'); });
+  }
+  host.querySelectorAll('.la4-chip').forEach(b => b.addEventListener('click', () => {
+    state.i = +b.dataset.i;
+    host.querySelectorAll('.la4-chip').forEach(x => x.classList.toggle('on', x === b));
+    draw();
+  }));
+  draw();
+  if(typeof ResizeObserver !== 'undefined'){
+    new ResizeObserver(() => { const w = Math.round(box.clientWidth), h = Math.round(box.clientHeight); if(w > 0 && (Math.abs(w - lastW) > 3 || (host.closest('.eb-chart') && Math.abs(h - lastH) > 3))) draw(); }).observe(box);
+  }
+}
+
 function renderLeaseActivity(){
   if(!leaseActivityAvailable()) return;
   const wrap = document.getElementById('leaseActivityWrap');
@@ -7417,31 +8400,56 @@ function renderLeaseActivity(){
     },
   ];
 
-  wrap.innerHTML = `<div class="la-layout">${sections.map((s,i) => `
-    <div class="la-section">
-      <div class="la-section-head">
-        <div class="oc-icon-badge la-icon-${i % 4}">${cardIcon(s.icon)}</div>
-        <div class="la-section-headtext">
-          <div class="la-section-title">${esc(s.title)}</div>
-          <div class="la-section-source">${s.sub}</div>
-        </div>
-        ${s.period ? `<div class="la-section-period bidi-ltr">${esc(s.period)}</div>` : ''}
-      </div>
-      <div class="la-section-body${s.donut ? '' : ' no-donut'}">
-        <div class="la-section-main">
-          <div class="oc-big">${splitBig(s.big)}</div>
-          ${s.spark ? `<div class="oc-spark">${s.spark}</div>` : ''}
-        </div>
-        ${s.donut ? `<div class="la-section-donut">${miniDonut(s.donut.segments, s.donut.centerText)}</div>` : ''}
-        <div class="la-section-rows">
-          ${s.rows.map(([label,value,raw,delta]) => {
-            const pct = rowPct(value, raw);
-            return `<div class="oc-row"><span class="oc-label">${esc(label)}</span><span class="oc-value bidi-ltr">${raw ? value : esc(value)}</span></div>${pct !== null ? `<div class="oc-bar"><div class="oc-bar-fill" style="width:${pct}%"></div></div>` : ''}${delta ? `<div class="oc-row-delta">${delta}</div>` : ''}`;
-          }).join('')}
-        </div>
-      </div>
+  // ---- Lease Activity v4 layout (trial v4) ----
+  // Same three validated sources, never added together. Daily charts use the
+  // real per-day CONTRACT counts (Cheque Count new_lease_daily / renewal_lease_daily,
+  // each contract counted once on its first date) and Request Count's daily rows.
+  const laNlNew = nl.total_new_leases || 0;
+  const agree = laNlNew === ccNewLease;
+  const agreeHtml = `<div class="la2-agree${agree ? '' : ' warn'}"><span class="dot"></span>${agree
+    ? t('leaseActivity.v2.agree', 'Sources agree') + ': <b>' + ccNewLease.toLocaleString() + '</b> ' + t('leaseActivity.v2.agreeTail', 'new-lease contracts in both Cheque Count and New Lease')
+    : t('leaseActivity.v2.differ', 'Sources differ') + ': Cheque Count <b>' + ccNewLease.toLocaleString() + '</b> vs New Lease <b>' + laNlNew.toLocaleString() + '</b> — ' + t('leaseActivity.v2.seeCross', 'see Cross-checks')}</div>`;
+
+  const C_REN = 'var(--accent)', C_NEW = 'var(--accent2)';
+  const rentVal = nl.rent_value_total || 0, feeTotal = nl.total_amount || 0;
+  const tile = (label, big, sub, delta, visual) => `<div class="la4-tile"><div class="la4-tile-label">${esc(label)}</div><div class="la4-tile-big bidi-ltr">${big}</div><div class="la4-tile-sub">${sub}</div><div class="la4-tile-delta">${delta || '&nbsp;'}</div><div class="la4-tile-vis">${visual || ''}</div></div>`;
+  const tiles = [
+    tile(t('leaseActivity.v2.tileContracts', 'Lease contracts'), (cc.total_contracts || 0).toLocaleString(), esc(t('leaseActivity.v2.tileContractsSub', 'Cheque Count · contract-level')), dClassifiedTotal, laStackBar([{label: 'Renewal', value: ccRenewal, color: C_REN}, {label: 'New', value: ccNewLease, color: C_NEW}, {label: 'Other', value: ccUnclassified, color: 'var(--border)'}])),
+    tile(t('leaseActivity.v2.tileRenewalShare', 'Renewal share'), pct(ccRenewal, cc.total_contracts), withPct(ccRenewal, cc.total_contracts) + ' ' + esc(t('leaseActivity.v2.ofContracts', 'of contracts')), dRenewalContracts, `<div class="la4-gauge"><i style="width:${cc.total_contracts ? Math.min(100, ccRenewal / cc.total_contracts * 100).toFixed(1) : 0}%;background:${C_REN}"></i></div>`),
+    tile(t('leaseActivity.v2.tileNew', 'New leases'), ccNewLease.toLocaleString(), esc(t('leaseActivity.v2.tileNewSub', 'distinct new-lease contracts')), dNewLeaseContracts, `<div class="la4-gauge"><i style="width:${cc.total_contracts ? Math.max(2, ccNewLease / cc.total_contracts * 100).toFixed(1) : 0}%;background:${C_NEW}"></i></div>`),
+    tile(t('leaseActivity.v2.tileRent', 'New-lease rent value'), fmtAed(rentVal), esc(t('leaseActivity.v2.totalFees', 'Total fees')) + ' ' + fmtAed(feeTotal), dRentValue, laStackBar([{label: 'Rent', value: rentVal, color: 'var(--amber)'}, {label: 'Other fees', value: Math.max(feeTotal - rentVal, 0), color: 'var(--border)'}])),
+  ].join('');
+
+  const mixRow = (title, source, a, b, unit) => {
+    const tot = a + b;
+    return `<div class="la4-mix-row"><div class="la4-mix-head"><div><div class="la4-mix-title">${esc(title)}</div><div class="la4-sub">${esc(source)}</div></div><div class="la4-mix-total bidi-ltr">${tot.toLocaleString()} <span class="la4-sub">${esc(unit)}</span></div></div>${laStackBar([{label: 'Renewal', value: a, color: C_REN}, {label: 'New', value: b, color: C_NEW}])}<div class="la4-mix-legend"><span><i style="background:${C_REN}"></i>${esc(t('leaseActivity.donut.renewal', 'Renewal'))} <b class="bidi-ltr">${a.toLocaleString()}</b> <em>${tot ? '(' + Math.round(a / tot * 100) + '%)' : ''}</em></span><span><i style="background:${C_NEW}"></i>${esc(t('leaseActivity.donut.new', 'New'))} <b class="bidi-ltr">${b.toLocaleString()}</b> <em>${tot ? '(' + Math.round(b / tot * 100) + '%)' : ''}</em></span></div></div>`;
+  };
+  const mixCard = `<div class="la4-card la4-mixcard"><div class="la4-card-title">${esc(t('leaseActivity.v4.mixTitle', 'Renewal vs new lease'))}</div><div class="la4-sub la4-card-note">${esc(t('leaseActivity.v4.mixNote', 'Two grains side by side — never added together'))}</div>${
+    mixRow(t('leaseActivity.v4.byContract', 'By contract'), 'Cheque Count · leaseType', ccRenewal, ccNewLease, t('leaseActivity.v2.contractsWord', 'contracts')) +
+    mixRow(t('leaseActivity.v4.byRequest', 'By request'), 'Request Count · request-level', rcRenewal, rcNew, t('leaseActivity.v2.requestsWord', 'requests'))
+  }</div>`;
+
+  const rowHtml = (src, grain, total, ren, nw, share, delta) => `<tr><td class="src">${esc(src)}<div class="grain">${esc(grain)}</div></td><td class="num"><span class="bidi-ltr">${total}</span></td><td class="num"><span class="bidi-ltr">${ren}</span></td><td class="num"><span class="bidi-ltr">${nw}</span></td><td class="num"><span class="bidi-ltr">${share}</span></td><td class="chg">${delta || '<span class="grain">—</span>'}</td></tr>`;
+  const table = `<table class="la2-table"><thead><tr><th>${esc(t('leaseActivity.v2.thSource', 'Source'))}</th><th class="num">${esc(t('leaseActivity.v2.thTotal', 'Total'))}</th><th class="num">${esc(t('leaseActivity.donut.renewal', 'Renewal'))}</th><th class="num">${esc(t('leaseActivity.donut.new', 'New'))}</th><th class="num">${esc(t('leaseActivity.v2.thShare', 'Renewal share'))}</th><th>${esc(t('leaseActivity.v2.thChange', 'Change'))}</th></tr></thead><tbody>${
+    rowHtml('Cheque Count', t('leaseActivity.v2.grainContract', 'contracts (leaseType)'), (cc.total_contracts || 0).toLocaleString(), ccRenewal.toLocaleString(), ccNewLease.toLocaleString(), pct(ccRenewal, cc.total_contracts), dClassifiedTotal) +
+    rowHtml('New Lease', t('leaseActivity.v2.grainDistinct', 'distinct new-lease contracts'), laNlNew.toLocaleString(), '—', laNlNew.toLocaleString(), '—', dNewLeaseContracts) +
+    rowHtml('Request Count', t('leaseActivity.v2.grainRequest', 'requests (renewal + new only)'), rcLeaseTotal.toLocaleString(), rcRenewal.toLocaleString(), rcNew.toLocaleString(), pct(rcRenewal, rcLeaseTotal), dRcRenewal)
+  }</tbody></table><div class="la2-note">${esc(t('leaseActivity.v2.grainNote', 'Three sources, three grains: contracts and requests are never added together.'))}${ccUnclassified ? ' ' + esc(ccUnclassified.toLocaleString()) + ' ' + esc(t('leaseActivity.v2.unclassified', 'contracts in Cheque Count have no renewal/new lease type.')) : ''}</div>`;
+
+  wrap.innerHTML = `<div class="la2 la4">
+    ${agreeHtml}
+    <div class="la4-tiles">${tiles}</div>
+    <div class="la4-main">
+      ${mixCard}
+      <div class="la4-card la4-trendcard"><div class="la4-card-title">${esc(t('leaseActivity.v4.dailyTitle', 'Daily activity'))}</div><div id="la4ChartHost"></div></div>
     </div>
-  `).join('')}</div>`;
+    <div class="la4-card"><div class="la4-card-title">${esc(t('leaseActivity.v2.compareTitle', 'Source comparison'))}</div><div class="la4-sub la4-card-note">${esc(t('leaseActivity.v2.compareSub', 'Same figures as above, side by side. For fee and line-item detail see the New Lease Detail tab.'))}</div>${table}</div>
+  </div>`;
+  laBuildChart(wrap.querySelector('#la4ChartHost'), [
+    {label: t('leaseActivity.v4.serNew', 'New-lease contracts'), unit: t('leaseActivity.v2.contractsWord', 'contracts'), source: 'Cheque Count · by first date', daily: cc.new_lease_daily, color: 'var(--accent2)'},
+    {label: t('leaseActivity.v4.serRen', 'Renewal contracts'), unit: t('leaseActivity.v2.contractsWord', 'contracts'), source: 'Cheque Count · by first date', daily: cc.renewal_lease_daily, color: 'var(--accent)'},
+    {label: t('leaseActivity.v4.serReq', 'Requests'), unit: t('leaseActivity.v2.requestsWord', 'requests'), source: 'Request Count', daily: rc.daily, color: 'var(--amber)'},
+  ]);
 }
 
 // Awqaf's own Executive Summary: hero cards, a plain-English narrative built
@@ -7583,7 +8591,7 @@ function renderExecSummaryAwqaf(){
   const awqafPriorHistory = getMonthlyHistory('awqaf').filter(h => h.periodKey && awqafPeriodKey && h.periodKey < awqafPeriodKey);
   const priorSnap = awqafPriorHistory.length ? awqafPriorHistory[awqafPriorHistory.length - 1] : null;
   const heroDelta = (curr, prevKey, isAed, isInverse) => priorSnap ? momDeltaText(curr, priorSnap[prevKey], isAed, isInverse) : null;
-  const withHeroDelta = (sub, delta) => delta ? `${sub} · ${delta}` : sub;
+  const withHeroDelta = (sub, delta) => delta ? `${sub}<span class="exec-delta">${delta}</span>` : sub;
 
   renderExecCards(heroWrap, [
     {label: totalCollectedLabel('awqaf'), value: fmtAed(cc.total_amount), sub: withHeroDelta(t('execsum.heroTotalSub','Cheque Count, this month — recorded ledger sum, not confirmed bank clearance'), heroDelta(cc.total_amount, 'totalCollected', true))},
@@ -7672,10 +8680,10 @@ function renderExecSummaryAwqaf(){
     const compNote = t('execsum.compNote','Lease composition (validated, by contract): {new} new · {renewal} renewal{unclassified} out of {total} total {unit} this period. New Lease Value above covers new-lease contracts only — a validated renewal-lease AED figure isn\'t available yet, so it isn\'t merged into that headline.')
       .replace('{new}', ccNewLease.toLocaleString()).replace('{renewal}', ccRenewal.toLocaleString()).replace('{unclassified}', compUnclassified).replace('{total}', (cc.total_contracts||0).toLocaleString()).replace('{unit}', contractUnit)
       + (priorSnap ? '' : t('execsum.compNotePriorMissing',' Previous-period comparisons above will appear once a second real month of data has been loaded.'));
-    perfWrap.innerHTML = `
-      ${groupsHtml}
-      <div class="exec-comp-note">${compNote}</div>
-    `;
+    const x4Stat = (g, [label, value, delta]) => `<div class="x4-stat"><div class="x4-stat-group">${esc(g.title)}</div><div class="x4-stat-name">${esc(label)}</div><div class="x4-stat-value">${value}</div><div class="x4-stat-delta">${delta || '&nbsp;'}</div></div>`;
+    const x4Pct = n => ccClassified ? Math.round(n / ccClassified * 100) : 0;
+    const x4Comp = ccClassified ? `<div class="x4-comp"><div class="x4-comp-head"><span>${esc(t('execsum.x4.mix', 'Lease mix by contract'))}</span><span><b>${(cc.total_contracts||0).toLocaleString()}</b> ${esc(contractUnit)}</span></div><div class="x4-bar"><i style="flex:${Math.max(ccRenewal / ccClassified, 0.02)} 1 0;background:var(--accent)"></i><i style="flex:${Math.max(ccNewLease / ccClassified, 0.02)} 1 0;background:var(--accent2)"></i></div><div class="x4-comp-legend"><span><i style="background:var(--accent)"></i><b>${ccRenewal.toLocaleString()}</b> ${esc(t('leaseActivity.donut.renewal','Renewal'))} (${x4Pct(ccRenewal)}%)</span><span><i style="background:var(--accent2)"></i><b>${ccNewLease.toLocaleString()}</b> ${esc(t('leaseActivity.donut.new','New'))} (${x4Pct(ccNewLease)}%)</span></div></div>` : '';
+    perfWrap.innerHTML = `<div class="x4-stats">${groups.map(g => x4Stat(g, g.rows[0])).join('')}</div>${x4Comp}<div class="x4-caveat">${compNote}</div>`;
   }
 
   if(riskWrap){
@@ -7730,8 +8738,83 @@ function renderExecSummaryAwqaf(){
     const trendNoteHtml = historyDepth < 2
       ? `<div class="period-note" style="margin-top:12px;">${esc(t('execsum.trendNote','Only {n} real {unit} of history saved so far — a trend read (rising or falling over time) will appear here once a second real month is loaded.').replace('{n}', historyDepth).replace('{unit}', monthUnit))}</div>`
       : '';
-    forwardWrap.innerHTML = listHtml + trendNoteHtml;
+    forwardWrap.innerHTML = (typeof v6Forward === 'function') ? v6Forward(watchItems, historyDepth, listHtml, trendNoteHtml) : listHtml + trendNoteHtml;
   }
+
+  // ---- Executive Summary v5: one-screen briefing (Awqaf) ----
+  // Same validated numbers as before, reorganised decision-first: headline
+  // sentence -> four headline tiles with a visual each -> daily activity chart
+  // + leasing/operations -> attention strip. Nothing new is calculated except
+  // display shares of numbers already on this tab.
+  (function(){
+    const pane = document.getElementById('pane-execsummary');
+    if(pane) pane.classList.add('exec-has-briefing');
+    const aedC = v => { v = Number(v) || 0; const a = Math.abs(v); const s = a >= 1e6 ? (a / 1e6).toFixed(2) + 'M' : a >= 1e3 ? Math.round(a / 1e3) + 'K' : String(Math.round(a)); return 'AED ' + (v < 0 ? '-' : '') + s; };
+    const monthName = (iso) => { if(!iso) return ''; const p = iso.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, 1)).toLocaleString(currentLang === 'ar' ? 'ar-AE' : 'en-GB', {month: 'long', year: 'numeric', timeZone: 'UTC'}); };
+    const reviewN = reviewCheckRows.length;
+    const rate = bounceRatePct;
+    const underTarget = rate !== null && rate < BOUNCE_TARGET;
+    const periodName = monthName(cc.date_min);
+    const headline = `<b>${esc(periodName || t('execsum.v5.thisPeriod', 'This period'))}</b> · ${esc(t('execsum.v5.recorded', 'Recorded'))} <b class="bidi-ltr">${aedC(cc.total_amount)}</b>, ${esc(t('execsum.v5.ofWhich', 'of which'))} <b class="bidi-ltr">${aedC(bc.total_amount)}</b>${rate !== null ? ` (<b class="${underTarget ? 'eb-ok' : 'eb-bad'}">${rate.toFixed(1)}%</b>)` : ''} ${esc(t('execsum.v5.bounced', 'bounced'))}${rate !== null ? ` — ${underTarget ? esc(t('execsum.v5.under', 'under the')) : esc(t('execsum.v5.over', 'at or above the'))} ${BOUNCE_TARGET}% ${esc(t('execsum.v5.target', 'target'))}` : ''}. <b class="bidi-ltr">${(cc.total_contracts || 0).toLocaleString()}</b> ${esc(t('execsum.v5.leaseContracts', 'lease contracts'))} (${ccClassified ? Math.round(ccRenewal / ccClassified * 100) : 0}% ${esc(t('execsum.v5.renewals', 'renewals'))}), <b class="bidi-ltr">${ccNewLease.toLocaleString()}</b> ${esc(t('execsum.v5.newLeases', 'new leases'))} ${esc(t('execsum.v5.worth', 'worth'))} <b class="bidi-ltr">${aedC(nl.rent_value_total)}</b>. ${reviewN ? `<span class="eb-warn"><b>${reviewN}</b> ${esc(t('execsum.v5.checksReview', reviewN === 1 ? 'cross-check needs a second look' : 'cross-checks need a second look'))}</span>` : `<span class="eb-ok">${esc(t('execsum.v5.allClear', 'All cross-checks clear.'))}</span>`}`;
+
+    const stack = (segs) => laStackBar(segs.filter(s => s.value > 0));
+    const legend = (segs) => `<div class="eb-leg">${segs.filter(s => s.value > 0).map(s => `<span><i style="background:${s.color}"></i>${esc(s.label)} <b class="bidi-ltr">${s.text}</b></span>`).join('')}</div>`;
+    const tile = (label, big, note, delta, vis, bigClass) => `<div class="la4-tile eb-tile"><div class="la4-tile-label">${esc(label)}</div><div class="la4-tile-big bidi-ltr ${bigClass || ''}">${big}</div><div class="la4-tile-sub">${note}</div><div class="la4-tile-delta">${delta || '&nbsp;'}</div><div class="la4-tile-vis">${vis}</div></div>`;
+
+    const timing = [
+      {label: t('execsum.v5.thisMonth', 'This month'), value: cc.cheque_dated_this_month_amount || 0, color: 'var(--accent)', text: aedC(cc.cheque_dated_this_month_amount)},
+      {label: t('execsum.v5.future', 'Future'), value: cc.cheque_future_dated_amount || 0, color: 'var(--accent2)', text: aedC(cc.cheque_future_dated_amount)},
+      {label: t('execsum.v5.past', 'Past'), value: cc.cheque_past_dated_amount || 0, color: 'var(--amber)', text: aedC(cc.cheque_past_dated_amount)},
+    ];
+    const gaugeFill = rate === null ? 0 : Math.min(100, rate / (BOUNCE_TARGET * 2) * 100);
+    const bounceVis = `<div class="eb-gauge" role="img" aria-label="Bounce rate ${rate !== null ? rate.toFixed(1) : '—'}% against ${BOUNCE_TARGET}% target"><i style="width:${gaugeFill.toFixed(1)}%;background:${underTarget ? 'var(--ok)' : 'var(--bad)'}"></i><u style="left:50%"></u></div><div class="eb-leg"><span>${rate !== null ? '<b>' + rate.toFixed(1) + '%</b>' : '—'} ${esc(t('execsum.v5.ofRecorded', 'of recorded value'))}</span><span>${esc(t('execsum.v5.target', 'target'))} &lt; <b>${BOUNCE_TARGET}%</b></span></div>`;
+    const netVis = stack([{label: 'Net', value: Math.max(netCollected, 0), color: 'var(--ok)'}, {label: 'Bounced', value: bc.total_amount || 0, color: 'var(--bad)'}]) + legend([{label: t('execsum.v5.net', 'Net'), value: 1, color: 'var(--ok)', text: aedC(netCollected)}, {label: t('execsum.v5.bounced', 'bounced'), value: 1, color: 'var(--bad)', text: aedC(bc.total_amount)}]);
+    const feeOther = Math.max((nl.total_amount || 0) - (nl.rent_value_total || 0), 0);
+    const leaseVis = stack([{label: 'Rent', value: nl.rent_value_total || 0, color: 'var(--amber)'}, {label: 'Other fees', value: feeOther, color: 'var(--border)'}]) + legend([{label: t('execsum.v5.rent', 'Rent'), value: 1, color: 'var(--amber)', text: aedC(nl.rent_value_total)}, {label: t('execsum.v5.otherFees', 'Other fees'), value: feeOther, color: 'var(--border)', text: aedC(feeOther)}]);
+
+    const nLeaseUnit = currentLang === 'ar' ? t('execsum.leaseUnit', 'lease') : pluralize(nl.total_new_leases, t('execsum.leaseUnit', 'lease'), t('execsum.leaseUnitPlural', 'leases'));
+    const tiles = [
+      tile(totalCollectedLabel('awqaf'), esc(fmtAed(cc.total_amount)), esc(t('execsum.v5.ledgerNote', 'Recorded ledger sum — not confirmed bank clearance')), heroDelta(cc.total_amount, 'totalCollected', true), stack(timing) + legend(timing)),
+      tile(currentLang === 'ar' ? 'قيمة الشيكات المرتجعة المسجلة' : 'Reported bounced value', esc(fmtAed(bc.total_amount)), `${bc.total_count.toLocaleString()} ${esc(chequeUnit)} · ${esc(t('execsum.v5.allStatuses', 'all statuses, incl. Paid'))}`, heroDelta(bc.total_amount, 'bouncedAmount', true, true), bounceVis, 'eb-bad'),
+      tile(netCollectedLabel('awqaf'), esc(fmtAed(netCollected)), esc(t('execsum.heroNetSub', 'Recorded value minus bounced')), heroDelta(netCollected, 'netCollected', true), netVis, 'eb-ok'),
+      tile(t('execsum.heroNewLeaseLabel', 'New Lease Value'), esc(fmtAed(nl.rent_value_total)), `${nl.total_new_leases.toLocaleString()} ${esc(nLeaseUnit)} · ${esc(t('execsum.v5.newOnly', 'new-lease value only'))}`, heroDelta(nl.rent_value_total || 0, 'leaseRentValue', true), leaseVis),
+    ].join('');
+
+    const stat = (group, name, value, delta) => `<div class="x4-stat"><div class="x4-stat-group">${esc(group)}</div><div class="x4-stat-name">${esc(name)}</div><div class="x4-stat-value">${value}</div><div class="x4-stat-delta">${delta || '&nbsp;'}</div></div>`;
+    const pctC = n => ccClassified ? Math.round(n / ccClassified * 100) : 0;
+    const bstat = bc.status && typeof bc.status === 'object' ? Object.entries(bc.status).filter(e => e[1] > 0) : [];
+    const bColor = k => /paid/i.test(k) ? 'var(--ok)' : /legal/i.test(k) ? 'var(--bad)' : 'var(--amber)';
+    const bTotal = bstat.reduce((a, e) => a + e[1], 0);
+    const softCaseStatus = s => /^[A-Z ]+$/.test(s) ? s.charAt(0) + s.slice(1).toLowerCase() : s;
+    const bstatHtml = bstat.length ? `<div class="x4-comp"><div class="x4-comp-head"><span>${esc(t('execsum.v5.bounceStatus', 'Bounced cheques by status'))}</span><span><b>${bTotal.toLocaleString()}</b> ${esc(chequeUnit)}</span></div>${laStackBar(bstat.map(e => ({label: e[0], value: e[1], color: bColor(e[0])})))}<div class="x4-comp-legend">${bstat.map(e => `<span><i style="background:${bColor(e[0])}"></i><b>${e[1].toLocaleString()}</b> ${esc(softCaseStatus(e[0]))} (${bTotal ? Math.round(e[1] / bTotal * 100) : 0}%)</span>`).join('')}</div></div>` : '';
+    const mixHtml = ccClassified ? `<div class="x4-comp"><div class="x4-comp-head"><span>${esc(t('execsum.x4.mix', 'Lease mix by contract'))}</span><span><b>${(cc.total_contracts || 0).toLocaleString()}</b> ${esc(t('leaseActivity.v2.contractsWord', 'contracts'))}</span></div>${laStackBar([{label: 'Renewal', value: ccRenewal, color: 'var(--accent)'}, {label: 'New', value: ccNewLease, color: 'var(--accent2)'}])}<div class="x4-comp-legend"><span><i style="background:var(--accent)"></i><b>${ccRenewal.toLocaleString()}</b> ${esc(t('leaseActivity.donut.renewal', 'Renewal'))} (${pctC(ccRenewal)}%)</span><span><i style="background:var(--accent2)"></i><b>${ccNewLease.toLocaleString()}</b> ${esc(t('leaseActivity.donut.new', 'New'))} (${pctC(ccNewLease)}%)</span></div></div>` : '';
+    const side = `<div class="la4-card eb-side"><div class="la4-card-title">${esc(t('execsum.v5.leasingOps', 'Leasing & operations'))}</div><div class="x4-stats eb-stats">${stat(t('execsum.groupLeasing', 'Leasing'), t('execsum.rowRenewalContracts', 'Renewal Lease contracts'), ccRenewal.toLocaleString(), priorSnap ? momDeltaText(ccRenewal, priorSnap.renewalLeaseContracts, false) : null)}${stat(t('execsum.groupOperations', 'Operations'), t('execsum.rowRequestsProcessed', 'Requests processed (Request Count)'), rc.total_requests.toLocaleString(), priorSnap ? momDeltaText(rc.total_requests, priorSnap.totalRequests, false) : null)}</div>${mixHtml}${bstatHtml}</div>`;
+
+    const issues = [...(dqStatusObj.criticalItems || []), ...(dqStatusObj.reviewItems || [])];
+    const attn = `<div class="eb-attn dh-${dqStatusObj.status}">
+      <div class="eb-attn-status"><div class="dh-status-label">${esc(t('execsum.dataStatusLabel', 'DATA STATUS'))}</div><div class="dh-status">${esc(dqStatusObj.statusLabel)}</div></div>
+      <div class="eb-attn-pills">
+        <div class="eb-pill"><span class="eb-pill-n" style="color:var(--ok)">${okCheckCount}<small>/${realCheckRows.length}</small></span><span class="eb-pill-l">${esc(t('execsum.crossChecksPassing', 'Cross-checks passing'))}</span></div>
+        <div class="eb-pill"><span class="eb-pill-n" style="color:${reviewN ? 'var(--amber)' : 'var(--text)'}">${reviewN}</span><span class="eb-pill-l">${esc(t('execsum.needsSecondLook', 'Needs a second look'))}</span></div>
+        <div class="eb-pill"><span class="eb-pill-n" style="color:${rate === null ? 'var(--text)' : underTarget ? 'var(--ok)' : 'var(--bad)'}">${rate !== null ? rate.toFixed(1) + '%' : '—'}</span><span class="eb-pill-l">${esc(t('execsum.bounceRateLabel', 'Bounce rate'))}</span></div>
+      </div>
+      <div class="eb-attn-list">${issues.length ? `<ul>${issues.slice(0, 2).map(x => `<li>${esc(x)}</li>`).join('')}</ul>${issues.length > 2 ? `<div class="la4-sub">${esc(t('execsum.moreSeeOverview', '+{n} more — see Overview for full details').replace('{n}', issues.length - 2))}</div>` : ''}` : `<div class="la4-sub">${esc(t('execsum.noCriticalClean', 'No critical data issues or reviews outstanding.'))}</div>`}</div>
+    </div>`;
+
+    heroWrap.innerHTML = `<div class="eb">
+      <div class="eb-headline">${headline}</div>
+      <div class="la4-tiles eb-tiles">${tiles}</div>
+      <div class="eb-mid">
+        <div class="la4-card eb-chart"><div class="la4-card-title">${esc(t('execsum.v5.dailyTitle', 'Daily activity'))}</div><div id="ebChartHost"></div></div>
+        ${side}
+      </div>
+      ${attn}
+    </div>`;
+    laBuildChart(heroWrap.querySelector('#ebChartHost'), [
+      {label: t('execsum.v5.serLines', 'Cheque lines'), unit: t('execsum.v5.linesUnit', 'cheque lines'), source: 'Cheque Count · fee/cheque lines per day', daily: cc.daily, color: 'var(--accent)'},
+      {label: t('execsum.v5.serBounced', 'Bounced cheques'), unit: t('execsum.v5.bouncedUnit', 'bounced cheques'), source: 'Bounced Cheques · per day', daily: bc.daily, color: 'var(--bad)'},
+    ]);
+  })();
 }
 
 function buildChecks(){

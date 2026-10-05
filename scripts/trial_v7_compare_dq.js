@@ -54,6 +54,17 @@ function v7CompareEnhance(mode){
       headline = `<b>${esc(nameA)}</b> recorded <b>${esc(fmtAedCompact(A.totalCollected))}</b> (bounce rate ${rate(A)}) · <b>${esc(nameB)}</b> recorded <b>${esc(fmtAedCompact(B.totalCollected))}</b> (bounce rate ${rate(B)}).`;
     }
   }
+  // one-sided comparison: generic prompt + a button that loads the missing portfolio
+  if(mode !== 'month' && (!A || !B)){
+    const note = wrap.querySelector('.compare-mismatch');
+    const missing = !A ? compareSel.a : compareSel.b;
+    if(note && !note.querySelector('.cmp7-load')){
+      note.classList.add('cmp7-note');
+      note.innerHTML = '<span>Only one portfolio has been loaded this session. Choose a second portfolio to complete the comparison.</span>'
+        + `<button type="button" class="cmp7-load" data-key="${esc(missing)}">Load comparison</button>`;
+      note.querySelector('.cmp7-load').addEventListener('click', () => v7LoadComparison(missing));
+    }
+  }
   if(headline && !wrap.querySelector('.cmp7-headline')){
     card.insertAdjacentHTML('beforebegin', `<div class="cmp7-headline">${headline}</div>`);
   }
@@ -76,6 +87,30 @@ function v7CompareEnhance(mode){
       if(Math.abs(v) === max && va !== vb) cell.classList.add('cmp7-lead');
     });
   });
+}
+
+// Opens the missing portfolio so its Executive Summary snapshot is captured, then returns to the
+// original portfolio's Compare tab. Uses the normal switchPortfolio(), so a PIN prompt still appears
+// where one is required; polling simply waits (up to ~25s) for the PIN to be entered.
+function v7LoadComparison(missing){
+  const orig = currentPortfolio;
+  const btn = document.querySelector('.cmp7-load');
+  const setBtn = (txt, dis) => { if(btn){ btn.textContent = txt; btn.disabled = !!dis; } };
+  if(!PORTFOLIOS[missing]){ setBtn('No reports for this portfolio yet', true); return; }
+  setBtn('Loading…', true);
+  if(missing !== orig) switchPortfolio(missing);
+  let ticks = 0;
+  const timer = setInterval(() => {
+    ticks++;
+    if(portfolioSnapshot[missing]){
+      clearInterval(timer);
+      if(currentPortfolio !== orig) switchPortfolio(orig);
+      selectTab('compare');
+      return;
+    }
+    if(ticks % 3 === 0){ try{ renderExecSummary(); }catch(e){} }
+    if(ticks > 50){ clearInterval(timer); setBtn('Could not load — open its Executive Summary tab', false); }
+  }, 500);
 }
 
 function renderCompare(){ renderCompareLegacy(); try{ v7CompareEnhance('portfolio'); }catch(e){ console.warn('v7 compare enhance', e); } }

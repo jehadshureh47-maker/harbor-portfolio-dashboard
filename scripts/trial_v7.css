@@ -10,6 +10,13 @@
   #compareWrap .compare-val{font-size:clamp(15px,1.45vw,19px); font-weight:800; letter-spacing:-.2px; text-align:right; min-width:0; unicode-bidi:isolate; direction:ltr;}
   #compareWrap .compare-val .compare-sub{font-size:11.5px; font-weight:500; letter-spacing:0; color:var(--sub); margin-top:2px;}
   #compareWrap .compare-row.compare-clickable:hover{background:var(--card2); box-shadow:inset 3px 0 0 var(--accent);}
+  /* values start on the same line in both columns; bars pin to the bottom of each cell */
+  #compareWrap .compare-row:not(.compare-head):not(.single-col){align-items:stretch;}
+  #compareWrap .compare-row:not(.compare-head) .compare-metric{align-self:center;}
+  #compareWrap .compare-row:not(.compare-head):not(.single-col) .compare-val{display:flex; flex-direction:column; align-items:flex-end; justify-content:flex-start;}
+  #compareWrap .compare-row .compare-val .cmp7-bar{margin-top:auto; align-self:stretch;}
+  #compareWrap .compare-row .compare-val .compare-sub{margin-bottom:8px;}
+  #compareWrap .compare-specific-grid .exec-card .exec-value{font-size:clamp(20px,1.6vw,26px);}
   .cmp7-bar{height:5px; border-radius:99px; background:rgba(127,140,170,.16); margin-top:8px; overflow:hidden;}
   .cmp7-bar i{display:block; height:100%; border-radius:99px; opacity:.55; transition:width .35s ease;}
   .cmp7-lead .cmp7-bar i{opacity:1;}
@@ -26,6 +33,12 @@
   #cmpPortfolioSelectors label:first-child::after{content:none;}
   .compare-mode-toggle{margin-bottom:12px;}
   .compare-selectors{margin-bottom:12px;}
+
+  .compare-mismatch.cmp7-note{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; border-radius:14px; padding:12px 16px;}
+  .cmp7-load{appearance:none; border:1px solid var(--amber); background:rgba(240,185,58,.14); color:var(--amber); font:inherit; font-size:12.5px; font-weight:700; padding:7px 16px; border-radius:999px; cursor:pointer; transition:background .15s, color .15s;}
+  .cmp7-load:hover:not(:disabled){background:var(--amber); color:#1a1a1a;}
+  .cmp7-load:disabled{opacity:.7; cursor:default;}
+  .cmp7-load:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
 
   /* portfolio highlight cards: one tile row, same look as the other tiles (no amber top bar) */
   #compareWrap .compare-specific-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px;}
