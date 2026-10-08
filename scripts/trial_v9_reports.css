@@ -328,3 +328,6 @@ html[dir="rtl"] .v9-crk2-head span:last-child{text-align:left;}
 
 /* keyboard focus (review item 7) */
 [role="button"][tabindex]:focus-visible, .la4-chip:focus-visible, .v9-rank-row:focus-visible, .v9-rank-more:focus-visible, .clickable-seg:focus-visible, .v9-plan-row:focus-visible, .seg-btn:focus-visible{outline:2px solid var(--accent, #5b8cff) !important; outline-offset:2px; border-radius:8px;}
+
+.v9-search:focus-visible{outline:2px solid var(--accent,#5b8cff); outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none !important; transition:none !important; scroll-behavior:auto !important;}}

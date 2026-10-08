@@ -48,17 +48,17 @@ def sub1(old, new, n=1):
 # (0) review fix: the report-height timer was never cleared, so every month/portfolio switch leaked four of them
 sub1("      setInterval(resize, 500);\n", "      if(pane.__v9RT) clearInterval(pane.__v9RT); pane.__v9RT = setInterval(function(){ if(!iframe.isConnected){ clearInterval(pane.__v9RT); return; } resize(); }, 500);\n")
 
-# (a) Executive Summary: Net Value is not a guaranteed number (mostly PDC) -> cheque value due this month
+# (a) Executive Summary: Net Value is not a guaranteed number (mostly PDC) -> cheque value dated this month
 old_net_vis = s[s.index("    const netVis = stack("):s.index("    const feeOther = Math.max(")]
 new_due_vis = (
     "    const dueAmt = (cc.cheque_month_amount !== undefined ? cc.cheque_month_amount : (cc.cheque_dated_this_month_amount || 0));\n"
     "    const dueN = (cc.cheque_month_count !== undefined ? cc.cheque_month_count : (cc.cheque_dated_this_month_count || 0));\n"
     "    const laterAmt = (cc.cheque_later_amount !== undefined ? cc.cheque_later_amount : (cc.cheque_future_dated_amount || 0));\n"
     "    const laterN = (cc.cheque_later_count !== undefined ? cc.cheque_later_count : (cc.cheque_future_dated_count || 0));\n"
-    "    const dueVis = stack([{label: 'Due this month', value: dueAmt, color: 'var(--accent)'}, {label: 'Dated later', value: laterAmt, color: 'var(--accent2)'}]) + legend([{label: currentLang === 'ar' ? 'هذا الشهر' : 'This month', value: 1, color: 'var(--accent)', text: dueN.toLocaleString() + ' · ' + aedC(dueAmt)}, {label: currentLang === 'ar' ? 'لاحقاً' : 'Dated later', value: 1, color: 'var(--accent2)', text: laterN.toLocaleString() + ' · ' + aedC(laterAmt)}]);\n")
+    "    const dueVis = stack([{label: 'Dated this month', value: dueAmt, color: 'var(--accent)'}, {label: 'Dated later', value: laterAmt, color: 'var(--accent2)'}]) + legend([{label: currentLang === 'ar' ? 'هذا الشهر' : 'This month', value: 1, color: 'var(--accent)', text: dueN.toLocaleString() + ' · ' + aedC(dueAmt)}, {label: currentLang === 'ar' ? 'لاحقاً' : 'Dated later', value: 1, color: 'var(--accent2)', text: laterN.toLocaleString() + ' · ' + aedC(laterAmt)}]);\n")
 s = s.replace(old_net_vis, new_due_vis)
 sub1("tile(netCollectedLabel('awqaf'), esc(fmtAed(netCollected)), esc(t('execsum.heroNetSub', 'Recorded value minus bounced')), heroDelta(netCollected, 'netCollected', true), netVis, 'eb-ok'),",
-     "tile(currentLang === 'ar' ? 'قيمة الشيكات المستحقة هذا الشهر' : 'Cheque value due this month', esc(fmtAed(dueAmt)), `${dueN.toLocaleString()} ${currentLang === 'ar' ? 'شيك' : 'cheques'} ${currentLang === 'ar' ? 'بتاريخ هذا الشهر' : 'dated this month'} · ${currentLang === 'ar' ? 'غير مؤكدة كمحصّلة' : 'not confirmed as cleared'}`, '', dueVis, 'eb-ok'),")
+     "tile(currentLang === 'ar' ? 'قيمة الشيكات المؤرخة بهذا الشهر' : 'Cheque value dated this month', esc(fmtAed(dueAmt)), `${dueN.toLocaleString()} ${currentLang === 'ar' ? 'شيك' : 'cheques'} ${currentLang === 'ar' ? 'بتاريخ هذا الشهر' : 'dated this month'} · ${currentLang === 'ar' ? 'غير مؤكدة كمحصّلة' : 'not confirmed as cleared'}`, '', dueVis, 'eb-ok'),")
 
 # (b) Executive Summary daily chart: "Cheque lines" -> Installments / Contracts (the chips are the switch)
 sub1("      {label: t('execsum.v5.serLines', 'Cheque lines'), unit: t('execsum.v5.linesUnit', 'cheque lines'), source: 'Cheque Count · fee/cheque lines per day', daily: cc.daily, color: 'var(--accent)'},\n",
@@ -111,6 +111,19 @@ s = s.replace('fee and line-item detail', 'fee and payment detail')
 assert 'مجموعتي سجلات مختلفتين' in s
 s = s.replace('يصف التقريران مجموعتي سجلات مختلفتين هنا', 'يعدّ التقريران أشياء مختلفة هنا').replace('مجموعتا سجلات مختلفتان', 'يعدّان أشياء مختلفة')
 sub1("    laBuildChart(heroWrap.querySelector('#ebChartHost'), [\n", "    window.__v9CcForNote = cc;\n    laBuildChart(heroWrap.querySelector('#ebChartHost'), [\n")
+
+# (g) guard: user-facing copy must not use the banned spreadsheet words (placeholders like {rows} are fine)
+import json as _json, re as _re
+_BAD = _re.compile(r"\b(rows?|line[- ]items?|lines|records?)\b", _re.I)
+def _walk(o):
+    if isinstance(o, dict):
+        for v in o.values(): yield from _walk(v)
+    elif isinstance(o, list):
+        if o and all(isinstance(i, str) for i in o): yield o[0]
+    elif isinstance(o, str): yield o
+for _f in ('trial_v9_copy.json', 'trial_v9_shell_copy.json'):
+    for _v in _walk(_json.loads((ROOT / 'scripts' / _f).read_text(encoding='utf-8'))):
+        assert not _BAD.search(_re.sub(r'\{[^}]*\}', '', _v)), ('banned word in copy', _f, _v[:80])
 
 # (e) shell features: executive brief, history seeded from the embedded months, header data-health badge
 SHELL_JS = (ROOT / 'scripts' / 'trial_v8_shell.js').read_text(encoding='utf-8') + '\n' + (ROOT / 'scripts' / 'trial_v9_ar_shell.js').read_text(encoding='utf-8') + '\n' + (ROOT / 'scripts' / 'trial_v9_fixes.js').read_text(encoding='utf-8')

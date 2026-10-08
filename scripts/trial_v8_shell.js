@@ -31,6 +31,17 @@ window.__v8Brief = function(o){
     if(rate !== null && rate !== undefined) watch.push('bounce rate <b>' + rate.toFixed(1) + '%</b> against a ' + tgt + '% target');
     watch.push(rv ? '<b>' + rv + '</b> cross-check' + (rv === 1 ? '' : 's') + ' to review' : 'all cross-checks clear');
     rows.push(row('Watch', watch.join(' · ') + '.'));
+    try{
+      var st = bc && bc.status && typeof bc.status === 'object' ? Object.keys(bc.status).map(function(k){ return [k, Number(bc.status[k]) || 0]; }).filter(function(e){ return e[1] > 0; }) : [];
+      if(st.length){
+        var paid = 0, open = [], tot = 0;
+        st.forEach(function(e){ tot += e[1]; if(/paid/i.test(e[0])) paid += e[1]; else open.push(e); });
+        var AR = function(k){ k = String(k).toLowerCase(); return /legal/.test(k) ? 'إجراء قانوني' : /process/.test(k) ? 'قيد المعالجة' : null; };
+        var en = '<b>' + (tot - paid) + '</b> of ' + tot + ' still unresolved' + (open.length ? ' (' + open.map(function(e){ return e[1] + ' ' + e[0]; }).join(', ') + ')' : '') + '; ' + paid + ' already paid.';
+        var ar = '<b>' + (tot - paid) + '</b> من ' + tot + ' لا تزال غير محسومة' + (open.length ? ' (' + open.map(function(e){ return e[1] + ' ' + (AR(e[0]) || e[0]); }).join('، ') + ')' : '') + '؛ ' + paid + ' مدفوعة بالفعل.';
+        rows.push('<div class="v8-brief-row"><span class="v8-brief-k"><span class="v9-en">Bounced cheques</span><span class="v9-ar">الشيكات المرتجعة</span></span><span class="v8-brief-v"><span class="v9-en">' + en + '</span><span class="v9-ar">' + ar + '</span></span></div>');
+      }
+    }catch(e){ console.warn('v9 brief bounced', e); }
     return '<div class="v8-brief" aria-label="Executive brief">' + rows.join('') + '</div>';
   }catch(e){ return ''; }
 };

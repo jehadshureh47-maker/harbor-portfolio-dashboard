@@ -5,6 +5,6 @@
     var t = e.target; if(!t || !t.closest) return;
     var el = t.closest('[role="button"][tabindex]');
     if(!el || el !== t || /^(BUTTON|A|INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
-    e.preventDefault(); el.click();
+    e.preventDefault(); (typeof el.click === 'function' ? el.click() : el.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true})));
   });
 })();
