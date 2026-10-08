@@ -1,5 +1,5 @@
 var __v9L = window.__v9L || (window.__v9L = function(en, ar){ var a = false; try{ a = (typeof currentLangCC !== 'undefined' && currentLangCC === 'ar') || (typeof currentLangRC !== 'undefined' && currentLangRC === 'ar') || (typeof currentLangNL !== 'undefined' && currentLangNL === 'ar') || (typeof currentLangBC !== 'undefined' && currentLangBC === 'ar'); }catch(e){} return a ? ar : en; });
-window.__v9Unit = window.__v9Unit || function(s){ if(!window.__v9L(false, true)) return s; var m = { 'records': 'سجل', 'record': 'سجل', 'requests': 'طلب', 'request': 'طلب', 'cheques': 'شيك', 'cheque': 'شيك', 'bounced cheques': 'شيك مرتجع', 'bounced cheque': 'شيك مرتجع', 'contracts': 'عقد', 'contract': 'عقد', 'installments': 'قسط', 'installment': 'قسط', 'line items': 'بند', 'line item': 'بند', 'fee lines': 'بند رسوم', 'fee line': 'بند رسوم' }; return String(s).replace(/\b(bounced cheques?|line items?|fee lines?|records?|requests?|cheques?|contracts?|installments?)\b/gi, function(w){ return m[w.toLowerCase()] || w; }); };
+window.__v9Unit = window.__v9Unit || function(s){ if(!window.__v9L(false, true)) return s; var m = { 'records': 'سجل', 'record': 'سجل', 'requests': 'طلب', 'request': 'طلب', 'cheques': 'شيك', 'cheque': 'شيك', 'bounced cheques': 'شيك مرتجع', 'bounced cheque': 'شيك مرتجع', 'contracts': 'عقد', 'contract': 'عقد', 'installments': 'قسط', 'installment': 'قسط', 'payments': 'دفعة', 'payment': 'دفعة', 'line items': 'بند', 'line item': 'بند', 'fee lines': 'بند رسوم', 'fee line': 'بند رسوم' }; return String(s).replace(/\b(bounced cheques?|line items?|fee lines?|records?|requests?|cheques?|contracts?|installments?)\b/gi, function(w){ return m[w.toLowerCase()] || w; }); };
 
 // TRIAL v8 (runs INSIDE each report iframe): trend charts drawn the way Lease Activity's "Daily activity" chart is.
 // Real calendar x-axis (days with no data are gaps), weekends shaded, dashed average line, peak marker,
@@ -53,7 +53,7 @@ function v8Trend(dataDict, w, h, padL, padR, padT, padB, unitLabel, secondaryDic
     var o = { x: +px(k).toFixed(1), y: +py(vals[i]).toFixed(1), label: wd[dd.getUTCDay()] + ' ' + k.slice(8,10) + '/' + k.slice(5,7), value: isAed ? Math.round(vals[i]).toLocaleString() : vals[i], secondary: secondaryDict ? fmtAmt(secondaryDict[k] || 0) : null };
     return o;
   });
-  var unit = window.__v9Unit(unitLabel || 'records');
+  var unit = window.__v9Unit(unitLabel || window.__V9_NOUN || 'records');
   var head = '<div class="v8-tmeta"><span><b>' + (isAed ? __v9L('AED ', 'د.إ ') : '') + Math.round(total).toLocaleString() + '</b> ' + (isAed ? __v9L('in total', 'إجمالي') : esc(unit)) + '</span>'
     + '<span class="v8-tmeta-s">' + __v9L('Peak', 'الذروة') + ' <b>' + (isAed ? __v9L('AED ', 'د.إ ') : '') + Math.round(rawMax).toLocaleString() + '</b> ' + __v9L('on', 'يوم') + ' ' + wd[new Date(ts(keys[pk])).getUTCDay()] + ' ' + keys[pk].slice(8,10) + '/' + keys[pk].slice(5,7)
     + ' · ' + __v9L('Average', 'المتوسط') + ' <b>' + (isAed ? __v9L('AED ', 'د.إ ') : '') + Math.round(avg).toLocaleString() + '</b> ' + __v9L('per day with activity', 'لكل يوم فيه نشاط') + '</span></div>';

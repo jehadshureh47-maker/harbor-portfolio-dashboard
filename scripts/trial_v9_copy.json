@@ -73,12 +73,12 @@
    "كل طلب وراء الأرقام أعلاه. البحث يضيّق هذه القائمة فقط."
   ],
   "rc.explore.truncNote": [
-   "Showing the first {shown} of {total} records. The CSV export has all of them.",
-   "عرض أول {shown} من {total} سجلاً. ملف CSV يحتوي كل السجلات."
+   "Showing the first {shown} of {total} requests. The CSV export has all of them.",
+   "عرض أول {shown} من {total} طلباً. ملف CSV يحتوي كل الطلبات."
   ],
   "rc.explore.countNote": [
-   "{count} matching record(s). The CSV export has the same records.",
-   "{count} سجل مطابق. ملف CSV يحتوي نفس السجلات."
+   "{count} matching request(s). The CSV export has the same requests.",
+   "{count} طلب مطابق. ملف CSV يحتوي نفس الطلبات."
   ],
   "rc.peakValueDayNote": [
    "AED {amt}, highest-value day",
@@ -273,8 +273,8 @@
    "اضغط على شريحة للتصفية حسب نوع الوحدة"
   ],
   "bc.exploreDesc": [
-   "Every record, newest first. Search and filters apply.",
-   "كل السجلات، الأحدث أولاً. البحث والتصفية مطبّقان."
+   "Every bounced cheque, newest first. Search and filters apply.",
+   "كل الشيكات المرتجعة، الأحدث أولاً. البحث والتصفية مطبّقان."
   ],
   "bc.valueBandLabel": [
    "Value filter (for analysis only):",

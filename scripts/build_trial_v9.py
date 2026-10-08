@@ -89,15 +89,31 @@ sub1("  .ov6-tile:hover{border-color:var(--accent); transform:translateY(-1px);}
 sub1("${pluralize(excluded.length, 'row', 'rows')} excluded (PM User or Type not on the roster)", "${pluralize(excluded.length, 'request', 'requests')} excluded (PM User or Type not on the roster)")
 sub1("All ${allRecords.length} ${pluralize(allRecords.length, 'row', 'rows')} verified against the roster.", "All ${allRecords.length} ${pluralize(allRecords.length, 'request', 'requests')} verified against the roster.")
 sub1("Excluded rows (${excluded.length})", "Excluded requests (${excluded.length})")
-sub1("{label:'Total rows', value: rows.length.toLocaleString()}", "{label:'Total records', value: rows.length.toLocaleString()}")
-sub1("data ${pluralize(dataRows.length, 'row', 'rows')} in", "data ${pluralize(dataRows.length, 'record', 'records')} in")
+sub1("{label:'Total rows', value: rows.length.toLocaleString()}", "{label:'Total entries', value: rows.length.toLocaleString()}")
+sub1("data ${pluralize(dataRows.length, 'row', 'rows')} in", "data ${pluralize(dataRows.length, 'entry', 'entries')} in")
 sub1("${dataRows.length} ${pluralize(dataRows.length, 'row', 'rows')}. Check passed.", "${dataRows.length} ${pluralize(dataRows.length, 'record', 'records')}. Check passed.")
 sub1("${result.rowCount} ${pluralize(result.rowCount, 'row', 'rows')}. Check passed.", "${result.rowCount} ${pluralize(result.rowCount, 'record', 'records')}. Check passed.")
 sub1("'dq.legend.warning': 'Warning — some rows were skipped or normalized; remaining totals are still usable'", "'dq.legend.warning': 'Warning — some records were skipped or normalized; remaining totals are still usable'")
-sub1("No dated rows</div>", "No dated records</div>")
+sub1("No dated rows</div>", "No dated entries</div>")
+
+
+# (f) round-2 review fixes
+assert s.count('لوحة معلومات الأم') >= 3
+s = s.replace('لوحة معلومات الأم', 'لوحة المعلومات')
+assert 'مجموعتا السجلات مختلفتان' in s
+s = s.replace('مجموعتا السجلات مختلفتان', 'كل رقم يعدّ شيئاً مختلفاً')
+sub1("different record populations here — confirm the relationship.", "different kinds of counts here — confirm the relationship.", 2)
+for _a in ("— different record populations; New Lease Report", "— different record populations; Cheque Count shows", "— different record populations; confirm both"):
+    sub1(_a, _a.replace('different record populations', 'different kinds of counts'))
+sub1("These are different record populations; counts alone", "These count different things; counts alone")
+assert s.count('fee and line-item detail') >= 1
+s = s.replace('fee and line-item detail', 'fee and payment detail')
+assert 'مجموعتي سجلات مختلفتين' in s
+s = s.replace('يصف التقريران مجموعتي سجلات مختلفتين هنا', 'يعدّ التقريران أشياء مختلفة هنا').replace('مجموعتا سجلات مختلفتان', 'يعدّان أشياء مختلفة')
+sub1("    laBuildChart(heroWrap.querySelector('#ebChartHost'), [\n", "    window.__v9CcForNote = cc;\n    laBuildChart(heroWrap.querySelector('#ebChartHost'), [\n")
 
 # (e) shell features: executive brief, history seeded from the embedded months, header data-health badge
-SHELL_JS = (ROOT / 'scripts' / 'trial_v8_shell.js').read_text(encoding='utf-8') + '\n' + (ROOT / 'scripts' / 'trial_v9_ar_shell.js').read_text(encoding='utf-8')
+SHELL_JS = (ROOT / 'scripts' / 'trial_v8_shell.js').read_text(encoding='utf-8') + '\n' + (ROOT / 'scripts' / 'trial_v9_ar_shell.js').read_text(encoding='utf-8') + '\n' + (ROOT / 'scripts' / 'trial_v9_fixes.js').read_text(encoding='utf-8')
 # the wrappers reassign shell functions, so the block has to sit in the same <script> as their declarations
 i_fn = s.index('function renderOverviewAwqaf(){')
 i_mount = s.index(mount)

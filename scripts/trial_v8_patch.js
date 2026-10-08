@@ -137,11 +137,11 @@ window.__v8PatchReport = function(html, reportId){
     [['لكل صف نوع ومستخدم عقار معروف','لكل طلب نوع ومستخدم عقار معروف'],['لكل صف نوع رسوم وموظف معروفان','لكل دفعة نوع رسوم وموظف معروفان'],['لكل صف رقم عقد وتاريخ','لكل دفعة رقم عقد وتاريخ'],
      ['تم تجاوز أو توحيد بعض الصفوف','تم تجاوز أو توحيد بعض الإدخالات'],['بنود عقود الإيجار الجديدة','دفعات عقود الإيجار الجديدة'],['حجم البنود اليومي','حجم الدفعات اليومي'],
      ['حسب نوع الرسوم / البند','حسب نوع الدفعة'],['أعلى العقارات حسب عدد البنود','أعلى العقارات حسب عدد الدفعات']].forEach(function(x){ swap(x[0], x[1]); });
-    swap('No rows match the current filters', 'No records match the current filters');
+    swap('No rows match the current filters', 'No entries match the current filters');
     swap('This sheet has no data rows at all', 'This sheet has no data at all');
-    swap("pluralize(nonEmptyRows.length-1,'row','rows')", "pluralize(nonEmptyRows.length-1,'record','records')");
-    swap("pluralize(nonEmptyRows.length-1, 'data row')", "pluralize(nonEmptyRows.length-1, 'data record')");
-    swap('No dated report rows found', 'No dated records found');
+    swap("pluralize(nonEmptyRows.length-1,'row','rows')", "pluralize(nonEmptyRows.length-1,'entry','entries')");
+    swap("pluralize(nonEmptyRows.length-1, 'data row')", "pluralize(nonEmptyRows.length-1, 'data entry')");
+    swap('No dated report rows found', 'No dated entries found');
     if(reportId === 'bounced-cheques'){
       swap('rows in Details', 'cheques recorded');
       swap('صفوف في ورقة التفاصيل', 'شيكات مسجلة');
@@ -163,11 +163,34 @@ window.__v8PatchReport = function(html, reportId){
       swap('every row has a recognized Type and PM User', 'every request has a recognized Type and PM User');
       swap('The underlying request-level rows behind the figures above', 'The underlying requests behind the figures above');
     } else if(reportId === 'count-report'){
-      swap('row(s) missing a Contract Number or Date', 'record(s) missing a Contract Number or Date');
+      swap('row(s) missing a Contract Number or Date', 'installment(s) missing a Contract Number or Date');
       swap('Cheque Value Due This Month', 'Value Dated This Month (All Payment Types)');
       swap('Cheque Value Due This Month'.toUpperCase(), 'VALUE DATED THIS MONTH (ALL PAYMENT TYPES)');
-      swap('every row has a Contract Number and Date', 'every record has a Contract Number and Date');
+      swap('every row has a Contract Number and Date', 'every installment has a Contract Number and Date');
     }
+    // 2c. round-2 review: "records" -> what each report actually counts (English and Arabic)
+    (function(){
+      var N = {
+        'request-count': {en:'Requests', enl:'requests', ar:'الطلبات', arf:'طلباً'},
+        'new-lease': {en:'Payments', enl:'payments', ar:'الدفعات', arf:'دفعة'},
+        'bounced-cheques': {en:'Bounced Cheques', enl:'bounced cheques', ar:'الشيكات المرتجعة', arf:'شيكاً مرتجعاً'},
+        'count-report': {en:'Payments', enl:'payments', ar:'الدفعات', arf:'دفعة'}
+      }[reportId];
+      if(!N) return;
+      swap('Explore Records', 'Explore ' + N.en); swap('"استكشاف السجلات"', '"استكشاف ' + N.ar + '"');
+      swap('Data reflects {n} records, period {range}', 'Data reflects {n} ' + N.enl + ', period {range}');
+      swap('"تعكس البيانات {n} سجلاً، للفترة {range}"', '"تعكس البيانات {n} ' + N.arf + '، للفترة {range}"');
+      swap('No records match the current filters', 'No ' + N.enl + ' match the current filters');
+      swap("unitLabel='records'", "unitLabel='" + N.enl + "'");
+      swap("'AED' : 'records'", "'AED' : '" + N.enl + "'");
+      swap("? 'records' : 'AED'", "? '" + N.enl + "' : 'AED'");
+      swap("pluralize(data.total_requests,'record','records')", "pluralize(data.total_requests,'" + N.enl.replace(/s$/, '') + "','" + N.enl + "')");
+      swap('"nl.recordUnit": "سجل"', '"nl.recordUnit": "دفعة"');
+      swap("t('nl.recordUnit','سجل')", "t('nl.recordUnit','دفعة')");
+      swap("26, 'records')", "26, '" + N.enl + "')");
+      swap('Data reflects Details sheet (302 records)', 'Data reflects Details sheet (302 requests)');
+      html = html.replace(/<head[^>]*>/, function(m){ return m + '<' + 'script>window.__V9_NOUN=' + JSON.stringify(N.enl) + ';<' + '/script>'; });
+    })();
     // 3. Cheque Count (per Bibin): cheque count = how many installments we give tenants -> lead with that
     if(reportId === 'count-report'){
       html = html.split('Rent &amp; Fee Cheques — Endowment &amp; AMAF Properties').join('Installments given to tenants — Endowment &amp; AMAF Properties');
