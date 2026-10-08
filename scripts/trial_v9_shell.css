@@ -1,0 +1,53 @@
+/* ===== TRIAL v9 shell layer: one card level, flat fills, hairlines, one type scale ===== */
+:root{--r-card:12px; --r-ctl:8px; --hair:1px solid color-mix(in srgb,var(--border) 60%,transparent);}
+body{font-variant-numeric:tabular-nums;}
+/* every tile / card: same fill, border, radius, padding */
+.la2-tile,.la4-tile,.ov6-tile,.dq7-tile,.eb-tile,.x4-stat,.chg6-tile,.exec-card,.compare-card,.la4-card,.la2-card,.dh-panel,.v6w,.cmp7-bar{background:var(--card) !important; border:var(--hair) !important; border-radius:var(--r-card) !important; box-shadow:none !important;}
+.la4-tile,.ov6-tile,.dq7-tile,.la2-tile,.chg6-tile{padding:16px 20px !important;}
+.la4-card,.la2-card,.dh-panel,.compare-card{padding:20px !important;}
+.eb-tile,.x4-stat{padding:14px 18px !important;}
+.la4-tile:hover,.ov6-tile:hover,.la4-card:hover,.dq7-tile:hover{border-color:color-mix(in srgb,var(--accent) 60%,transparent) !important; transform:none !important;}
+/* one tile-number size, one tile-label size */
+.la2-tile-big,.la4-tile-big,.ov6-big,.x4-stat-value,.chg6-b,.dq7-b,.exec-value,.eb-side .x4-stat-value,.eb-tile .la4-tile-big{font-size:21px !important; font-weight:700 !important; line-height:1.25 !important; letter-spacing:0 !important;}
+.la2-tile-label,.la4-tile-label,.ov6-label,.x4-stat-label,.exec-label,.dq7-l{font-size:11px !important; font-weight:600 !important; letter-spacing:.6px !important; text-transform:uppercase;}
+.la4-tile-sub,.ov6-sub,.la4-tile-delta,.x4-stat-sub,.exec-sub{font-size:12px !important;}
+/* the single hero number per tab: first tile of the main row */
+.la4-tiles,.ov6-tiles,.dq7-tiles,.eb-tiles{gap:16px !important; align-items:stretch;}
+/* tile rows never end up uneven */
+.la4-tile,.ov6-tile,.eb-tile,.dq7-tile{display:flex; flex-direction:column; min-height:112px;}
+.la4-tile-vis,.ov6-vis{margin-top:auto;}
+/* headings */
+.v8-ohead h3,.la4-card-title{font-size:14px !important; font-weight:600 !important;}
+.v8-step-n{border-radius:50% !important; background:none !important; border:1px solid var(--accent); min-width:22px !important; height:22px !important; font-size:11px !important; font-weight:700 !important;}
+.eb-headline,.cmp7-headline{background:none !important; border:0 !important; padding:0 !important; font-size:14px;}
+.v8-brief{background:none !important; border:0 !important; border-top:var(--hair) !important; border-bottom:var(--hair) !important; border-radius:0 !important; padding:10px 0 !important;}
+/* pills, chips, switches: pill radius only */
+.la4-chip,.v8-sw-b,.dq7-chip,.eb-pill{border-radius:999px !important;}
+/* kill 800 weights that read heavy */
+.la4-tile-big b,.eb-headline b,.v8-brief-v b{font-weight:700 !important;}
+/* tabs: underline style */
+.tab-btn{border-radius:0 !important; background:none !important; border:0 !important; border-bottom:2px solid transparent !important;}
+.tab-btn.active,.tab-btn[aria-selected="true"]{border-bottom-color:var(--accent) !important; color:var(--text) !important;}
+/* report iframes: calmer frame */
+.report-pane iframe{border-radius:var(--r-card);}
+
+/* overview: four tiles in one row on wide screens, two-by-two below */
+.ov6-tiles{grid-template-columns:repeat(4,minmax(0,1fr)) !important;}
+@media(max-width:1200px){.ov6-tiles{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
+@media(max-width:600px){.ov6-tiles{grid-template-columns:1fr !important;}}
+/* exec: tile numbers all on one baseline, never clipped */
+.eb-tiles .la4-tile-big{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.eb-tile .la4-tile-sub{min-height:2.6em;}
+/* leasing & operations stat tiles: labels never push numbers to different heights */
+.x4-stat{display:flex !important; flex-direction:column;}
+.x4-stat-value{margin-top:auto !important;}
+.x4-stats{align-items:stretch !important;}
+
+.ov6-tile .ov6-spark{margin-top:auto;}
+.v8-sw{flex-wrap:wrap; gap:6px 10px; align-items:center;}
+.eb-tile .la4-tile-vis{min-height:76px; margin-top:auto;}
+#v8DqHead{margin-top:12px !important;}
+
+/* Arabic (RTL) */
+html[dir="rtl"] .tab-notice-dot{left:auto; right:2px;}
+html[dir="rtl"] b, html[dir="rtl"] strong{unicode-bidi:isolate;}

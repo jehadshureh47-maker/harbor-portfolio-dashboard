@@ -1,0 +1,170 @@
+{
+ "app.subtitle": [
+  "Pick a portfolio and month to see its reports.",
+  "اختر المحفظة والشهر لعرض تقاريرها."
+ ],
+ "shell.awqafNote": [
+  "Showing Awqaf · {month}. Use “Load Excel File” in a report tab to preview a newer month.",
+  "عرض الأوقاف · {month}. استخدم «تحميل ملف Excel» في أي تقرير لمعاينة شهر أحدث."
+ ],
+ "execsum.v5.ledgerNote": [
+  "Recorded value, not bank clearance",
+  "قيمة مسجلة وليست مقاصة بنكية"
+ ],
+ "dh.explWarn": [
+  "Usable, but some cross-report checks need review.",
+  "قابلة للاستخدام، لكن بعض الفحوصات بين التقارير تحتاج مراجعة."
+ ],
+ "dh.explBad": [
+  "Some required data was not found, so totals for the affected {unit} may be wrong.",
+  "لم يتم العثور على بعض البيانات المطلوبة، لذا قد تكون إجماليات {unit} المتأثرة غير صحيحة."
+ ],
+ "cc.nlc.review": [
+  "{a} {aUnit} vs {b} {bUnit}. The New Lease Report has more contracts than requests. Worth a look.",
+  "{a} {aUnit} مقابل {b} {bUnit}. تقرير العقود الجديدة فيه عقود أكثر من الطلبات. يستحق المراجعة."
+ ],
+ "cc.rc.review": [
+  "{a} {aUnit} vs {b} {bUnit}. Cheque Count has more contracts than requests. Worth a look.",
+  "{a} {aUnit} مقابل {b} {bUnit}. تقرير عدد الشيكات فيه عقود أكثر من الطلبات. يستحق المراجعة."
+ ],
+ "cc.bo.review": [
+  "{a} {aUnit} vs 0 in this month's Cheque Count. Check both workbooks cover the same period.",
+  "{a} {aUnit} مقابل 0 في عدد الشيكات لهذا الشهر. تأكد أن الملفين يغطيان نفس الفترة."
+ ],
+ "cc.bo.match": [
+  "{a} of {b} {bUnit} are in this month's Cheque Count. The rest belong to cheques recorded in earlier months.",
+  "{a} من {b} {bUnit} موجودة في عدد الشيكات لهذا الشهر. الباقي يعود لشيكات سُجلت في أشهر سابقة."
+ ],
+ "cc.nlc.ok": [
+  "OK. {a} {aUnit} across {b} {bUnit} in the New Lease Report. Some contracts have several requests.",
+  "سليم. {a} {aUnit} على {b} {bUnit} في تقرير العقود الجديدة. بعض العقود لها أكثر من طلب."
+ ],
+ "cc.rc.ok": [
+  "OK. {a} {aUnit} across {b} {bUnit} in Cheque Count. Some contracts have several requests.",
+  "سليم. {a} {aUnit} على {b} {bUnit} في عدد الشيكات. بعض العقود لها أكثر من طلب."
+ ],
+ "cc.awqaf.newLeaseCount.name": [
+  "Request Count's New Lease count matches the New Lease Report's contract count",
+  "عدد طلبات الإيجار الجديد في Request Count يطابق عدد عقود New Lease Report"
+ ],
+ "cc.awqaf.overallTotals.detail": [
+  "These reports measure different things (rent cheques vs property requests), so their totals are not expected to match. Only Renewal Lease appears in both.",
+  "هذه التقارير تقيس أشياء مختلفة (شيكات الإيجار مقابل طلبات العقارات)، فلا يُتوقع أن تتطابق إجمالياتها. عقود التجديد فقط تظهر في الاثنين."
+ ],
+ "cc.sectionNote": [
+  "Automatic checks between reports that overlap.",
+  "فحوصات تلقائية بين التقارير المتداخلة."
+ ],
+ "heatmap.noteGeneric": [
+  "Daily activity across all loaded reports, last {n} weeks. {scale} Click a day for details.",
+  "النشاط اليومي عبر كل التقارير المحمّلة، آخر {n} أسبوعاً. {scale} اضغط على يوم للتفاصيل."
+ ],
+ "heatmap.noteTyped": [
+  "Daily {type}, last {n} weeks ({unit}). {scale} Click a day for details.",
+  "{type} اليومية، آخر {n} أسبوعاً ({unit}). {scale} اضغط على يوم للتفاصيل."
+ ],
+ "overview.hm.mixedTotalOne": [
+  "Total for that day across 1 report (counts contracts, requests and installments together).",
+  "إجمالي ذلك اليوم من تقرير واحد (يجمع العقود والسجلات معاً)."
+ ],
+ "overview.hm.mixedTotalMany": [
+  "Total for that day across {n} reports (counts contracts, requests and installments together).",
+  "إجمالي ذلك اليوم من {n} تقارير (يجمع العقود والسجلات معاً)."
+ ],
+ "overview.paneDesc": [
+  "Headline numbers from the 4 reports. For the short version, see Executive Summary.",
+  "الأرقام الرئيسية من التقارير الأربعة. للنسخة المختصرة، راجع الملخص التنفيذي."
+ ],
+ "execsum.paneDesc": [
+  "Headline numbers, a short summary and a quick health check.",
+  "الأرقام الرئيسية وملخص قصير وفحص سريع للحالة."
+ ],
+ "execsum.sectionPerformanceNote": [
+  "Headline figures, with the change vs the last saved month.",
+  "الأرقام الرئيسية مع التغيّر مقارنة بآخر شهر محفوظ."
+ ],
+ "execsum.sectionRiskNote": [
+  "Cross-checks, bounce rate vs target, and data status.",
+  "الفحوصات المتقاطعة ومعدل الارتجاع مقابل الهدف وحالة البيانات."
+ ],
+ "execsum.sectionHealthSnapshotNote": [
+  "Cross-checks and the key rate for this portfolio.",
+  "الفحوصات المتقاطعة والمعدل الرئيسي لهذه المحفظة."
+ ],
+ "execsum.compNote": [
+  "By contract: {new} new · {renewal} renewal{unclassified} of {total} {unit} this period. New Lease Value above covers new leases only.",
+  "حسب العقد: {new} جديد · {renewal} تجديد{unclassified} من {total} {unit} هذه الفترة. قيمة الإيجار الجديد أعلاه تشمل العقود الجديدة فقط."
+ ],
+ "execsum.noItemsOutstanding": [
+  "Nothing outstanding from today's cross-checks, thresholds and data checks.",
+  "لا شيء معلّق من فحوصات اليوم والحدود وجودة البيانات."
+ ],
+ "leaseActivity.desc": [
+  "Leasing at a glance, from Cheque Count, New Lease and Request Count. Each figure shows its source. Fee detail is in New Lease Detail.",
+  "نظرة سريعة على التأجير من عدد الشيكات والإيجار الجديد وعدد الطلبات. كل رقم يوضح مصدره. تفاصيل الرسوم في تفاصيل الإيجار الجديد."
+ ],
+ "dq.paneDesc": [
+  "Things worth double-checking in the source files, grouped by sheet.",
+  "أمور تستحق التحقق منها في الملفات المصدر، مجمّعة حسب الورقة."
+ ],
+ "dq.legend.critical": [
+  "Critical: a required column was not found, so totals may be wrong",
+  "حرج: لم يتم العثور على عمود مطلوب، فقد تكون الإجماليات غير صحيحة"
+ ],
+ "dq.noReportsYet": [
+  "No detailed data yet, so nothing to check.",
+  "لا توجد بيانات تفصيلية بعد، لذا لا شيء للفحص."
+ ],
+ "compare.paneDesc": [
+  "Compare two portfolios side by side, using the same figures as each Executive Summary. Metrics only one portfolio has are listed separately. Click a trend for the daily chart.",
+  "قارن بين محفظتين جنباً إلى جنب بنفس أرقام الملخص التنفيذي لكل منهما. المقاييس الموجودة في محفظة واحدة فقط تُعرض منفصلة. اضغط على صف الاتجاه للرسم اليومي."
+ ],
+ "compare.sameMonthNote": [
+  "Both columns show the same month. Pick two different months to see a change.",
+  "العمودان يعرضان نفس الشهر. اختر شهرين مختلفين لرؤية التغيّر."
+ ],
+ "compare.onlyLoadedNote": [
+  "Only {loaded} is loaded. Open {other}'s Executive Summary once to compare.",
+  "تم تحميل {loaded} فقط. افتح الملخص التنفيذي لـ {other} مرة واحدة للمقارنة."
+ ],
+ "ov.step1.t": [
+  "Is the data safe to report from?",
+  "هل البيانات آمنة للاعتماد عليها في التقارير؟"
+ ],
+ "ov.step1.s": [
+  "Status of the four reports.",
+  "حالة التقارير الأربعة."
+ ],
+ "ov.step2.t": [
+  "Do the reports agree with each other?",
+  "هل التقارير متفقة مع بعضها؟"
+ ],
+ "ov.step2.s": [
+  "Automatic checks between overlapping reports.",
+  "فحوصات تلقائية بين التقارير المتداخلة."
+ ],
+ "ov.step3.t": [
+  "When did the work happen?",
+  "متى تم العمل؟"
+ ],
+ "ov.step3.s": [
+  "Activity by day across the four reports.",
+  "النشاط اليومي عبر التقارير الأربعة."
+ ],
+ "leaseActivity.v2.peak": [
+  "Peak",
+  "الذروة"
+ ],
+ "leaseActivity.v4.avg": [
+  "Avg / active day",
+  "المتوسط / يوم نشط"
+ ],
+ "leaseActivity.v4.weekendNote": [
+  "shaded = weekend",
+  "المظلل = نهاية الأسبوع"
+ ],
+ "dq.legend.warning": [
+  "Warning — some entries were skipped or normalized; remaining totals are still usable",
+  "تحذير — تم تجاوز أو توحيد بعض الإدخالات؛ الإجماليات المتبقية لا تزال قابلة للاستخدام"
+ ]
+}

@@ -1,0 +1,518 @@
+{
+ "request-count": {
+  "rc.snapshot.desc": [
+   "Requests received this period, what they were worth, and the daily average.",
+   "الطلبات المستلمة خلال الفترة وقيمتها والمتوسط اليومي."
+  ],
+  "rc.kpi.totalValueNote": [
+   "Total of all request amounts",
+   "مجموع مبالغ جميع الطلبات"
+  ],
+  "rc.kpi.avgValueNote": [
+   "Total value ÷ requests",
+   "إجمالي القيمة ÷ عدد الطلبات"
+  ],
+  "rc.kpi.activeDaysNote": [
+   "Days with at least one request",
+   "أيام فيها طلب واحد على الأقل"
+  ],
+  "rc.composition.desc": [
+   "Requests by type and by PM user.",
+   "الطلبات حسب النوع وحسب مستخدم إدارة الممتلكات."
+  ],
+  "rc.composition.byTypeDesc": [
+   "Count, share and AED value for each request type.",
+   "العدد والحصة والقيمة بالدرهم لكل نوع طلب."
+  ],
+  "rc.composition.renewalShareNote": [
+   "Renewal Lease is {pct}% of requests.",
+   "عقود التجديد تمثل {pct}% من الطلبات."
+  ],
+  "rc.hint.clickType": [
+   "Click a slice to filter by type",
+   "اضغط على شريحة للتصفية حسب النوع"
+  ],
+  "rc.composition.byUserDesc": [
+   "Count, share and AED value for each PM user.",
+   "العدد والحصة والقيمة بالدرهم لكل مستخدم."
+  ],
+  "rc.hint.clickUser": [
+   "Click a bar to filter by PM user",
+   "اضغط على شريط للتصفية حسب المستخدم"
+  ],
+  "rc.composition.userMixDesc": [
+   "Each user's mix of request types.",
+   "توزيع أنواع الطلبات لكل مستخدم."
+  ],
+  "rc.property.desc": [
+   "Properties with the most requests and value.",
+   "العقارات الأعلى في عدد الطلبات والقيمة."
+  ],
+  "rc.activity.desc": [
+   "Requests per day, by count and AED value.",
+   "الطلبات اليومية بالعدد وبالقيمة بالدرهم."
+  ],
+  "rc.supporting.desc": [
+   "Ownership type, unit type and bank.",
+   "نوع الملكية ونوع الوحدة والبنك."
+  ],
+  "rc.hint.clickOwnership": [
+   "Click a slice to filter by ownership",
+   "اضغط على شريحة للتصفية حسب الملكية"
+  ],
+  "rc.hint.clickUnit": [
+   "Click a slice to filter by unit type",
+   "اضغط على شريحة للتصفية حسب نوع الوحدة"
+  ],
+  "rc.hint.clickBank": [
+   "Click a bar to filter by bank",
+   "اضغط على شريط للتصفية حسب البنك"
+  ],
+  "rc.explore.desc": [
+   "Every request behind the figures above. Search only narrows this list.",
+   "كل طلب وراء الأرقام أعلاه. البحث يضيّق هذه القائمة فقط."
+  ],
+  "rc.explore.truncNote": [
+   "Showing the first {shown} of {total} records. The CSV export has all of them.",
+   "عرض أول {shown} من {total} سجلاً. ملف CSV يحتوي كل السجلات."
+  ],
+  "rc.explore.countNote": [
+   "{count} matching record(s). The CSV export has the same records.",
+   "{count} سجل مطابق. ملف CSV يحتوي نفس السجلات."
+  ],
+  "rc.peakValueDayNote": [
+   "AED {amt}, highest-value day",
+   "{amt} د.إ، أعلى يوم من حيث القيمة"
+  ],
+  "rc.allVerifiedNote": [
+   "✓ {n}/{n} requests checked — all have a valid Type and PM User",
+   "✓ تم فحص {n}/{n} طلب — جميعها بنوع ومستخدم صحيحين"
+  ],
+  "rc.excludedRowsNote": [
+   "⚠ {rows} left out of the counts (invalid Type or PM User) — click to see which",
+   "⚠ {rows} مستبعدة من العدّ (نوع أو مستخدم غير صحيح) — اضغط لعرضها"
+  ],
+  "rc.rosterFoundNote": [
+   "Roster read from \"{sheet}\": {users} users and {types} types always show, even at 0.",
+   "قائمة الأسماء من \"{sheet}\": {users} مستخدمين و{types} أنواع تظهر دائماً حتى عند الصفر."
+  ]
+ },
+ "new-lease": {
+  "nl.keyMetrics.desc": [
+   "Payments, total fees recorded and rent value for this period.",
+   "الدفعات وإجمالي الرسوم المسجلة وقيمة الإيجار لهذه الفترة."
+  ],
+  "nl.kpi.totalNote": [
+   "Contracts in Details",
+   "العقود في ورقة التفاصيل"
+  ],
+  "nl.kpi.amountNote": [
+   "AED, all payments in Details",
+   "د.إ، كل الدفعات في ورقة التفاصيل"
+  ],
+  "nl.kpi.rentValueNote": [
+   "AED, rent of this period's new leases",
+   "د.إ، إيجار العقود الجديدة لهذه الفترة"
+  ],
+  "nl.kpi.renewalShareNote": [
+   "Share of total fees (AED)",
+   "حصة من إجمالي الرسوم (د.إ)"
+  ],
+  "nl.byFeeType.desc": [
+   "Total fees split into rent installments, security deposits and everything else.",
+   "إجمالي الرسوم مقسماً إلى أقساط الإيجار والتأمين وبقية الرسوم."
+  ],
+  "nl.trend.desc": [
+   "Payments per day.",
+   "الدفعات اليومية."
+  ],
+  "nl.type.desc": [
+   "The other fee types, by count and AED value.",
+   "أنواع الرسوم الأخرى بالعدد وبالقيمة بالدرهم."
+  ],
+  "nl.hint.clickType": [
+   "Click a slice to filter by fee type",
+   "اضغط على شريحة للتصفية حسب نوع الرسوم"
+  ],
+  "nl.otherFees.title": [
+   "Other Fees",
+   "رسوم أخرى"
+  ],
+  "nl.otherFees.desc": [
+   "Government, HRE and VAT fees. Click a card for details.",
+   "الرسوم الحكومية ورسوم HRE وضريبة القيمة المضافة. اضغط على بطاقة للتفاصيل."
+  ],
+  "nl.otherFees.hre.note": [
+   "AED, all Harbor Fees",
+   "د.إ، كل رسوم Harbor Fees"
+  ],
+  "nl.otherFees.other.note": [
+   "VAT on the rent",
+   "ضريبة على الإيجار"
+  ],
+  "nl.otherFees.misc.note": [
+   "AED, fee types not categorised above",
+   "د.إ، أنواع رسوم غير مصنفة أعلاه"
+  ],
+  "nl.property.desc": [
+   "Properties with the most payments: rent installments, fees and deposits.",
+   "العقارات الأعلى في عدد الدفعات: أقساط الإيجار والرسوم والتأمين."
+  ],
+  "nl.property.tableDesc": [
+   "Properties with the most payments this period",
+   "العقارات الأعلى في الدفعات هذه الفترة"
+  ],
+  "nl.supporting.desc": [
+   "Ownership, unit type, staff, bank and agent.",
+   "الملكية ونوع الوحدة والموظف والبنك والوكيل."
+  ],
+  "nl.hint.clickOwnership": [
+   "Click a slice to filter by ownership",
+   "اضغط على شريحة للتصفية حسب الملكية"
+  ],
+  "nl.hint.clickUnit": [
+   "Click a slice to filter by unit type",
+   "اضغط على شريحة للتصفية حسب نوع الوحدة"
+  ],
+  "nl.hint.clickStaff": [
+   "Click a bar to filter by staff",
+   "اضغط على شريط للتصفية حسب الموظف"
+  ],
+  "nl.bank.desc": [
+   "Banks by number of payments",
+   "البنوك حسب عدد الدفعات"
+  ],
+  "nl.hint.clickBank": [
+   "Click a bar to filter by bank",
+   "اضغط على شريط للتصفية حسب البنك"
+  ],
+  "nl.agent.desc": [
+   "Leasing agent credited on the payment",
+   "وكيل التأجير المسجل على الدفعة"
+  ],
+  "nl.hint.clickAgent": [
+   "Click a bar to filter by agent",
+   "اضغط على شريط للتصفية حسب الوكيل"
+  ],
+  "nl.stacked.desc": [
+   "Each staff member's mix of fee types.",
+   "توزيع أنواع الرسوم لكل موظف."
+  ],
+  "nl.excludedRowsNote": [
+   "⚠ {n} {unit} left out of the counts (invalid Fee Type or Staff) — click to see which",
+   "⚠ {n} {unit} مستبعدة من العدّ (نوع رسوم أو موظف غير صحيح) — اضغط لعرضها"
+  ],
+  "nl.allVerifiedNote": [
+   "✓ {n}/{n} payments checked — all have a valid Fee Type and Staff",
+   "✓ تم فحص {n}/{n} دفعة — جميعها بنوع رسوم وموظف صحيحين"
+  ],
+  "nl.summaryLinkedNote": [
+   "✓ {n} {unit} this period, matched to Summary. Total Fees also counts payments tied to contracts from other periods.",
+   "✓ {n} {unit} هذه الفترة، مطابقة لورقة Summary. إجمالي الرسوم يشمل أيضاً دفعات عقود من فترات أخرى."
+  ]
+ },
+ "bounced-cheques": {
+  "bc.snapshotDesc": [
+   "Bounced cheques this period: how many, how much, and where the risk sits.",
+   "الشيكات المرتجعة هذه الفترة: عددها وقيمتها وأين يتركز الخطر."
+  ],
+  "bc.statusSectionDesc": [
+   "Which cheques are under legal action, paid, or in process.",
+   "أي الشيكات تحت إجراء قانوني أو مدفوعة أو قيد المعالجة."
+  ],
+  "bc.exposureSectionDesc": [
+   "Timing, bank, tenant and the largest single cheques.",
+   "التوقيت والبنك والمستأجر وأكبر الشيكات."
+  ],
+  "bc.supportingSectionDesc": [
+   "Unit type split.",
+   "التوزيع حسب نوع الوحدة."
+  ],
+  "bc.kpiAvgValueNote": [
+   "AED, total value ÷ cheques",
+   "د.إ، إجمالي القيمة ÷ عدد الشيكات"
+  ],
+  "bc.trendDesc": [
+   "Cheques bounced per day.",
+   "الشيكات المرتجعة يومياً."
+  ],
+  "bc.statusDesc": [
+   "By count and AED value",
+   "بالعدد وبالقيمة بالدرهم"
+  ],
+  "bc.statusHint": [
+   "Click a slice to filter by status",
+   "اضغط على شريحة للتصفية حسب الحالة"
+  ],
+  "bc.bankDesc": [
+   "Issuing banks by AED value.",
+   "البنوك المُصدِرة حسب القيمة بالدرهم."
+  ],
+  "bc.bankHint": [
+   "Click a bar to filter by bank",
+   "اضغط على شريط للتصفية حسب البنك"
+  ],
+  "bc.tenantTitle": [
+   "Tenant Exposure",
+   "تعرّض المستأجرين"
+  ],
+  "bc.tenantDesc": [
+   "Tenants with the highest bounced value, all their cheques combined.",
+   "المستأجرون الأعلى قيمة مرتجعة، مع جمع كل شيكاتهم."
+  ],
+  "bc.largestDesc": [
+   "The highest-value single cheques, listed one by one.",
+   "أعلى الشيكات قيمة، مدرجة كلٌّ على حدة."
+  ],
+  "bc.unitTypeDesc": [
+   "Residential vs Commercial",
+   "سكني مقابل تجاري"
+  ],
+  "bc.unitTypeHint": [
+   "Click a slice to filter by unit type",
+   "اضغط على شريحة للتصفية حسب نوع الوحدة"
+  ],
+  "bc.exploreDesc": [
+   "Every record, newest first. Search and filters apply.",
+   "كل السجلات، الأحدث أولاً. البحث والتصفية مطبّقان."
+  ],
+  "bc.valueBandLabel": [
+   "Value filter (for analysis only):",
+   "تصفية حسب القيمة (للتحليل فقط):"
+  ]
+ },
+ "count-report": {
+  "cc.snapshotDesc": [
+   "Headline figures for this period, from the Details sheet.",
+   "الأرقام الرئيسية لهذه الفترة من ورقة التفاصيل."
+  ],
+  "cc.kpiAmountNote": [
+   "AED, all payments this period. Recorded value, not bank clearance.",
+   "د.إ، كل الدفعات هذه الفترة. قيمة مسجلة وليست مقاصة بنكية."
+  ],
+  "cc.kpiLinesNote": [
+   "Contracts on a payment plan",
+   "العقود ضمن خطة دفع"
+  ],
+  "cc.kpiInstallmentsNote": [
+   "Installments this period",
+   "الأقساط هذه الفترة"
+  ],
+  "cc.kpiFutureDatedNote": [
+   "AED, cheques dated after this month",
+   "د.إ، شيكات مؤرخة بعد هذا الشهر"
+  ],
+  "cc.kpiTotalContractsNote": [
+   "Contracts with a payment this period",
+   "عقود لها دفعة هذه الفترة"
+  ],
+  "cc.kpiDueThisMonthNote": [
+   "AED, cheques dated this month",
+   "د.إ، شيكات مؤرخة في هذا الشهر"
+  ],
+  "cc.chequeFutureNote": [
+   "{n} {unit}, dated after this month",
+   "{n} {unit}، مؤرخة بعد هذا الشهر"
+  ],
+  "cc.chequePastNote": [
+   "{n} {unit}, dated before this month",
+   "{n} {unit}، مؤرخة قبل هذا الشهر"
+  ],
+  "cc.pipelineDesc": [
+   "Cheques by the date written on them: earlier, this month, or later (post-dated). Later-dated cheques are already in hand, not forecast.",
+   "الشيكات حسب التاريخ المكتوب عليها: سابق أو هذا الشهر أو لاحق (مؤجل). الشيكات المؤجلة موجودة بالفعل وليست توقعاً."
+  ],
+  "cc.maturitiesDesc": [
+   "Post-dated cheques already in hand, by month. Not a forecast. Bars add up to the Future-Dated value above.",
+   "الشيكات المؤجلة الموجودة بالفعل حسب الشهر. ليست توقعاً. مجموع الأعمدة يساوي القيمة المؤجلة أعلاه."
+  ],
+  "cc.bucketsDesc": [
+   "Next month, 2–3 months, 4–6 months and over 6 months. Adds up to the Future-Dated value.",
+   "الشهر القادم، و2–3 أشهر، و4–6 أشهر، وأكثر من 6 أشهر. المجموع يساوي القيمة المؤجلة."
+  ],
+  "cc.reconciledNote": [
+   "✓ The 4 buckets add up to the Future-Dated value (AED {amt}, {n} {unit}).",
+   "✓ الفئات الأربع تساوي القيمة المؤجلة ({amt} د.إ، {n} {unit})."
+  ],
+  "cc.reconciledFailedNote": [
+   "⚠ The buckets do not add up to the Future-Dated value. Treat them as unchecked.",
+   "⚠ مجموع الفئات لا يساوي القيمة المؤجلة. اعتبرها غير مؤكدة."
+  ],
+  "cc.activityDesc": [
+   "Installments per day, by count and AED value. The busiest day is not always the highest-value day.",
+   "الأقساط يومياً بالعدد وبقيمة الدرهم. أكثر الأيام نشاطاً ليس دائماً الأعلى قيمة."
+  ],
+  "cc.kpiActiveDaysNote": [
+   "Days with at least one installment",
+   "أيام فيها قسط واحد على الأقل"
+  ],
+  "cc.kpiAvgLinesPerDayNote": [
+   "Installments ÷ active days",
+   "الأقساط ÷ الأيام النشطة"
+  ],
+  "cc.kpiAvgAmountPerDayNote": [
+   "AED, value ÷ active days",
+   "د.إ، القيمة ÷ الأيام النشطة"
+  ],
+  "cc.kpiAvgLineValueNote": [
+   "Rent value ÷ installments",
+   "قيمة الإيجار ÷ الأقساط"
+  ],
+  "cc.compositionDesc": [
+   "Total value by payment method, bank and fee type.",
+   "إجمالي القيمة حسب طريقة الدفع والبنك ونوع الرسوم."
+  ],
+  "cc.paymethodDesc": [
+   "Cheque, credit card and bank transfer",
+   "شيك وبطاقة ائتمان وتحويل بنكي"
+  ],
+  "cc.paymethodHint": [
+   "Click a slice to filter by payment method",
+   "اضغط على شريحة للتصفية حسب طريقة الدفع"
+  ],
+  "cc.bankDesc": [
+   "Banks by payment value",
+   "البنوك حسب قيمة الدفعات"
+  ],
+  "cc.bankHint": [
+   "Click a bar to filter by bank",
+   "اضغط على شريط للتصفية حسب البنك"
+  ],
+  "cc.feecatDesc": [
+   "Rent installments, cheque replacements, HRE fees and other fees. Click a card for details.",
+   "أقساط الإيجار واستبدال الشيكات ورسوم HRE ورسوم أخرى. اضغط على بطاقة للتفاصيل."
+  ],
+  "cc.feeNoteRent": [
+   "AED, rent installments",
+   "د.إ، أقساط الإيجار"
+  ],
+  "cc.feeNoteRepl": [
+   "AED, cheque replacements",
+   "د.إ، استبدال الشيكات"
+  ],
+  "cc.feeNoteHre": [
+   "AED, HRE fees and payments with no description",
+   "د.إ، رسوم HRE ودفعات بلا وصف"
+  ],
+  "cc.feeNoteOther": [
+   "AED, {types} this period. Click for details.",
+   "د.إ، {types} هذه الفترة. اضغط للتفاصيل."
+  ],
+  "cc.concentrationDesc": [
+   "Properties, lease type and portfolio mix.",
+   "العقارات ونوع العقد وتوزيع المحفظة."
+  ],
+  "cc.propsDesc": [
+   "Properties ranked by payment value, with their contracts and installments.",
+   "العقارات مرتبة حسب قيمة الدفعات مع عقودها وأقساطها."
+  ],
+  "cc.leaseCompositionDesc": [
+   "New vs Renewal lease. Lease Activity is the main leasing report.",
+   "عقود جديدة مقابل تجديد. تقرير نشاط التأجير هو التقرير الرئيسي."
+  ],
+  "cc.ownershipTitle": [
+   "By Ownership Type",
+   "حسب نوع الملكية"
+  ],
+  "cc.ownershipDesc": [
+   "Endowment, AMAF and Minor",
+   "وقف وAMAF وقاصر"
+  ],
+  "cc.ownershipHint": [
+   "Click a slice to filter by ownership",
+   "اضغط على شريحة للتصفية حسب الملكية"
+  ],
+  "cc.unitHint": [
+   "Click a slice to filter by unit type",
+   "اضغط على شريحة للتصفية حسب نوع الوحدة"
+  ],
+  "cc.staffDesc": [
+   "Workload by PM user and by agent. Totals above do not depend on these fields.",
+   "عبء العمل حسب مستخدم إدارة الممتلكات وحسب الوكيل. الإجماليات أعلاه لا تعتمد عليهما."
+  ],
+  "cc.exploreDesc": [
+   "Every payment, newest first. Search and filters apply.",
+   "كل الدفعات، الأحدث أولاً. البحث والتصفية يعملان."
+  ],
+  "cc.referenceCardTitle": [
+   "Installment Count — Workbook Reference",
+   "عدد الأقساط — مرجع ملف العمل"
+  ],
+  "cc.referenceCardDesc": [
+   "The workbook's Installment count sheet, as entered. For reference; it is counted separately from the Details totals.",
+   "ورقة عدد الأقساط في ملف العمل كما أُدخلت. للمرجعية فقط؛ وتُحتسب بشكل مستقل عن إجماليات التفاصيل."
+  ],
+  "cc.runtime.paymentBankTransfer": [
+   "AED, bank transfers",
+   "د.إ، التحويلات البنكية"
+  ],
+  "cc.runtime.paymentCash": [
+   "AED, cash",
+   "د.إ، النقد"
+  ],
+  "cc.exploreNoteMore": [
+   "Showing {shown} of {total} {unit}. Search to narrow down.",
+   "عرض {shown} من {total} {unit}. استخدم البحث للتضييق."
+  ],
+  "cc.allRecordsVerified": [
+   "✓ All {n} payments checked",
+   "✓ تم فحص كل الدفعات ({n})"
+  ],
+  "cc.classifiedNewLease": [
+   "Contracts marked New Lease · {pct}% of classified",
+   "عقود جديدة · {pct}% من العقود المصنفة"
+  ],
+  "cc.classifiedNewLeaseNoData": [
+   "Contracts marked New Lease",
+   "عقود جديدة"
+  ],
+  "cc.classifiedRenewalLease": [
+   "Contracts marked Renewal Lease · {pct}% of classified",
+   "عقود تجديد · {pct}% من العقود المصنفة"
+  ],
+  "cc.classifiedRenewalLeaseNoData": [
+   "Contracts marked Renewal Lease",
+   "عقود تجديد"
+  ],
+  "cc.renewalNewSnapNote": [
+   "Renewal / New, of {n} classified contracts ({p1}% / {p2}%)",
+   "تجديد / جديد، من {n} عقداً مصنفاً ({p1}% / {p2}%)"
+  ],
+  "cc.renewalNewSnapNoteEmpty": [
+   "Renewal / New contracts",
+   "عقود التجديد / الجديدة"
+  ],
+  "cc.excludedRowsNote": [
+   "⚠ {n} payment(s) with no Contract Number or Date are left out of the counts — click to see which",
+   "⚠ {n} دفعة بلا رقم عقد أو تاريخ مستبعدة من الأعداد — انقر لعرضها"
+  ],
+  "cc.kpiAvgLinesPerDay": [
+   "Avg Installments / Active Day",
+   "متوسط الأقساط / يوم نشط"
+  ],
+  "cc.kpiAvgLineValue": [
+   "Avg Installment Value",
+   "متوسط قيمة القسط"
+  ],
+  "cc.peakDayRecords": [
+   "{n} installments",
+   "{n} قسط"
+  ],
+  "cc.recordUnit": [
+   "payments",
+   "دفعة"
+  ],
+  "cc.toggleCountActivity": [
+   "INSTALLMENTS",
+   "الأقساط"
+  ],
+  "cc.toggleValue": [
+   "AED VALUE",
+   "القيمة (د.إ)"
+  ],
+  "cc.kpiPeakDayCount": [
+   "Peak Day (Installments)",
+   "ذروة اليوم (الأقساط)"
+  ]
+ }
+}

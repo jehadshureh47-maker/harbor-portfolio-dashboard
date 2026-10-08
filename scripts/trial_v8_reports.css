@@ -1,0 +1,75 @@
+
+/* TRIAL v8: shared skin for the four embedded report pages (Request Count, New Lease, Bounced Cheques, Cheque Count) */
+html,body{background:transparent;}
+body{max-width:none; padding:4px 2px 28px; background:transparent;}
+
+/* header: title left, period + print on one row */
+header{margin-bottom:14px; align-items:center;}
+h1{font-size:19px; font-weight:700;}
+header .sub{margin-top:3px;}
+.header-actions{flex-direction:row; align-items:center; gap:10px;}
+.period{border-radius:999px; padding:7px 14px; font-size:13px; color:var(--sub); background:var(--card2);}
+
+/* toolbar: one calm strip, note becomes plain helper text */
+.toolbar{border-radius:14px; padding:12px 16px; background:linear-gradient(180deg,var(--card2),var(--card));}
+.toolbar-row-actions{gap:14px;}
+.btn{border-radius:999px; padding:8px 18px; font-weight:700;}
+.btn.secondary{background:var(--card2);}
+.empty-state-note{border:none; background:transparent; padding:0; flex:1 1 260px; align-items:center;}
+.empty-state-note .esn-icon{display:none;}
+.status{font-size:13px; line-height:1.5;}
+select, input[type=date], input[type=text], input[type=search]{border-radius:10px; padding:7px 10px;}
+
+/* KPI tiles: same language as Overview / Executive Summary tiles (no colour bar, bigger numbers) */
+.kpis,.kpis-split{gap:12px;}
+.kpis .kpi,.kpis-split .kpi,.kpi{border-top:1px solid var(--border) !important; border-radius:14px; padding:14px 18px; box-shadow:none; background:linear-gradient(180deg,var(--card2),var(--card)) !important; display:flex; flex-direction:column; gap:2px;}
+.kpi:hover{transform:none; border-color:var(--accent);}
+.kpi .label{font-size:12px;}
+.kpi .value{font-size:21px; font-weight:700; line-height:1.25; margin-top:4px;}
+.kpi .note{font-size:12px; margin-top:4px;}
+
+/* section headings + cards */
+.section-head{margin:14px 0 10px;}
+.section-head h3{font-size:14px; font-weight:600; color:var(--text);}
+.grid{gap:14px;}
+.card{border-radius:14px; padding:16px 18px; box-shadow:none; background:linear-gradient(180deg,var(--card2),var(--card));}
+.card h3{font-size:14px; font-weight:600;}
+.card .desc{margin-bottom:12px;}
+
+/* tables */
+table th{font-size:12px; font-weight:600; text-transform:uppercase;}
+table td,table th{font-variant-numeric:tabular-nums;}
+tbody tr:hover{background:var(--card2);}
+.explore-table-scroll{border-radius:12px;}
+
+/* spacing inside the shell card (title no longer touches the border) */
+body{padding:6px 18px 28px;}
+
+/* toolbar: buttons, helper text and the filters toggle share one row */
+.toolbar{display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px;}
+.toolbar .toolbar-row-actions{flex:1 1 auto; flex-wrap:wrap; align-items:center; margin:0; padding:0; border:none;}
+.toolbar .toolbar-row-actions .status{flex:1 1 280px; margin:0;}
+.toolbar .filters-toggle-btn{margin:0;}
+.toolbar > .toolbar-row:not(.toolbar-row-actions){flex:1 1 100%;}
+
+/* "Active Days" etc: support tiles line up with the primary tile grid instead of one wide orphan card */
+.kpis-support{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin:0 0 10px;}
+.kpi-mini{border:1px solid var(--border); border-radius:14px; padding:12px 18px; background:linear-gradient(180deg,var(--card2),var(--card)); display:flex; flex-direction:column; gap:2px;}
+.kpi-mini .label{font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--sub);}
+.kpi-mini .value{font-size:15px; font-weight:700; margin-top:2px;}
+.kpi-mini .note{font-size:11px; color:var(--sub);}
+
+/* record tables: dates stay on one line */
+.explore-table-scroll td:first-child{white-space:nowrap;}
+
+/* Request Count: say which basis each half of the composition uses */
+#chartType::before{content:"Share of requests (by count)"; display:block; font-size:11px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:var(--sub); margin-bottom:6px;}
+#typeValueStats::before{content:"Share of total value (AED)"; grid-column:1/-1; flex:0 0 100%; width:100%; display:block; font-size:11px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:var(--sub); margin-bottom:6px;}
+
+/* at-a-glance strip under the toolbar (same idea as the headline sentence on Executive Summary) */
+.v8-headline{display:flex; align-items:center; gap:12px; margin:0 0 14px; padding:13px 18px; border:1px solid var(--border); border-radius:14px; background:linear-gradient(90deg,rgba(91,140,255,.14),rgba(91,140,255,.03)); font-size:14px; line-height:1.5; color:var(--text);}
+.v8-headline b{font-weight:800;}
+.v8-dot{flex:0 0 10px; width:10px; height:10px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px rgba(91,140,255,.2);}
+
+/* pills + chips */
+.status-pill{border-radius:999px;}
