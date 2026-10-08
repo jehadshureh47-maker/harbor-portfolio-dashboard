@@ -112,6 +112,11 @@ assert 'مجموعتي سجلات مختلفتين' in s
 s = s.replace('يصف التقريران مجموعتي سجلات مختلفتين هنا', 'يعدّ التقريران أشياء مختلفة هنا').replace('مجموعتا سجلات مختلفتان', 'يعدّان أشياء مختلفة')
 sub1("    laBuildChart(heroWrap.querySelector('#ebChartHost'), [\n", "    window.__v9CcForNote = cc;\n    laBuildChart(heroWrap.querySelector('#ebChartHost'), [\n")
 
+# Compare tab: the sheet records cheques, it does not confirm collection -> "Recorded", not "Collected" (English and Arabic)
+for _a, _b in (('Total Collected', 'Total Recorded'), ('Net Collected', 'Net Recorded'), ('إجمالي المحصّل', 'إجمالي المسجّل'), ('صافي المحصّل', 'صافي المسجّل')):
+    assert _a in s, _a
+    s = s.replace(_a, _b)
+
 # (g) guard: user-facing copy must not use the banned spreadsheet words (placeholders like {rows} are fine)
 import json as _json, re as _re
 _BAD = _re.compile(r"\b(rows?|line[- ]items?|lines|records?)\b", _re.I)

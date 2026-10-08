@@ -675,7 +675,7 @@
   .exec-card.exec-accent-2{border-top-color:var(--bad);}
   .exec-card.exec-accent-3{border-top-color:var(--ok);}
   .exec-card.exec-accent-4{border-top-color:var(--amber);}
-  /* #502: the 4 Hero cards (Total Collected / Reported bounced value / Net
+  /* #502: the 4 Hero cards (Total Recorded / Reported bounced value / Net
      Collected / New Lease Value) sit in one grid row and share no fixed
      label height. Bounced value's label runs noticeably longer than the
      others (longer still in Arabic) and can wrap to 2 lines while its
@@ -1792,9 +1792,9 @@ const TRANSLATIONS = {
 "shell.label.4": "Collections Detail",
 "shell.label.5": "Cheque Clearance",
 "shell.label.6": "Occupancy",
-"shell.label.7": "Total Collected",
+"shell.label.7": "Total Recorded",
 "shell.label.8": "Bounced / At Risk",
-"shell.label.9": "Net Collected",
+"shell.label.9": "Net Recorded",
 "shell.label.10": "Occupancy Rate",
 "shell.label.11": "Collections Detail, this month",
 "shell.label.12": "Collected minus bounced",
@@ -1885,7 +1885,7 @@ const TRANSLATIONS = {
     "th.occupancy": "Al Naser Club — occupancy target",
     "th.mom": "Month-over-month change alerts — how big a swing vs last saved month before Needs Attention flags it:",
     "th.bounceSwing": "Bounce rate swing",
-    "th.collectedDrop": "Total Collected drop",
+    "th.collectedDrop": "Total Recorded drop",
     "th.occupancyDrop": "Occupancy drop (Al Naser)",
     "th.leaseSwing": "Lease contracts/value swing (Awqaf)",
     "th.note": "Bounce threshold is fixed at 2% across all portfolios. Other alert settings apply immediately to Overview and Executive Summary.",
@@ -1966,11 +1966,11 @@ const TRANSLATIONS = {
     'leaseActivity.s3.rowRenewal': 'Renewal Lease requests',
     'leaseActivity.s3.rowNew': 'New Lease requests',
     'metric.totalRecordedValue': 'Total Recorded Value',
-    'metric.totalCollected': 'Total Collected',
+    'metric.totalCollected': 'Total Recorded',
     'metric.recorded': 'Recorded',
     'metric.collected': 'Collected',
     'metric.netRecordedValue': 'Net Recorded Value',
-    'metric.netCollected': 'Net Collected',
+    'metric.netCollected': 'Net Recorded',
     'metric.noChange': 'No change vs last period',
     'metric.vsLastPeriod': 'vs last period',
     'overview.cc.title': 'Cheque Count',
@@ -2281,10 +2281,10 @@ const TRANSLATIONS = {
     'compare.bouncedAtRisk': 'Bounced / At Risk',
     'compare.bounceRate': 'Bounce Rate',
     'compare.metricsLabel': 'Metrics shown',
-    'compare.metricChip.collected': 'Total Collected',
+    'compare.metricChip.collected': 'Total Recorded',
     'compare.metricChip.bounced': 'Bounced / At Risk',
     'compare.metricChip.rate': 'Bounce Rate',
-    'compare.metricChip.net': 'Net Collected',
+    'compare.metricChip.net': 'Net Recorded',
     'compare.metricChip.count': 'Bounced Cheque Count',
     'compare.metricChip.highlight': 'Portfolio Highlight',
     'compare.bouncedCount': 'Bounced Cheque Count',
@@ -2313,9 +2313,9 @@ const TRANSLATIONS = {
 "shell.label.4": "تفاصيل التحصيل",
 "shell.label.5": "تحصيل الشيكات",
 "shell.label.6": "الإشغال",
-"shell.label.7": "إجمالي المحصّل",
+"shell.label.7": "إجمالي المسجّل",
 "shell.label.8": "المرتجع / المعرّض للخطر",
-"shell.label.9": "صافي المحصّل",
+"shell.label.9": "صافي المسجّل",
 "shell.label.10": "معدل الإشغال",
 "shell.label.11": "تفاصيل التحصيل، هذا الشهر",
 "shell.label.12": "المحصّل ناقص المرتجع",
@@ -2487,11 +2487,11 @@ const TRANSLATIONS = {
     'leaseActivity.s3.rowRenewal': 'طلبات التجديد',
     'leaseActivity.s3.rowNew': 'طلبات العقد الجديد',
     'metric.totalRecordedValue': 'إجمالي القيمة المسجلة',
-    'metric.totalCollected': 'إجمالي المحصّل',
+    'metric.totalCollected': 'إجمالي المسجّل',
     'metric.recorded': 'مسجّل',
     'metric.collected': 'محصّل',
     'metric.netRecordedValue': 'صافي القيمة المسجلة',
-    'metric.netCollected': 'صافي المحصّل',
+    'metric.netCollected': 'صافي المسجّل',
     'metric.noChange': 'لا تغيير مقارنة بالفترة السابقة',
     'metric.vsLastPeriod': 'مقارنة بالفترة السابقة',
     'overview.cc.title': 'عدد الشيكات',
@@ -2820,10 +2820,10 @@ const TRANSLATIONS = {
   }
 };
 
-const SHELL_LABEL_KEYS = {"Asset Occupancy": "shell.label.0", "Renewals Tracking": "shell.label.1", "Bounced Cheques": "shell.label.2", "Collections": "shell.label.3", "Collections Detail": "shell.label.4", "Cheque Clearance": "shell.label.5", "Occupancy": "shell.label.6", "Total Collected": "shell.label.7", "Bounced / At Risk": "shell.label.8", "Net Collected": "shell.label.9", "Occupancy Rate": "shell.label.10", "Collections Detail, this month": "shell.label.11", "Collected minus bounced": "shell.label.12", "Residential + commercial": "shell.label.13", "Rent": "shell.label.14", "Other fees": "shell.label.15", "Residential": "shell.label.16", "Commercial": "shell.label.17", "Vacant units": "shell.label.18", "Cleared": "shell.label.19", "Bounced": "shell.label.20", "Settled": "shell.label.21", "Pending": "shell.label.22", "Total amount": "shell.label.23", "Still open": "shell.label.24", "Resolved": "shell.label.25", "By value": "shell.label.26", "Renewed": "shell.label.27", "In progress": "shell.label.28", "Not renewing": "shell.label.29", "Leased": "shell.label.30", "Vacant": "shell.label.31", "Suspended": "shell.label.32", "Total assets": "shell.label.33", "Collected + Penalty": "shell.label.34", "With Legal Affairs": "shell.label.35", "Pending Collection": "shell.label.36"};
+const SHELL_LABEL_KEYS = {"Asset Occupancy": "shell.label.0", "Renewals Tracking": "shell.label.1", "Bounced Cheques": "shell.label.2", "Collections": "shell.label.3", "Collections Detail": "shell.label.4", "Cheque Clearance": "shell.label.5", "Occupancy": "shell.label.6", "Total Recorded": "shell.label.7", "Bounced / At Risk": "shell.label.8", "Net Recorded": "shell.label.9", "Occupancy Rate": "shell.label.10", "Collections Detail, this month": "shell.label.11", "Collected minus bounced": "shell.label.12", "Residential + commercial": "shell.label.13", "Rent": "shell.label.14", "Other fees": "shell.label.15", "Residential": "shell.label.16", "Commercial": "shell.label.17", "Vacant units": "shell.label.18", "Cleared": "shell.label.19", "Bounced": "shell.label.20", "Settled": "shell.label.21", "Pending": "shell.label.22", "Total amount": "shell.label.23", "Still open": "shell.label.24", "Resolved": "shell.label.25", "By value": "shell.label.26", "Renewed": "shell.label.27", "In progress": "shell.label.28", "Not renewing": "shell.label.29", "Leased": "shell.label.30", "Vacant": "shell.label.31", "Suspended": "shell.label.32", "Total assets": "shell.label.33", "Collected + Penalty": "shell.label.34", "With Legal Affairs": "shell.label.35", "Pending Collection": "shell.label.36"};
 function shellLabel(value){ return Object.prototype.hasOwnProperty.call(SHELL_LABEL_KEYS,value) ? t(SHELL_LABEL_KEYS[value],value) : value; }
 
-const REMAINING_UI = {"This dashboard is now behind a login - each approved viewer is scoped to their own portfolio automatically, instead of everyone seeing the full portfolio switcher.": "أصبحت اللوحة خلف تسجيل دخول؛ يُوجّه كل مستخدم معتمد تلقائياً إلى محفظته بدلاً من عرض جميع المحافظ.", "New Backup button in the header: download everything you've uploaded in this browser as a file, and load it back in later (or on a new device) without losing saved months.": "أُضيف زر النسخ الاحتياطي لحفظ الملخصات الشهرية والإعدادات في ملف واستعادتها لاحقاً أو على جهاز آخر. ملفات العمل الأصلية ليست ضمن النسخة.", "Every upload button now says clearly that uploading a file only previews it in your own browser - it's never shared with other viewers.": "توضح أزرار رفع الملفات أن الملف يُعرض في متصفحك فقط ولا يُشارك مع المستخدمين الآخرين.", "Cleaned up the wording on every report tab so status messages describe what's actually shown, instead of leftover build notes.": "نُقّحت عبارات تبويبات التقارير لتصف رسائل الحالة البيانات المعروضة فعلياً بدلاً من ملاحظات التطوير القديمة.", "New guided tour for first-time viewers - walks through the sidebar, search, Needs Attention, Executive Summary, Compare, and Board Pack. Reopen it anytime from the Tour button in the header.": "أُضيفت جولة للمستخدمين الجدد تشمل الشريط الجانبي والبحث وما يستدعي الانتباه والملخص التنفيذي والمقارنة وحزمة مجلس الإدارة. يمكن إعادة فتحها من زر الجولة.", "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Collected, or a drop in occupancy (Al Naser) vs the last saved month. Swing size is configurable from the Thresholds button.": "ترصد لوحة ما يستدعي الانتباه التغيرات الشهرية تلقائياً: ارتفاع معدل الارتجاع أو انخفاض إجمالي المحصّل أو إشغال نادي النصر مقارنةً بآخر شهر محفوظ. يمكن ضبط حجم التغير من إعدادات الحدود.", "Executive Summary now shows exactly which bounced cheques are new vs resolved compared to last month, once 2+ real months are on record.": "يعرض الملخص التنفيذي الشيكات المرتجعة الجديدة وتلك التي تمت معالجتها مقارنةً بالشهر السابق، عند توفر شهرين فعليين أو أكثر.", "Compare tab: added a Print/Export PDF button and a CSV download of the comparison table.": "أُضيف إلى المقارنة زر للطباعة أو تصدير PDF وتنزيل جدول المقارنة بصيغة CSV.", "Executive Summary now tracks month-over-month trend automatically once 2+ months are uploaded (a real bar chart, plus quarterly/yearly views).": "يتابع الملخص التنفيذي الاتجاه الشهري تلقائياً عند رفع شهرين أو أكثر، برسم أعمدة وعروض ربع سنوية وسنوية.", "Uploaded reports now persist automatically — reload the page and everything you loaded is still there, no re-uploading.": "تُحفظ التقارير المرفوعة تلقائياً؛ تبقى الملفات المحمّلة متاحة بعد إعادة تحميل الصفحة دون رفعها مجدداً.", "New Compare tab: put any two portfolios side by side, with dropdowns to choose which ones and click-to-expand daily trend charts.": "أُضيف تبويب مقارنة محفظتين جنباً إلى جنب، مع قوائم اختيار ورسوم اتجاه يومية قابلة للتوسيع.", "Overview KPI cards now show a small trend sparkline under each headline number.": "تعرض بطاقات النظرة العامة رسماً مصغّراً للاتجاه أسفل كل قيمة رئيسية.", "Al Naser Club's 4 report types added to the demo dashboard with realistic synthetic data.": "أُضيفت أنواع تقارير نادي النصر الأربعة إلى اللوحة التجريبية باستخدام بيانات اصطناعية واقعية.", "Click any day on the Activity heatmap to see exactly which reports contributed to that day's total.": "اضغط على يوم في خريطة النشاط لمعرفة التقارير التي ساهمت في إجمالي ذلك اليوم.", "Added a light/dark mode toggle and a dedicated Executive Summary tab with headline KPI cards and a plain-English summary.": "أُضيف تبديل الوضع الفاتح والداكن وتبويب مستقل للملخص التنفيذي ببطاقات مؤشرات رئيسية وملخص مبسّط بالإنجليزية.", "Fixed a real layout bug on Bounced Cheques: the Summary card's text box wasn't stretching to match the Status Breakdown chart beside it, leaving a blank gap - it now fills the card properly.": "أُصلح خلل في تقرير الشيكات المرتجعة: لم يكن مربع نص الملخص يتمدد لمجاراة رسم تفصيل الحالات المجاور، مما ترك فراغاً؛ وأصبح يملأ البطاقة.", "Ran a full accuracy audit across all 4 RTA reports (Occupancy, Renewals, Bounced Cheques, Collections) - checked every KPI, chart total, filter, and CSV export against the underlying data. No data errors found.": "أُجري تدقيق دقة للتقارير الأربعة في RTA (الإشغال والتجديدات والشيكات المرتجعة والتحصيل)، شمل المؤشرات وإجماليات الرسوم وعوامل التصفية وتصدير CSV مقابل البيانات الأصلية. لم تُكتشف أخطاء بيانات في ذلك التدقيق.", "Fixed the \"Activity by Day\" heatmap, which was stuck on \"Waiting for reports to finish loading\" - Renewals and Bounced Cheques now report day-by-day activity like the other portfolios.": "أُصلحت خريطة النشاط اليومي التي كانت عالقة عند انتظار تحميل التقارير؛ وأصبحت التجديدات والشيكات المرتجعة تعرض نشاطاً يومياً كالمحافظ الأخرى.", "Fixed uneven card widths and bar-chart sizing on Bounced Cheques and Renewals Tracking.": "أُصلح تفاوت عرض البطاقات وأحجام رسوم الأعمدة في الشيكات المرتجعة ومتابعة التجديدات.", "Rebuilt the charts and filter panel on all 4 RTA reports to be fully interactive - click a chart segment to filter the table, multi-select filters, search, and CSV export, matching Awqaf and Al Naser Club.": "أُعيد تجهيز الرسوم ولوحات التصفية لتقارير RTA الأربعة بالتصفية عبر الرسوم والاختيار المتعدد والبحث وتصدير CSV، على غرار الأوقاف ونادي النصر.", "Added RTA as a full portfolio: Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections, built from the Rent Roll workbook and the July 2026 monthly report.": "أُضيفت محفظة RTA بتقارير إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل، اعتماداً على ملف Rent Roll وتقرير يوليو 2026 الشهري.", "Al Naser Club's 4 reports (Bounced Cheques, Cheque Clearance, Collections Detail, Occupancy) added to the dashboard with realistic data.": "أُضيفت تقارير نادي النصر الأربعة (الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال) إلى اللوحة ببيانات واقعية.", "Original Awqaf build: report tabs, cross-checks, and Data Quality tracking all in place - the first portfolio this dashboard supported.": "الإصدار الأول للأوقاف: تبويبات التقارير والفحوص المتقاطعة ومتابعة جودة البيانات؛ وكانت أول محفظة تدعمها اللوحة.", "What's new": "المستجدات", "Recent additions to this dashboard": "الإضافات الأخيرة إلى هذه اللوحة", "Updates": "التحديثات", "Recent changes to this portfolio's reports": "التغييرات الأخيرة في تقارير هذه المحفظة", "No portfolio-specific updates logged yet.": "لم تُسجّل تحديثات خاصة بهذه المحفظة بعد.", "Metric": "المؤشر", "Period": "الفترة", "Bounce Rate": "معدل الارتجاع", "Bounced / At Risk": "المرتجع / المعرّض للخطر", "Report": "التقرير", "Count": "العدد", "What is counted": "ما الذي يُعدّ", "Total": "الإجمالي", "That doesn't look like a Dashboard backup file.": "لا يبدو هذا ملف نسخة احتياطية للوحة المعلومات الرئيسية.", "Unsupported backup identity or version. Production backups require separate provenance review before migration.": "هوية النسخة الاحتياطية أو إصدارها غير مدعوم. تتطلب نسخ الإنتاج مراجعة مستقلة لمصدرها قبل ترحيلها.", "Unknown portfolio or invalid history.": "محفظة غير معروفة أو سجل غير صالح.", "Invalid or duplicate reporting month.": "شهر تقرير غير صالح أو مكرر.", "History conflict: an existing month differs. Current history is retained; reconcile the revision before import.": "تعارض في السجل: يختلف شهر محفوظ عن النسخة. تم الاحتفاظ بالسجل الحالي؛ طابق المراجعة قبل الاستيراد.", "Data as of": "البيانات حتى", "Data as of this load": "البيانات عند هذا التحميل", "this period": "هذه الفترة", "generated": "تم الإنشاء", " — pulled from Bounced Cheques, Cheque Clearance, Collections Detail, and Occupancy.": " — مستمدة من الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال.", " — pulled from Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections.": " — مستمدة من إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل.", " — pulled from Harbor's monthly achievement report for the Dubai Police portfolio (aggregate figures only — no per-record workbook has been shared yet).": " — مستمدة من تقرير إنجاز Harbor الشهري لمحفظة شرطة دبي (أرقام مجمّعة فقط؛ لم يُشارك ملف عمل على مستوى السجل بعد).", "July 2026": "يوليو 2026", "Cross-checks": "الفحوص المتقاطعة", "Not applicable": "لا ينطبق", "no per-record data to cross-validate yet": "لا توجد بيانات على مستوى السجل للتحقق المتقاطع بعد", "Staff — PM User Workload": "الموظفون — عبء عمل مستخدمي PM", "Staff — Agent Workload": "الموظفون — عبء عمل الوكلاء", "All totals on this tab": "جميع إجماليات هذا التبويب", "Payment detail and installment distribution": "تفاصيل السداد وتوزيع الأقساط", "Recent changes to {portfolio} reports": "التغييرات الأخيرة في تقارير {portfolio}"};
+const REMAINING_UI = {"This dashboard is now behind a login - each approved viewer is scoped to their own portfolio automatically, instead of everyone seeing the full portfolio switcher.": "أصبحت اللوحة خلف تسجيل دخول؛ يُوجّه كل مستخدم معتمد تلقائياً إلى محفظته بدلاً من عرض جميع المحافظ.", "New Backup button in the header: download everything you've uploaded in this browser as a file, and load it back in later (or on a new device) without losing saved months.": "أُضيف زر النسخ الاحتياطي لحفظ الملخصات الشهرية والإعدادات في ملف واستعادتها لاحقاً أو على جهاز آخر. ملفات العمل الأصلية ليست ضمن النسخة.", "Every upload button now says clearly that uploading a file only previews it in your own browser - it's never shared with other viewers.": "توضح أزرار رفع الملفات أن الملف يُعرض في متصفحك فقط ولا يُشارك مع المستخدمين الآخرين.", "Cleaned up the wording on every report tab so status messages describe what's actually shown, instead of leftover build notes.": "نُقّحت عبارات تبويبات التقارير لتصف رسائل الحالة البيانات المعروضة فعلياً بدلاً من ملاحظات التطوير القديمة.", "New guided tour for first-time viewers - walks through the sidebar, search, Needs Attention, Executive Summary, Compare, and Board Pack. Reopen it anytime from the Tour button in the header.": "أُضيفت جولة للمستخدمين الجدد تشمل الشريط الجانبي والبحث وما يستدعي الانتباه والملخص التنفيذي والمقارنة وحزمة مجلس الإدارة. يمكن إعادة فتحها من زر الجولة.", "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Recorded, or a drop in occupancy (Al Naser) vs the last saved month. Swing size is configurable from the Thresholds button.": "ترصد لوحة ما يستدعي الانتباه التغيرات الشهرية تلقائياً: ارتفاع معدل الارتجاع أو انخفاض إجمالي المسجّل أو إشغال نادي النصر مقارنةً بآخر شهر محفوظ. يمكن ضبط حجم التغير من إعدادات الحدود.", "Executive Summary now shows exactly which bounced cheques are new vs resolved compared to last month, once 2+ real months are on record.": "يعرض الملخص التنفيذي الشيكات المرتجعة الجديدة وتلك التي تمت معالجتها مقارنةً بالشهر السابق، عند توفر شهرين فعليين أو أكثر.", "Compare tab: added a Print/Export PDF button and a CSV download of the comparison table.": "أُضيف إلى المقارنة زر للطباعة أو تصدير PDF وتنزيل جدول المقارنة بصيغة CSV.", "Executive Summary now tracks month-over-month trend automatically once 2+ months are uploaded (a real bar chart, plus quarterly/yearly views).": "يتابع الملخص التنفيذي الاتجاه الشهري تلقائياً عند رفع شهرين أو أكثر، برسم أعمدة وعروض ربع سنوية وسنوية.", "Uploaded reports now persist automatically — reload the page and everything you loaded is still there, no re-uploading.": "تُحفظ التقارير المرفوعة تلقائياً؛ تبقى الملفات المحمّلة متاحة بعد إعادة تحميل الصفحة دون رفعها مجدداً.", "New Compare tab: put any two portfolios side by side, with dropdowns to choose which ones and click-to-expand daily trend charts.": "أُضيف تبويب مقارنة محفظتين جنباً إلى جنب، مع قوائم اختيار ورسوم اتجاه يومية قابلة للتوسيع.", "Overview KPI cards now show a small trend sparkline under each headline number.": "تعرض بطاقات النظرة العامة رسماً مصغّراً للاتجاه أسفل كل قيمة رئيسية.", "Al Naser Club's 4 report types added to the demo dashboard with realistic synthetic data.": "أُضيفت أنواع تقارير نادي النصر الأربعة إلى اللوحة التجريبية باستخدام بيانات اصطناعية واقعية.", "Click any day on the Activity heatmap to see exactly which reports contributed to that day's total.": "اضغط على يوم في خريطة النشاط لمعرفة التقارير التي ساهمت في إجمالي ذلك اليوم.", "Added a light/dark mode toggle and a dedicated Executive Summary tab with headline KPI cards and a plain-English summary.": "أُضيف تبديل الوضع الفاتح والداكن وتبويب مستقل للملخص التنفيذي ببطاقات مؤشرات رئيسية وملخص مبسّط بالإنجليزية.", "Fixed a real layout bug on Bounced Cheques: the Summary card's text box wasn't stretching to match the Status Breakdown chart beside it, leaving a blank gap - it now fills the card properly.": "أُصلح خلل في تقرير الشيكات المرتجعة: لم يكن مربع نص الملخص يتمدد لمجاراة رسم تفصيل الحالات المجاور، مما ترك فراغاً؛ وأصبح يملأ البطاقة.", "Ran a full accuracy audit across all 4 RTA reports (Occupancy, Renewals, Bounced Cheques, Collections) - checked every KPI, chart total, filter, and CSV export against the underlying data. No data errors found.": "أُجري تدقيق دقة للتقارير الأربعة في RTA (الإشغال والتجديدات والشيكات المرتجعة والتحصيل)، شمل المؤشرات وإجماليات الرسوم وعوامل التصفية وتصدير CSV مقابل البيانات الأصلية. لم تُكتشف أخطاء بيانات في ذلك التدقيق.", "Fixed the \"Activity by Day\" heatmap, which was stuck on \"Waiting for reports to finish loading\" - Renewals and Bounced Cheques now report day-by-day activity like the other portfolios.": "أُصلحت خريطة النشاط اليومي التي كانت عالقة عند انتظار تحميل التقارير؛ وأصبحت التجديدات والشيكات المرتجعة تعرض نشاطاً يومياً كالمحافظ الأخرى.", "Fixed uneven card widths and bar-chart sizing on Bounced Cheques and Renewals Tracking.": "أُصلح تفاوت عرض البطاقات وأحجام رسوم الأعمدة في الشيكات المرتجعة ومتابعة التجديدات.", "Rebuilt the charts and filter panel on all 4 RTA reports to be fully interactive - click a chart segment to filter the table, multi-select filters, search, and CSV export, matching Awqaf and Al Naser Club.": "أُعيد تجهيز الرسوم ولوحات التصفية لتقارير RTA الأربعة بالتصفية عبر الرسوم والاختيار المتعدد والبحث وتصدير CSV، على غرار الأوقاف ونادي النصر.", "Added RTA as a full portfolio: Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections, built from the Rent Roll workbook and the July 2026 monthly report.": "أُضيفت محفظة RTA بتقارير إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل، اعتماداً على ملف Rent Roll وتقرير يوليو 2026 الشهري.", "Al Naser Club's 4 reports (Bounced Cheques, Cheque Clearance, Collections Detail, Occupancy) added to the dashboard with realistic data.": "أُضيفت تقارير نادي النصر الأربعة (الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال) إلى اللوحة ببيانات واقعية.", "Original Awqaf build: report tabs, cross-checks, and Data Quality tracking all in place - the first portfolio this dashboard supported.": "الإصدار الأول للأوقاف: تبويبات التقارير والفحوص المتقاطعة ومتابعة جودة البيانات؛ وكانت أول محفظة تدعمها اللوحة.", "What's new": "المستجدات", "Recent additions to this dashboard": "الإضافات الأخيرة إلى هذه اللوحة", "Updates": "التحديثات", "Recent changes to this portfolio's reports": "التغييرات الأخيرة في تقارير هذه المحفظة", "No portfolio-specific updates logged yet.": "لم تُسجّل تحديثات خاصة بهذه المحفظة بعد.", "Metric": "المؤشر", "Period": "الفترة", "Bounce Rate": "معدل الارتجاع", "Bounced / At Risk": "المرتجع / المعرّض للخطر", "Report": "التقرير", "Count": "العدد", "What is counted": "ما الذي يُعدّ", "Total": "الإجمالي", "That doesn't look like a Dashboard backup file.": "لا يبدو هذا ملف نسخة احتياطية للوحة المعلومات الرئيسية.", "Unsupported backup identity or version. Production backups require separate provenance review before migration.": "هوية النسخة الاحتياطية أو إصدارها غير مدعوم. تتطلب نسخ الإنتاج مراجعة مستقلة لمصدرها قبل ترحيلها.", "Unknown portfolio or invalid history.": "محفظة غير معروفة أو سجل غير صالح.", "Invalid or duplicate reporting month.": "شهر تقرير غير صالح أو مكرر.", "History conflict: an existing month differs. Current history is retained; reconcile the revision before import.": "تعارض في السجل: يختلف شهر محفوظ عن النسخة. تم الاحتفاظ بالسجل الحالي؛ طابق المراجعة قبل الاستيراد.", "Data as of": "البيانات حتى", "Data as of this load": "البيانات عند هذا التحميل", "this period": "هذه الفترة", "generated": "تم الإنشاء", " — pulled from Bounced Cheques, Cheque Clearance, Collections Detail, and Occupancy.": " — مستمدة من الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال.", " — pulled from Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections.": " — مستمدة من إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل.", " — pulled from Harbor's monthly achievement report for the Dubai Police portfolio (aggregate figures only — no per-record workbook has been shared yet).": " — مستمدة من تقرير إنجاز Harbor الشهري لمحفظة شرطة دبي (أرقام مجمّعة فقط؛ لم يُشارك ملف عمل على مستوى السجل بعد).", "July 2026": "يوليو 2026", "Cross-checks": "الفحوص المتقاطعة", "Not applicable": "لا ينطبق", "no per-record data to cross-validate yet": "لا توجد بيانات على مستوى السجل للتحقق المتقاطع بعد", "Staff — PM User Workload": "الموظفون — عبء عمل مستخدمي PM", "Staff — Agent Workload": "الموظفون — عبء عمل الوكلاء", "All totals on this tab": "جميع إجماليات هذا التبويب", "Payment detail and installment distribution": "تفاصيل السداد وتوزيع الأقساط", "Recent changes to {portfolio} reports": "التغييرات الأخيرة في تقارير {portfolio}"};
 function remainingText(value){ return currentLang === 'ar' && Object.prototype.hasOwnProperty.call(REMAINING_UI,value) ? REMAINING_UI[value] : value; }
 
 function t(key, fallback){
@@ -6183,13 +6183,13 @@ function monthlyTrendSvg(history, metricKey, color, metricLabel){
 // and Executive Summary via this one shared field. Every other portfolio's
 // underlying source (Collections Detail, etc.) genuinely represents
 // received/collected amounts, so their wording is intentionally unchanged.
-function totalCollectedLabel(portfolio){ return portfolio === 'awqaf' ? t('metric.totalRecordedValue','Total Recorded Value') : t('metric.totalCollected','Total Collected'); }
+function totalCollectedLabel(portfolio){ return portfolio === 'awqaf' ? t('metric.totalRecordedValue','Total Recorded Value') : t('metric.totalCollected','Total Recorded'); }
 function totalCollectedLabelShort(portfolio){ return portfolio === 'awqaf' ? t('metric.recorded','Recorded') : t('metric.collected','Collected'); }
-function netCollectedLabel(portfolio){ return portfolio === 'awqaf' ? t('metric.netRecordedValue','Net Recorded Value') : t('metric.netCollected','Net Collected'); }
+function netCollectedLabel(portfolio){ return portfolio === 'awqaf' ? t('metric.netRecordedValue','Net Recorded Value') : t('metric.netCollected','Net Recorded'); }
 function collectedRatioWord(portfolio){ return portfolio === 'awqaf' ? t('metric.ratioWord.recorded','recorded value') : t('metric.ratioWord.collected','collected'); }
 // Section 5 (Phase 3 FINAL pass): the Compare tab shows one metric-name label
-// spanning two portfolio columns, so a single hardcoded "Total Collected" /
-// "Net Collected" would misdescribe Awqaf's Cheque Count ledger sum as
+// spanning two portfolio columns, so a single hardcoded "Total Recorded" /
+// "Net Recorded" would misdescribe Awqaf's Cheque Count ledger sum as
 // confirmed bank clearance the moment it's compared against a portfolio that
 // actually reports confirmed collections. When both sides agree on
 // terminology, show it once same as before; when they don't, show both so
@@ -6748,8 +6748,8 @@ function buildOverviewTab(){
 // Summary into portfolioSnapshot[key], and this tab just reads that. That
 // guarantees a number shown here can never drift from what the same
 // portfolio's own Exec Summary shows, and means only metrics that already
-// share one formula across both portfolios (Total Collected, Bounced/At
-// Risk, Bounce Rate, Net Collected - all "bounced amount / that portfolio's
+// share one formula across both portfolios (Total Recorded, Bounced/At
+// Risk, Bounce Rate, Net Recorded - all "bounced amount / that portfolio's
 // own collected-amount figure") are compared side by side; Awqaf's New
 // Lease Value and Al Naser's Occupancy Rate have no counterpart in the
 // other portfolio, so they're shown separately, not forced into the same
@@ -6838,10 +6838,10 @@ function buildCompareTab(){
     </div>
     <div class="compare-metric-chips" id="cmpMetricChips" role="group" aria-label="${esc(t('compare.metricsLabel','Metrics shown'))}">
       <span class="compare-metric-chips-label" data-i18n="compare.metricsLabel">${esc(t('compare.metricsLabel','Metrics shown'))}</span>
-      <button type="button" class="compare-metric-chip" data-metric="collected" data-i18n="compare.metricChip.collected">${esc(t('compare.metricChip.collected','Total Collected'))}</button>
+      <button type="button" class="compare-metric-chip" data-metric="collected" data-i18n="compare.metricChip.collected">${esc(t('compare.metricChip.collected','Total Recorded'))}</button>
       <button type="button" class="compare-metric-chip" data-metric="bounced" data-i18n="compare.metricChip.bounced">${esc(t('compare.metricChip.bounced','Bounced / At Risk'))}</button>
       <button type="button" class="compare-metric-chip" data-metric="rate" data-i18n="compare.metricChip.rate">${esc(t('compare.metricChip.rate','Bounce Rate'))}</button>
-      <button type="button" class="compare-metric-chip" data-metric="net" data-i18n="compare.metricChip.net">${esc(t('compare.metricChip.net','Net Collected'))}</button>
+      <button type="button" class="compare-metric-chip" data-metric="net" data-i18n="compare.metricChip.net">${esc(t('compare.metricChip.net','Net Recorded'))}</button>
       <button type="button" class="compare-metric-chip" data-metric="count" data-i18n="compare.metricChip.count">${esc(t('compare.metricChip.count','Bounced Cheque Count'))}</button>
       <button type="button" class="compare-metric-chip" data-metric="highlight" data-i18n="compare.metricChip.highlight">${esc(t('compare.metricChip.highlight','Portfolio Highlight'))}</button>
     </div>
@@ -10427,15 +10427,15 @@ function renderExecSummaryAlNaser(){
   }
 
   renderExecCards(heroWrap, [
-    {label:'Total Collected', value: fmtAed(co.total_amount), sub:'Collections Detail, this month'},
+    {label:'Total Recorded', value: fmtAed(co.total_amount), sub:'Collections Detail, this month'},
     {label:'Bounced / At Risk', value: fmtAed(bc.total_amount), sub:`${bc.total_count.toLocaleString()} ${pluralize(bc.total_count, 'cheque', 'cheques')}`},
-    {label:'Net Collected', value: fmtAed(netCollected), sub:'Collected minus bounced'},
+    {label:'Net Recorded', value: fmtAed(netCollected), sub:'Collected minus bounced'},
     {label:'Occupancy Rate', value: fmtPctVal(oc.overall_occupancy), sub:'Residential + commercial'},
   ]);
 
   if(narrativeWrap){
     const period = fmtPeriod(co.date_min, co.date_max) || 'this period';
-    narrativeWrap.innerHTML = currentLang === 'ar' ? `<p>خلال ${esc(remainingText(period))}، حصّل نادي النصر ${fmtAed(co.total_amount)} عبر ${co.total_count.toLocaleString()} معاملة. ارتجع ${bc.total_count.toLocaleString()} شيكاً بإجمالي ${fmtAed(bc.total_amount)}${bounceRatePct !== null ? ` (${bounceRatePct.toFixed(1)}% من التحصيل)` : ''}. بلغ صافي المحصّل بعد المرتجعات ${fmtAed(netCollected)}. بلغ الإشغال الإجمالي ${fmtPctVal(oc.overall_occupancy)} — السكني ${fmtPctVal(oc.residential_occupancy)} والتجاري ${fmtPctVal(oc.commercial_occupancy)}.</p>` : `<p>For ${esc(period)}, Al Naser Club collected ${fmtAed(co.total_amount)} across ${co.total_count.toLocaleString()} ${pluralize(co.total_count, 'transaction', 'transactions')}. ${bc.total_count.toLocaleString()} ${pluralize(bc.total_count, 'cheque', 'cheques')} bounced, totalling ${fmtAed(bc.total_amount)}${bounceRatePct !== null ? ` (${bounceRatePct.toFixed(1)}% of collections)` : ''}. Net collected after bounces was ${fmtAed(netCollected)}. Occupancy stood at ${fmtPctVal(oc.overall_occupancy)} overall — ${fmtPctVal(oc.residential_occupancy)} residential, ${fmtPctVal(oc.commercial_occupancy)} commercial.</p>`;
+    narrativeWrap.innerHTML = currentLang === 'ar' ? `<p>خلال ${esc(remainingText(period))}، حصّل نادي النصر ${fmtAed(co.total_amount)} عبر ${co.total_count.toLocaleString()} معاملة. ارتجع ${bc.total_count.toLocaleString()} شيكاً بإجمالي ${fmtAed(bc.total_amount)}${bounceRatePct !== null ? ` (${bounceRatePct.toFixed(1)}% من التحصيل)` : ''}. بلغ صافي المسجّل بعد المرتجعات ${fmtAed(netCollected)}. بلغ الإشغال الإجمالي ${fmtPctVal(oc.overall_occupancy)} — السكني ${fmtPctVal(oc.residential_occupancy)} والتجاري ${fmtPctVal(oc.commercial_occupancy)}.</p>` : `<p>For ${esc(period)}, Al Naser Club collected ${fmtAed(co.total_amount)} across ${co.total_count.toLocaleString()} ${pluralize(co.total_count, 'transaction', 'transactions')}. ${bc.total_count.toLocaleString()} ${pluralize(bc.total_count, 'cheque', 'cheques')} bounced, totalling ${fmtAed(bc.total_amount)}${bounceRatePct !== null ? ` (${bounceRatePct.toFixed(1)}% of collections)` : ''}. Net collected after bounces was ${fmtAed(netCollected)}. Occupancy stood at ${fmtPctVal(oc.overall_occupancy)} overall — ${fmtPctVal(oc.residential_occupancy)} residential, ${fmtPctVal(oc.commercial_occupancy)} commercial.</p>`;
   }
 
   if(healthWrap){
@@ -10640,15 +10640,15 @@ function renderExecSummaryRTA(){
   }
 
   renderExecCards(heroWrap, [
-    {label:'Total Collected', value: fmtAed(co.total_collected), sub:`${(co.payment_count||0).toLocaleString()} ${pluralize(co.payment_count||0, 'payment', 'payments')}, this month`},
+    {label:'Total Recorded', value: fmtAed(co.total_collected), sub:`${(co.payment_count||0).toLocaleString()} ${pluralize(co.payment_count||0, 'payment', 'payments')}, this month`},
     {label:'Bounced / At Risk', value: fmtAed(bc.total_bounced_value), sub: fmtPctVal(bc.collection_rate) + ' collected so far'},
-    {label:'Net Collected', value: fmtAed(netCollected), sub:'Collected minus bounced'},
+    {label:'Net Recorded', value: fmtAed(netCollected), sub:'Collected minus bounced'},
     {label:'Occupancy Rate', value: fmtPctVal(oc.overall_occupancy), sub:`${(oc.vacant_total||0).toLocaleString()} vacant assets`},
   ]);
 
   if(narrativeWrap){
     const period = co.period || bc.period || 'this period';
-    narrativeWrap.innerHTML = currentLang === 'ar' ? `<p>خلال ${esc(remainingText(period))}، حصّلت RTA مبلغ ${fmtAed(co.total_collected)} عبر ${(co.payment_count||0).toLocaleString()} دفعة عقد. تبلغ قيمة الشيكات المرتجعة المسجّلة ${fmtAed(bc.total_bounced_value)}${bounceRatePct !== null ? ` (${bounceRatePct.toFixed(1)}% من التدفق النقدي المعروف)` : ''} — تم تحصيل ${fmtPctVal(bc.collection_rate)} منها، ولدى الشؤون القانونية ${fmtAed(bc.legal_value)}، وما زال ${fmtAed(bc.pending_value)} قيد الانتظار. بلغ صافي المحصّل بعد المرتجعات ${fmtAed(netCollected)}. بلغ إشغال الأصول ${fmtPctVal(oc.overall_occupancy)}، مع ${(oc.vacant_total||0).toLocaleString()} أصلاً شاغراً و${(oc.suspended_total||0).toLocaleString()} أصلاً معلّقاً. من أصل ${(rn.total_contracts||0).toLocaleString()} عقد تجديد متابع، اكتمل ${fmtPctVal(rn.renewal_progress)}، وما زال ${(rn.ongoing||0).toLocaleString()} قيد الإجراء، ولن يتجدد ${(rn.non_renewal||0).toLocaleString()}.</p>` : `<p>For ${esc(period)}, RTA collected ${fmtAed(co.total_collected)} across ${(co.payment_count||0).toLocaleString()} contract ${pluralize(co.payment_count||0, 'payment', 'payments')}. Bounced cheques on record total ${fmtAed(bc.total_bounced_value)}${bounceRatePct !== null ? ` (${bounceRatePct.toFixed(1)}% of known cash flow)` : ''} — ${fmtPctVal(bc.collection_rate)} of that has been collected, ${fmtAed(bc.legal_value)} is with legal affairs, and ${fmtAed(bc.pending_value)} is still pending. Net collected after bounces was ${fmtAed(netCollected)}. Asset occupancy stood at ${fmtPctVal(oc.overall_occupancy)}, with ${(oc.vacant_total||0).toLocaleString()} vacant and ${(oc.suspended_total||0).toLocaleString()} suspended assets. Of ${(rn.total_contracts||0).toLocaleString()} tracked renewal contracts, ${fmtPctVal(rn.renewal_progress)} have completed, ${(rn.ongoing||0).toLocaleString()} are ongoing, and ${(rn.non_renewal||0).toLocaleString()} are not renewing.</p>`;
+    narrativeWrap.innerHTML = currentLang === 'ar' ? `<p>خلال ${esc(remainingText(period))}، حصّلت RTA مبلغ ${fmtAed(co.total_collected)} عبر ${(co.payment_count||0).toLocaleString()} دفعة عقد. تبلغ قيمة الشيكات المرتجعة المسجّلة ${fmtAed(bc.total_bounced_value)}${bounceRatePct !== null ? ` (${bounceRatePct.toFixed(1)}% من التدفق النقدي المعروف)` : ''} — تم تحصيل ${fmtPctVal(bc.collection_rate)} منها، ولدى الشؤون القانونية ${fmtAed(bc.legal_value)}، وما زال ${fmtAed(bc.pending_value)} قيد الانتظار. بلغ صافي المسجّل بعد المرتجعات ${fmtAed(netCollected)}. بلغ إشغال الأصول ${fmtPctVal(oc.overall_occupancy)}، مع ${(oc.vacant_total||0).toLocaleString()} أصلاً شاغراً و${(oc.suspended_total||0).toLocaleString()} أصلاً معلّقاً. من أصل ${(rn.total_contracts||0).toLocaleString()} عقد تجديد متابع، اكتمل ${fmtPctVal(rn.renewal_progress)}، وما زال ${(rn.ongoing||0).toLocaleString()} قيد الإجراء، ولن يتجدد ${(rn.non_renewal||0).toLocaleString()}.</p>` : `<p>For ${esc(period)}, RTA collected ${fmtAed(co.total_collected)} across ${(co.payment_count||0).toLocaleString()} contract ${pluralize(co.payment_count||0, 'payment', 'payments')}. Bounced cheques on record total ${fmtAed(bc.total_bounced_value)}${bounceRatePct !== null ? ` (${bounceRatePct.toFixed(1)}% of known cash flow)` : ''} — ${fmtPctVal(bc.collection_rate)} of that has been collected, ${fmtAed(bc.legal_value)} is with legal affairs, and ${fmtAed(bc.pending_value)} is still pending. Net collected after bounces was ${fmtAed(netCollected)}. Asset occupancy stood at ${fmtPctVal(oc.overall_occupancy)}, with ${(oc.vacant_total||0).toLocaleString()} vacant and ${(oc.suspended_total||0).toLocaleString()} suspended assets. Of ${(rn.total_contracts||0).toLocaleString()} tracked renewal contracts, ${fmtPctVal(rn.renewal_progress)} have completed, ${(rn.ongoing||0).toLocaleString()} are ongoing, and ${(rn.non_renewal||0).toLocaleString()} are not renewing.</p>`;
   }
 
   if(healthWrap){
@@ -10877,7 +10877,7 @@ function renderExecSummaryPolice(){
   // about session state, just about this assignment never happening. Also
   // give Police its own real metrics for the Compare tab's "Portfolio
   // Highlight" section (extraMetrics) - the five default rows (Total
-  // Collected, Bounced/At Risk, Bounce Rate, Net Collected, Bounced Cheque
+  // Collected, Bounced/At Risk, Bounce Rate, Net Recorded, Bounced Cheque
   // Count) are all Awqaf-style cheque/collections metrics Police doesn't
   // have, so those rows correctly stay "-" for Police, but extraMetrics is
   // exactly the mechanism the other portfolios already use for their own
@@ -11413,7 +11413,7 @@ const WHATS_NEW = [
   ]},
   { date: '2026-08-26', items: [
     "New guided tour for first-time viewers - walks through the sidebar, search, Needs Attention, Executive Summary, Compare, and Board Pack. Reopen it anytime from the Tour button in the header.",
-    "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Collected, or a drop in occupancy (Al Naser) vs the last saved month. Swing size is configurable from the Thresholds button.",
+    "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Recorded, or a drop in occupancy (Al Naser) vs the last saved month. Swing size is configurable from the Thresholds button.",
     "Executive Summary now shows exactly which bounced cheques are new vs resolved compared to last month, once 2+ real months are on record.",
   ]},
   { date: '2026-08-24', items: [

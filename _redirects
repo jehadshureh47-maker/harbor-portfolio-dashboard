@@ -1,0 +1,9 @@
+# Only index.html is the dashboard. Old builds, notes and scripts stay in the repo but are not served: they go to the PIN-gated page.
+/Dashboard_*  /  302
+/Data_Quality_Validator.html  /  302
+/memory/*  /  302
+/docs/*  /  302
+/scripts/*  /  302
+/demo-upload/*  /  302
+/ai-command-center/*  /  302
+/.claude/*  /  302
