@@ -1,0 +1,39 @@
+/* ---- Dashboard motion (v12): cards and tiles rise in as they first come into view, charts draw in, headline numbers count up.
+   Additive only: no colour or layout changes. Injected into the page and into every embedded report. ---- */
+.dm-pre{opacity:0}
+.dm-in{will-change:transform,opacity;animation:dmRise .4s cubic-bezier(.2,.7,.2,1) backwards}
+@keyframes dmRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.dm-draw{animation:dmReveal 1s .3s ease backwards}
+@keyframes dmReveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+html[dir=rtl] .dm-draw{animation-name:dmRevealRtl}
+@keyframes dmRevealRtl{from{clip-path:inset(0 0 0 100%)}to{clip-path:inset(0 0 0 0)}}
+@media (prefers-reduced-motion:reduce){.dm-pre{opacity:1}.dm-in,.dm-draw{animation:none}}
+@media print{.dm-pre{opacity:1!important}.dm-in,.dm-draw{animation:none!important}}
+
+/* v13: load stability. The Overview used to grow from a one-line placeholder to its full height in two jumps (and push everything below it down).
+   Space is now reserved up front and a pulsing skeleton stands in until the real tiles arrive. Nothing here touches data. */
+@keyframes dmPulse{0%,100%{opacity:.55}50%{opacity:1}}
+#overviewWrap{min-height:480px}
+#overviewWrap:not(:has(.ov6-tile))::after{content:"";display:block;height:215px;margin-top:14px;border-radius:14px;animation:dmPulse 1.3s ease-in-out infinite;
+  background:linear-gradient(color-mix(in srgb,var(--text,#fff) 7%,transparent),color-mix(in srgb,var(--text,#fff) 7%,transparent)) 0 0/calc(25% - 9px) 100% no-repeat,
+             linear-gradient(color-mix(in srgb,var(--text,#fff) 7%,transparent),color-mix(in srgb,var(--text,#fff) 7%,transparent)) 33.333% 0/calc(25% - 9px) 100% no-repeat,
+             linear-gradient(color-mix(in srgb,var(--text,#fff) 7%,transparent),color-mix(in srgb,var(--text,#fff) 7%,transparent)) 66.667% 0/calc(25% - 9px) 100% no-repeat,
+             linear-gradient(color-mix(in srgb,var(--text,#fff) 7%,transparent),color-mix(in srgb,var(--text,#fff) 7%,transparent)) 100% 0/calc(25% - 9px) 100% no-repeat}
+#dataHealthWrap:empty{min-height:111px}
+#dataHealthWrap:empty::after{content:"";display:block;height:111px;border-radius:14px;background:color-mix(in srgb,var(--text,#fff) 7%,transparent);animation:dmPulse 1.3s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){#overviewWrap:not(:has(.ov6-tile))::after,#dataHealthWrap:empty::after{animation:none}}
+@media print{#overviewWrap{min-height:0}#overviewWrap::after,#dataHealthWrap::after{display:none!important}}
+
+/* v13b: bars grow, donuts sweep, line/area charts draw - on first view, on every tab visit, and whenever a chart is re-rendered
+   (for example switching Installments / Contracts / Bounced cheques). Reveals use clip-path/mask so bar ends are never squashed. */
+@property --dmp{syntax:'<percentage>';inherits:false;initial-value:0%}
+.dm-bx.dm-in{animation:dmBarX .7s cubic-bezier(.2,.7,.2,1) backwards;transform-origin:0 50%}
+.dm-by.dm-in{animation:dmBarY .7s cubic-bezier(.2,.7,.2,1) backwards;transform-origin:50% 100%}
+html[dir=rtl] .dm-bx.dm-in{transform-origin:100% 50%}
+@keyframes dmBarX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes dmBarY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.dm-sp.dm-in{animation:dmReveal 1s ease backwards}
+.dm-pp.dm-in{animation:dmSweep 1s cubic-bezier(.25,.7,.25,1) both;-webkit-mask-image:conic-gradient(#000 var(--dmp),transparent 0);mask-image:conic-gradient(#000 var(--dmp),transparent 0)}
+@keyframes dmSweep{from{--dmp:0%;opacity:0}12%{opacity:1}to{--dmp:100%;opacity:1}}
+@media (prefers-reduced-motion:reduce){.dm-bx.dm-in,.dm-by.dm-in,.dm-sp.dm-in,.dm-pp.dm-in{animation:none;-webkit-mask-image:none;mask-image:none}}
+@media print{.dm-bx.dm-in,.dm-by.dm-in,.dm-sp.dm-in,.dm-pp.dm-in{animation:none!important;-webkit-mask-image:none!important;mask-image:none!important}}
