@@ -114,7 +114,7 @@
         if(r.fixed){ tt.textContent = r.tgt != null ? fmt(r.tgt, m.f) : '—'; tt.title = tr('Set in Thresholds'); }
         else {
           var ti = el('input', 'vf-risk-num vf-tgt'); ti.type = 'number'; ti.step = 'any'; ti.placeholder = '—'; ti.setAttribute('data-tgt', m.k); ti.setAttribute('aria-label', tr('Type a target') + ': ' + tr(m.l)); if(T0[m.k] != null) ti.value = T0[m.k];
-          ti.addEventListener('change', function(){ var o = loadT(); if(ti.value === '' || isNaN(+ti.value)) delete o[m.k]; else o[m.k] = +ti.value; saveT(o); render(); }); tt.appendChild(ti);
+          ti.addEventListener('change', function(){ var o = loadT(); if(ti.value === '' || isNaN(+ti.value)) delete o[m.k]; else o[m.k] = +ti.value; saveT(o); setTimeout(function(){ var ae = document.activeElement, f = ae && ae.getAttribute ? ae.getAttribute('data-tgt') : null; render(); if(f){ var again = document.querySelector('[data-tgt="' + f + '"]'); if(again) again.focus(); } }, 0); }); tt.appendChild(ti);
         }
         row.appendChild(tt);
         row.appendChild(el('td', 'num', r.tgt != null ? signed(r.a - r.tgt, m.f) : '—'));
