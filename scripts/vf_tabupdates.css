@@ -1,0 +1,4 @@
+/* Per-tab Updates button (trial v17) */
+.vf-tabupd{position:relative}
+.vf-tabdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber,#f0b93a);margin-inline-start:.45rem;vertical-align:middle}
+@media print{.vf-tabupd{display:none!important}}
