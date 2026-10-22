@@ -11580,7 +11580,6 @@ const PORTFOLIO_PINS = {
 const PIN_VERIFIED_PREFIX = 'motherDashboardPinVerified_';
 
 function isPortfolioPinVerified(key){
-  /* TRIAL ONLY: PIN prompt disabled in this local trial file */ return true;
   try{ return localStorage.getItem(PIN_VERIFIED_PREFIX + key) === 'true'; }
   catch(e){ return false; }
 }
