@@ -8,13 +8,13 @@
   var NAMES = {'bounced-cheques':'Bounced Cheques','new-lease':'New Lease','count-report':'Cheque Count','request-count':'Request Count'};
   var AR = {
     'View contracts':'عرض العقود','Find contract':'ابحث عن عقد','Contract number…':'رقم العقد…','Search…':'بحث…','Close':'إغلاق','Back to list':'العودة إلى القائمة',
-    'Matches the tile':'يطابق الرقم في البطاقة','Tile shows':'البطاقة تعرض','this list shows':'وهذه القائمة تعرض','Showing the first':'عرض أول','of':'من','rows — export for all':'صفًا — صدّر للحصول على الكل',
+    'Matches the tile':'يطابق الرقم في البطاقة','Tile shows':'البطاقة تعرض','this list shows':'وهذه القائمة تعرض','Showing the first':'عرض أول','of':'من','entries — export for all':'عنصرًا — صدّر للحصول على الكل',
     'No matching contracts':'لا توجد عقود مطابقة','Contract':'العقد','Tenant':'المستأجر','Property':'العقار','Date':'التاريخ','Amount (AED)':'المبلغ (درهم)','Bank':'البنك','Status':'الحالة',
     'Cheque no.':'رقم الشيك','Unit type':'نوع الوحدة','Fee type':'نوع الرسوم','PM user':'مدير العقار','Agent':'الوكيل','Description':'الوصف','Pay method':'طريقة الدفع','Cheque date':'تاريخ الشيك',
-    'Lease type':'نوع العقد','Request type':'نوع الطلب','Lines':'عدد البنود','First date':'أول تاريخ','Rent value (AED)':'قيمة الإيجار (درهم)','Filters applied':'الفلاتر مفعّلة',
+    'Lease type':'نوع العقد','Request type':'نوع الطلب','Payments':'عدد الدفعات','First date':'أول تاريخ','Rent value (AED)':'قيمة الإيجار (درهم)','Filters applied':'الفلاتر مفعّلة',
     'Contract not found':'لم يتم العثور على العقد','Lease period':'مدة العقد','Cheque Count':'عدد الشيكات','Request Count':'عدد الطلبات','New Lease':'عقد جديد','Bounced Cheques':'الشيكات المرتجعة',
-    'Cheque lines':'بنود الشيكات','Requests':'الطلبات','New lease fees':'رسوم العقد الجديد','Rent value':'قيمة الإيجار','Bounced cheques':'الشيكات المرتجعة','Nothing recorded for this contract in this report':'لا توجد بيانات لهذا العقد في هذا التقرير',
-    'Total':'الإجمالي','contracts':'عقود','lines':'بنود','Open this contract':'افتح هذا العقد','Not loaded yet':'لم يتم التحميل بعد'
+    'Cheque payments':'دفعات الشيكات','Requests':'الطلبات','New lease fees':'رسوم العقد الجديد','Rent value':'قيمة الإيجار','Bounced cheques':'الشيكات المرتجعة','Nothing recorded for this contract in this report':'لا توجد بيانات لهذا العقد في هذا التقرير',
+    'Total':'الإجمالي','contracts':'عقود','payments':'دفعات','Open this contract':'افتح هذا العقد','Not loaded yet':'لم يتم التحميل بعد'
   };
   try{ if(typeof REMAINING_UI === 'object') Object.keys(AR).forEach(function(k){ if(!(k in REMAINING_UI)) REMAINING_UI[k] = AR[k]; }); }catch(e){}
   function tr(s){ try{ return typeof remainingText === 'function' ? remainingText(s) : s; }catch(e){ return s; } }
@@ -60,7 +60,14 @@
       return {rows: rows, map: o.map, win: w, all: o.rows, filtersApplied: applied};
     }catch(e){ return null; }
   }
-  function records(id, filtered){
+  var tmCache = {t: 0, m: null};
+  function tenantMap(){
+    var now = Date.now(); if(tmCache.m && now - tmCache.t < 3000) return tmCache.m;
+    var m = {}, r = records('count-report', false, true);
+    if(r) r.list.forEach(function(x){ if(x.tenant && !m[x.ck]) m[x.ck] = x.tenant; });
+    tmCache = {t: now, m: m}; return m;
+  }
+  function records(id, filtered, noTenantFill){
     var o = rawOf(id, filtered); if(!o) return null;
     var hdr = o.rows[0] || [], hi = {}, i;
     for(i = 0; i < hdr.length; i++){ var nk = norm(hdr[i]); if(nk && hi[nk] === undefined) hi[nk] = i; }
@@ -80,6 +87,7 @@
       rec.startISO = iso(o.win, rec.start); rec.endISO = iso(o.win, rec.end); rec.ck = ckey(rec.contract);
       out.push(rec);
     }
+    if(!noTenantFill && id !== 'count-report'){ var tm = tenantMap(); out.forEach(function(x){ if(!x.tenant && tm[x.ck]) x.tenant = tm[x.ck]; }); }
     return {list: out, win: o.win, filtersApplied: o.filtersApplied, total: o.all.length - 1};
   }
   function summaryRent(id, c){
@@ -137,7 +145,7 @@
     'request-count': [['dateISO', 'Date', 'date'], ['contract', 'Contract', 'contract'], ['tenant', 'Tenant'], ['property', 'Property'], ['type', 'Request type'], ['amountN', 'Amount (AED)', 'num'], ['pmUser', 'PM user'], ['bank', 'Bank']]
   };
   function groupCols(id){
-    var c = [['contract', 'Contract', 'contract'], ['tenant', 'Tenant'], ['property', 'Property'], ['leaseType', 'Lease type'], ['pmUser', 'PM user'], ['dateISO', 'First date', 'date'], ['lines', 'Lines', 'num'], ['amountN', 'Amount (AED)', 'num']];
+    var c = [['contract', 'Contract', 'contract'], ['tenant', 'Tenant'], ['property', 'Property'], ['leaseType', 'Lease type'], ['pmUser', 'PM user'], ['dateISO', 'First date', 'date'], ['lines', 'Payments', 'num'], ['amountN', 'Amount (AED)', 'num']];
     if(id === 'new-lease'){ c = c.filter(function(x){ return x[0] !== 'leaseType'; }); c.splice(c.length - 1, 0, ['rent', 'Rent value (AED)', 'num']); }
     return c;
   }
@@ -261,7 +269,7 @@
       rows.slice(0, LIMIT).forEach(function(r){
         var row = el('tr');
         v.cols.forEach(function(c){
-          var td = el('td', c[2] === 'num' ? 'num' : ''), x = r[c[0]];
+          var td = el('td', c[2] === 'num' ? 'num' : (c[2] === 'date' ? 'dt' : '')), x = r[c[0]];
           if(c[2] === 'num') td.textContent = fmt(x, c[0] === 'lines' ? 0 : 2);
           else if(c[2] === 'contract' && x){ var a = el('button', 'vf-link', String(x).trim()); a.type = 'button'; a.title = tr('Open this contract'); a.addEventListener('click', function(){ openContract(x); }); td.appendChild(a); }
           else td.textContent = x == null ? '' : String(x).trim();
@@ -271,8 +279,8 @@
       });
       var seen = {}; rows.forEach(function(r){ total += num(r.amountN); if(r.ck) seen[r.ck] = 1; });
       var nc = Object.keys(seen).length;
-      sum.textContent = fmt(rows.length) + ' ' + tr(v.grouped ? 'contracts' : 'lines') + (v.grouped ? '' : ' · ' + fmt(nc) + ' ' + tr('contracts')) + ' · AED ' + fmt(total, 2);
-      note.textContent = rows.length > LIMIT ? tr('Showing the first') + ' ' + fmt(LIMIT) + ' ' + tr('of') + ' ' + fmt(rows.length) + ' ' + tr('rows — export for all') : '';
+      sum.textContent = fmt(rows.length) + ' ' + tr(v.grouped ? 'contracts' : 'payments') + (v.grouped ? '' : ' · ' + fmt(nc) + ' ' + tr('contracts')) + ' · AED ' + fmt(total, 2);
+      note.textContent = rows.length > LIMIT ? tr('Showing the first') + ' ' + fmt(LIMIT) + ' ' + tr('of') + ' ' + fmt(rows.length) + ' ' + tr('entries — export for all') : '';
     }
     q.addEventListener('input', function(){ v.q = q.value; draw(); });
     draw();
@@ -301,7 +309,7 @@
     var sr = summaryRent('new-lease', v.ck);
     fact('Lease period', start || end ? (start || '—') + ' → ' + (end || '—') : '');
     fact('Lease type', first(cc, 'leaseType')); fact('PM user', first(cc, 'pmUser') || first(nl, 'pmUser') || first(rq, 'pmUser'));
-    fact('Cheque lines', cc.length ? fmt(cc.length) + ' · AED ' + fmt(sum(cc), 2) : '');
+    fact('Cheque payments', cc.length ? fmt(cc.length) + ' · AED ' + fmt(sum(cc), 2) : '');
     fact('Requests', rq.length ? fmt(rq.length) + ' · AED ' + fmt(sum(rq), 2) : '');
     fact('New lease fees', nl.length ? 'AED ' + fmt(sum(nl), 2) : ''); fact('Rent value', sr ? 'AED ' + fmt(num(sr.rentAmount), 2) : '');
     fact('Bounced cheques', bc.length ? fmt(bc.length) + ' · AED ' + fmt(sum(bc), 2) : '');
@@ -381,12 +389,13 @@
     });
   }
   function refreshLabels(){
-    document.querySelectorAll('[data-vf-contracts]').forEach(function(b){ b.textContent = tr('View contracts'); });
-    document.querySelectorAll('.vf-find').forEach(function(f){ f.placeholder = tr('Contract number…'); });
-    Object.keys(NAMES).forEach(function(id){ try{ win(id).document.querySelectorAll('[data-vf-drill]').forEach(function(t){ t.title = tr('View contracts'); }); }catch(e){} });
+    document.querySelectorAll('[data-vf-contracts]').forEach(function(b){ var t = tr('View contracts'); if(b.textContent !== t) b.textContent = t; });
+    document.querySelectorAll('[data-vf-export]').forEach(function(b){ var t = tr('Export Excel'); if(b.textContent !== t) b.textContent = t; });
+    document.querySelectorAll('.vf-find').forEach(function(f){ var t = tr('Contract number…'); if(f.placeholder !== t) f.placeholder = t; });
+    Object.keys(NAMES).forEach(function(id){ try{ win(id).document.querySelectorAll('[data-vf-drill]').forEach(function(t){ var x = tr('View contracts'); if(t.title !== x) t.title = x; }); }catch(e){} });
   }
   document.addEventListener('click', function(e){ if(e.target && e.target.id === 'langBtn') setTimeout(refreshLabels, 60); });
-  function tick(){ Object.keys(NAMES).forEach(wire); decorate(); }
+  function tick(){ Object.keys(NAMES).forEach(wire); decorate(); refreshLabels(); }
   setInterval(tick, 1000); setTimeout(tick, 300);
   window.MDDrill = {records: records, kpi: KPI, openKpi: openKpi, openContract: openContract, openFiltered: openFiltered, close: closeDrawer, measure: measure, tileNumber: tileNumber, wire: wire, decorate: decorate, groupRows: groupRows};
 })();
