@@ -89,7 +89,17 @@
           return;
         }
       }catch(e){}
-      /* 2) bundled snapshot: rebuild the workbook with the original sheet names and headers (Details, plus Summary for New Lease), readable column widths, filters on. */
+      /* 2) bundled snapshot with the month's original workbook kept in the page: hand back that exact file (all sheets, formulas, original columns and name). */
+      try{
+        var og = (window.__VF_ORIGINALS && window.__VF_ORIGINALS[currentPortfolio] && window.__VF_ORIGINALS[currentPortfolio][currentMonth] || {})[id];
+        if(og && og.d){
+          var bin = atob(og.d), u8 = new Uint8Array(bin.length);
+          for(var q = 0; q < bin.length; q++) u8[q] = bin.charCodeAt(q);
+          download(new Blob([u8], {type: MIME}), og.n);
+          return;
+        }
+      }catch(e){}
+      /* 3) no original kept: rebuild the workbook with the original sheet names and headers (Details, plus Summary for New Lease), readable column widths, filters on. */
       try{
         var data = [];
         for(var i = 0; i < o.rows.length; i++) data.push(Array.prototype.slice.call(o.rows[i]));
