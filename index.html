@@ -2008,6 +2008,69 @@ dialog.vf-risk .vf-table td{white-space:normal;overflow-wrap:anywhere;vertical-a
 .vf-bar .vf-find{padding:.42rem .8rem;font-size:.85rem;line-height:1.2}
 
 </style>
+<style id="vfWeek4Css">
+/* Week 4 (trial v19): Targets & trends */
+.vf-bar [data-vf-targets]{order:3}
+.vf-good{color:var(--ok,#3ecf8e)}
+.vf-bad{color:#ff8d8d}
+.vf-st-ok{background:rgba(62,207,142,.16);color:var(--ok,#3ecf8e);border:1px solid rgba(62,207,142,.5)}
+.vf-st-watch{background:rgba(232,168,56,.16);color:var(--amber,#e8a838);border:1px solid rgba(232,168,56,.5)}
+.vf-st-off{background:rgba(224,82,82,.18);color:#ff8d8d;border:1px solid rgba(224,82,82,.5)}
+.vf-tgt{width:6.5rem}
+dialog.vf-targets .vf-table td.num{text-align:end}
+
+/* All panels (contract lists, Needs attention, Targets & trends) open as a centred window like What's New and Updates, not a side drawer */
+dialog.vf-drawer{margin:auto!important;inset:0!important;height:auto!important;max-height:86vh!important;width:min(1180px,94vw)!important;max-width:94vw!important;border:1px solid var(--border,#33405c)!important;border-radius:14px!important;box-shadow:0 20px 60px rgba(0,0,0,.35)!important;overflow:hidden}
+dialog.vf-drawer::backdrop{background:rgba(10,13,22,.55)}
+dialog.vf-drawer .vf-d-body{height:auto;max-height:86vh}
+dialog.vf-drawer .vf-d-head{padding:1rem 1.3rem .75rem}
+
+/* Executive Summary is a fixed grid: pin the toolbar to the top-right of the first row, beside the title, and leave room for it */
+#pane-execsummary.exec-fit > .vf-bar{grid-column:1 / -1;grid-row:1;justify-self:end;align-self:start;margin:0!important;padding:0!important;border:0!important;z-index:3;position:relative}
+#pane-execsummary.exec-fit > .exec-header-row{padding-inline-end:15.5rem}
+#pane-execsummary.exec-fit > .exec-header-row{gap:.5rem}
+#pane-execsummary.exec-fit > .exec-header-row > div:first-child{flex:1 1 auto}
+#pane-execsummary.exec-fit > .exec-header-row > button{align-self:flex-start;padding:.42rem .95rem;font-size:.85rem;line-height:1.2;white-space:nowrap}
+#pane-execsummary.exec-fit > .vf-bar>button{padding:.42rem .95rem;font-size:.85rem;line-height:1.2}
+#pane-execsummary.exec-fit > .exec-header-row{padding-inline-end:14.5rem}
+#pane-execsummary.exec-fit > .exec-header-row{padding-inline-end:21rem}
+#pane-execsummary.exec-fit > .exec-header-row > button,#pane-execsummary.exec-fit > .vf-bar>button{height:2.4rem;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;margin-top:0!important}
+#pane-execsummary.exec-fit > .vf-bar{align-self:start;margin-top:0!important}
+
+/* Toolbar groups: Find (search, contracts, needs attention) | Output (Export Excel, Print, Updates) */
+.vf-bar [data-vf-print]{order:5}
+.vf-bar [data-vf-tabupd]{order:6}
+.vf-bar>[data-vf-export]{margin-inline-start:1rem!important}
+.vf-bar>button,.vf-bar .vf-find{min-height:2.4rem;box-sizing:border-box}
+#pane-execsummary.exec-fit > .exec-header-row > button{border-radius:999px!important}
+/* Fill the empty left side of the toolbar: Find group on the left, Output group pushed to the right */
+.vf-bar{justify-content:flex-start!important}
+.vf-bar .vf-find{flex:0 1 18rem!important}
+.vf-bar>[data-vf-export]{margin-inline-start:auto!important}
+#pane-execsummary.exec-fit > .exec-header-row{padding-inline-end:20.6rem}
+/* Compare / Data Quality / Lease Activity have no report buttons of their own: pin Updates to the title row instead of giving it a row (and divider) of its own */
+.report-pane[data-report="compare"],.report-pane[data-report="dataquality"],.report-pane[data-report="lease-activity"]{position:relative}
+.report-pane[data-report="compare"]>.vf-bar,.report-pane[data-report="dataquality"]>.vf-bar,.report-pane[data-report="lease-activity"]>.vf-bar{position:absolute;top:14px;inset-inline-end:16px;margin:0!important;padding:0!important;border:0!important;width:auto;z-index:3}
+.report-pane[data-report="dataquality"]>.vf-bar,.report-pane[data-report="lease-activity"]>.vf-bar{top:10px}
+.report-pane[data-report="dataquality"]>.vf-bar>button,.report-pane[data-report="lease-activity"]>.vf-bar>button{min-height:2rem!important;height:2rem;padding:.2rem .9rem!important}
+
+/* Compare: one row, same pills as the other tabs. Export CSV dropped; Print stays in its own spot and Updates sits beside it */
+.report-pane[data-report="compare"]>.vf-bar{top:12px;inset-inline-end:14px}
+.report-pane[data-report="compare"]>.vf-bar>button{height:2.4rem;min-height:2.4rem;border-radius:999px;padding:.42rem .95rem;font-size:.85rem}
+.report-pane[data-report="compare"] .exec-header-row{padding-inline-end:7.9rem}
+.report-pane[data-report="compare"] .exec-header-row button[onclick="exportCompareCsv()"]{display:none!important}
+.report-pane[data-report="compare"] .exec-header-row .exec-print-btn{height:2.4rem;border-radius:999px;padding:.42rem .95rem;font-size:.85rem;margin-top:0;display:inline-flex;align-items:center;justify-content:center}
+
+/* Data Quality: air between the title row (with Updates) and the banner */
+#pane-dataquality>h2{margin-bottom:18px!important;min-height:2rem}
+
+/* Top buttons: tighter so all ten fit on one row with the sidebar open (English labels are the longest) */
+header .header-actions{gap:6px!important;flex-wrap:wrap}
+header .header-actions>.theme-switch,header .header-actions>button{padding:.36rem .56rem!important;font-size:13px!important;gap:5px}
+/* Keyboard focus ring on the sidebar: keep it for keyboard users, but inside the item and thinner so it reads as focus, not as a stray box */
+.sidebar .tab-btn:focus-visible{outline:1.5px solid var(--accent)!important;outline-offset:-3px!important;border-radius:10px}
+
+</style>
 </head>
 <body>
 <div id="errBar" hidden role="alert" style="position:fixed;top:0;left:0;right:0;z-index:3000;display:flex;gap:12px;align-items:center;justify-content:center;padding:8px 14px;background:#7a2430;color:#fff;font-size:13px;"><span></span><button type="button" onclick="this.parentNode.hidden=true" aria-label="Close" style="background:transparent;border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:6px;padding:2px 8px;cursor:pointer;">✕</button></div>
@@ -3274,7 +3337,7 @@ const TRANSLATIONS = {
 const SHELL_LABEL_KEYS = {"Asset Occupancy": "shell.label.0", "Renewals Tracking": "shell.label.1", "Bounced Cheques": "shell.label.2", "Collections": "shell.label.3", "Collections Detail": "shell.label.4", "Cheque Clearance": "shell.label.5", "Occupancy": "shell.label.6", "Total Recorded": "shell.label.7", "Bounced / At Risk": "shell.label.8", "Net Recorded": "shell.label.9", "Occupancy Rate": "shell.label.10", "Collections Detail, this month": "shell.label.11", "Collected minus bounced": "shell.label.12", "Residential + commercial": "shell.label.13", "Rent": "shell.label.14", "Other fees": "shell.label.15", "Residential": "shell.label.16", "Commercial": "shell.label.17", "Vacant units": "shell.label.18", "Cleared": "shell.label.19", "Bounced": "shell.label.20", "Settled": "shell.label.21", "Pending": "shell.label.22", "Total amount": "shell.label.23", "Still open": "shell.label.24", "Resolved": "shell.label.25", "By value": "shell.label.26", "Renewed": "shell.label.27", "In progress": "shell.label.28", "Not renewing": "shell.label.29", "Leased": "shell.label.30", "Vacant": "shell.label.31", "Suspended": "shell.label.32", "Total assets": "shell.label.33", "Collected + Penalty": "shell.label.34", "With Legal Affairs": "shell.label.35", "Pending Collection": "shell.label.36"};
 function shellLabel(value){ return Object.prototype.hasOwnProperty.call(SHELL_LABEL_KEYS,value) ? t(SHELL_LABEL_KEYS[value],value) : value; }
 
-const REMAINING_UI = {"New Needs attention button on each report tab: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk and explained line by line. The rules are defaults and can be changed in the panel.": "زر جديد «يحتاج إلى متابعة» في كل تبويب تقرير: قائمة بالعقود القريبة من الانتهاء دون تجديد والشيكات المرتجعة اللافتة، مرتبة حسب الخطورة مع شرح السبب. القواعد افتراضية ويمكن تغييرها من اللوحة.", "The buttons at the top of each report now sit in the same order on every tab, with Updates always last.": "أصبحت الأزرار أعلى كل تقرير بالترتيب نفسه في كل تبويب، ويأتي زر التحديثات دائمًا في الآخر.", "Export Excel on every report tab: it downloads the month's original Excel file, with all its sheets and columns, or the file you loaded yourself.": "تصدير إلى Excel في كل تقرير: يحمّل ملف Excel الأصلي للشهر بجميع أوراقه وأعمدته، أو الملف الذي حمّلته بنفسك.", "Click any figure on a report tab to see the contracts behind it. Each list checks itself against the figure and shows a green tick when they match. Click a contract number to see everything about that contract across the four reports, and use the Contract number box at the top of each report to jump straight to one.": "انقر على أي رقم في تبويب التقرير لعرض العقود التي يتكوّن منها. تتحقق كل قائمة من نفسها مقابل الرقم وتُظهر علامة خضراء عند التطابق. انقر على رقم العقد لرؤية كل ما يخصه في التقارير الأربعة، واستخدم خانة رقم العقد أعلى كل تقرير للانتقال إليه مباشرة.", "The dashboard now reopens on the portfolio, month and tab you were last viewing.": "تُعيد اللوحة فتح المحفظة والشهر والتبويب الذي كنت تعرضه آخر مرة.", "Every headline figure on the Awqaf report tabs for August and September now opens the list of contracts behind it, checked against the figure itself.": "كل رقم رئيسي في تبويبات تقارير الأوقاف لشهري أغسطس وسبتمبر يفتح الآن قائمة العقود التي يتكوّن منها، بعد التحقق منها مقابل الرقم نفسه.", "Export Excel on the Awqaf reports returns the original August and September workbooks, so the sheets and columns match the files you keep.": "يعيد تصدير Excel في تقارير الأوقاف ملفات أغسطس وسبتمبر الأصلية، فتتطابق الأوراق والأعمدة مع الملفات التي تحتفظون بها.", "New TV button in the header: a full-screen wallboard for an office screen that rotates through Overview, Bounced cheques, Leasing and Requests every 20 seconds, in English or Arabic. Press Esc to exit.": "زر جديد للتلفاز في الأعلى: شاشة عرض كاملة لشاشة المكتب تتنقل كل 20 ثانية بين النظرة العامة والشيكات المرتجعة والتأجير والطلبات، بالإنجليزية أو العربية. اضغط Esc للخروج.", "Charts now animate in: bars grow, donuts sweep and trend lines draw when a tab opens, when you switch a filter or chip, and as you scroll down to them. Fast scrolling skips the animation, and it is turned off for reduced-motion settings and printing.": "أصبحت الرسوم البيانية متحركة: تنمو الأعمدة وتدور الرسوم الدائرية وتُرسم خطوط الاتجاه عند فتح التبويب أو تبديل المرشح أو عند التمرير إليها. يتخطى التمرير السريع الحركة، وتُعطّل عند تفعيل خيار تقليل الحركة وعند الطباعة.", "The dashboard now loads without the page jumping around: the Overview and data-health areas keep their space while the reports load.": "تُحمَّل اللوحة الآن دون قفز في الصفحة: تحتفظ النظرة العامة وحالة البيانات بمساحتها أثناء تحميل التقارير.", "September 2026 is loaded for all four Awqaf reports (Cheque Count, Bounced Cheques, Lease Activity, Request Count) and cross-checked against the source workbooks.": "تم تحميل بيانات سبتمبر 2026 لتقارير الأوقاف الأربعة (عدد الشيكات والشيكات المرتجعة ونشاط التأجير وعدد الطلبات) والتحقق منها مقابل ملفات المصدر.", "September bounced cheques: 31 cheques worth AED 415K, 1.8% of recorded value, under the 2% target.": "الشيكات المرتجعة في سبتمبر: 31 شيكاً بقيمة 415 ألف درهم، أي 1.8% من القيمة المسجلة، وهي دون الهدف البالغ 2%.", "Lease Activity: 515 lease contracts (501 renewals, 14 new), with AED 785K annual rent on the new leases, up from 11 new leases in the previous period.": "نشاط التأجير: 515 عقد إيجار (501 تجديد و14 جديداً)، بإيجار سنوي 785 ألف درهم للعقود الجديدة، مقابل 11 عقداً جديداً في الفترة السابقة.", "This dashboard is now behind a login - each approved viewer is scoped to their own portfolio automatically, instead of everyone seeing the full portfolio switcher.": "أصبحت اللوحة خلف تسجيل دخول؛ يُوجّه كل مستخدم معتمد تلقائياً إلى محفظته بدلاً من عرض جميع المحافظ.", "New Backup button in the header: download everything you've uploaded in this browser as a file, and load it back in later (or on a new device) without losing saved months.": "أُضيف زر النسخ الاحتياطي لحفظ الملخصات الشهرية والإعدادات في ملف واستعادتها لاحقاً أو على جهاز آخر. ملفات العمل الأصلية ليست ضمن النسخة.", "Every upload button now says clearly that uploading a file only previews it in your own browser - it's never shared with other viewers.": "توضح أزرار رفع الملفات أن الملف يُعرض في متصفحك فقط ولا يُشارك مع المستخدمين الآخرين.", "Cleaned up the wording on every report tab so status messages describe what's actually shown, instead of leftover build notes.": "نُقّحت عبارات تبويبات التقارير لتصف رسائل الحالة البيانات المعروضة فعلياً بدلاً من ملاحظات التطوير القديمة.", "New guided tour for first-time viewers - walks through the sidebar, search, Needs Attention, Executive Summary, Compare, and Board Pack. Reopen it anytime from the Tour button in the header.": "أُضيفت جولة للمستخدمين الجدد تشمل الشريط الجانبي والبحث وما يستدعي الانتباه والملخص التنفيذي والمقارنة وحزمة مجلس الإدارة. يمكن إعادة فتحها من زر الجولة.", "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Recorded, or a drop in occupancy (Al Naser) vs the last saved month. Swing size is configurable from the Thresholds button.": "ترصد لوحة ما يستدعي الانتباه التغيرات الشهرية تلقائياً: ارتفاع معدل الارتجاع أو انخفاض إجمالي المسجّل أو إشغال نادي النصر مقارنةً بآخر شهر محفوظ. يمكن ضبط حجم التغير من إعدادات الحدود.", "Executive Summary now shows exactly which bounced cheques are new vs resolved compared to last month, once 2+ real months are on record.": "يعرض الملخص التنفيذي الشيكات المرتجعة الجديدة وتلك التي تمت معالجتها مقارنةً بالشهر السابق، عند توفر شهرين فعليين أو أكثر.", "Compare tab: added a Print/Export PDF button and a CSV download of the comparison table.": "أُضيف إلى المقارنة زر للطباعة أو تصدير PDF وتنزيل جدول المقارنة بصيغة CSV.", "Executive Summary now tracks month-over-month trend automatically once 2+ months are uploaded (a real bar chart, plus quarterly/yearly views).": "يتابع الملخص التنفيذي الاتجاه الشهري تلقائياً عند رفع شهرين أو أكثر، برسم أعمدة وعروض ربع سنوية وسنوية.", "Uploaded reports now persist automatically — reload the page and everything you loaded is still there, no re-uploading.": "تُحفظ التقارير المرفوعة تلقائياً؛ تبقى الملفات المحمّلة متاحة بعد إعادة تحميل الصفحة دون رفعها مجدداً.", "New Compare tab: put any two portfolios side by side, with dropdowns to choose which ones and click-to-expand daily trend charts.": "أُضيف تبويب مقارنة محفظتين جنباً إلى جنب، مع قوائم اختيار ورسوم اتجاه يومية قابلة للتوسيع.", "Overview KPI cards now show a small trend sparkline under each headline number.": "تعرض بطاقات النظرة العامة رسماً مصغّراً للاتجاه أسفل كل قيمة رئيسية.", "Al Naser Club's 4 report types added to the demo dashboard with realistic synthetic data.": "أُضيفت أنواع تقارير نادي النصر الأربعة إلى اللوحة التجريبية باستخدام بيانات اصطناعية واقعية.", "Click any day on the Activity heatmap to see exactly which reports contributed to that day's total.": "اضغط على يوم في خريطة النشاط لمعرفة التقارير التي ساهمت في إجمالي ذلك اليوم.", "Added a light/dark mode toggle and a dedicated Executive Summary tab with headline KPI cards and a plain-English summary.": "أُضيف تبديل الوضع الفاتح والداكن وتبويب مستقل للملخص التنفيذي ببطاقات مؤشرات رئيسية وملخص مبسّط بالإنجليزية.", "Fixed a real layout bug on Bounced Cheques: the Summary card's text box wasn't stretching to match the Status Breakdown chart beside it, leaving a blank gap - it now fills the card properly.": "أُصلح خلل في تقرير الشيكات المرتجعة: لم يكن مربع نص الملخص يتمدد لمجاراة رسم تفصيل الحالات المجاور، مما ترك فراغاً؛ وأصبح يملأ البطاقة.", "Ran a full accuracy audit across all 4 RTA reports (Occupancy, Renewals, Bounced Cheques, Collections) - checked every KPI, chart total, filter, and CSV export against the underlying data. No data errors found.": "أُجري تدقيق دقة للتقارير الأربعة في RTA (الإشغال والتجديدات والشيكات المرتجعة والتحصيل)، شمل المؤشرات وإجماليات الرسوم وعوامل التصفية وتصدير CSV مقابل البيانات الأصلية. لم تُكتشف أخطاء بيانات في ذلك التدقيق.", "Fixed the \"Activity by Day\" heatmap, which was stuck on \"Waiting for reports to finish loading\" - Renewals and Bounced Cheques now report day-by-day activity like the other portfolios.": "أُصلحت خريطة النشاط اليومي التي كانت عالقة عند انتظار تحميل التقارير؛ وأصبحت التجديدات والشيكات المرتجعة تعرض نشاطاً يومياً كالمحافظ الأخرى.", "Fixed uneven card widths and bar-chart sizing on Bounced Cheques and Renewals Tracking.": "أُصلح تفاوت عرض البطاقات وأحجام رسوم الأعمدة في الشيكات المرتجعة ومتابعة التجديدات.", "Rebuilt the charts and filter panel on all 4 RTA reports to be fully interactive - click a chart segment to filter the table, multi-select filters, search, and CSV export, matching Awqaf and Al Naser Club.": "أُعيد تجهيز الرسوم ولوحات التصفية لتقارير RTA الأربعة بالتصفية عبر الرسوم والاختيار المتعدد والبحث وتصدير CSV، على غرار الأوقاف ونادي النصر.", "Added RTA as a full portfolio: Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections, built from the Rent Roll workbook and the July 2026 monthly report.": "أُضيفت محفظة RTA بتقارير إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل، اعتماداً على ملف Rent Roll وتقرير يوليو 2026 الشهري.", "Al Naser Club's 4 reports (Bounced Cheques, Cheque Clearance, Collections Detail, Occupancy) added to the dashboard with realistic data.": "أُضيفت تقارير نادي النصر الأربعة (الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال) إلى اللوحة ببيانات واقعية.", "Original Awqaf build: report tabs, cross-checks, and Data Quality tracking all in place - the first portfolio this dashboard supported.": "الإصدار الأول للأوقاف: تبويبات التقارير والفحوص المتقاطعة ومتابعة جودة البيانات؛ وكانت أول محفظة تدعمها اللوحة.", "What's new": "المستجدات", "Recent additions to this dashboard": "الإضافات الأخيرة إلى هذه اللوحة", "Updates": "التحديثات", "Recent changes to this portfolio's reports": "التغييرات الأخيرة في تقارير هذه المحفظة", "No portfolio-specific updates logged yet.": "لم تُسجّل تحديثات خاصة بهذه المحفظة بعد.", "Metric": "المؤشر", "Period": "الفترة", "Bounce Rate": "معدل الارتجاع", "Bounced / At Risk": "المرتجع / المعرّض للخطر", "Report": "التقرير", "Count": "العدد", "What is counted": "ما الذي يُعدّ", "Total": "الإجمالي", "That doesn't look like a Dashboard backup file.": "لا يبدو هذا ملف نسخة احتياطية للوحة المعلومات الرئيسية.", "Unsupported backup identity or version. Production backups require separate provenance review before migration.": "هوية النسخة الاحتياطية أو إصدارها غير مدعوم. تتطلب نسخ الإنتاج مراجعة مستقلة لمصدرها قبل ترحيلها.", "Unknown portfolio or invalid history.": "محفظة غير معروفة أو سجل غير صالح.", "Invalid or duplicate reporting month.": "شهر تقرير غير صالح أو مكرر.", "History conflict: an existing month differs. Current history is retained; reconcile the revision before import.": "تعارض في السجل: يختلف شهر محفوظ عن النسخة. تم الاحتفاظ بالسجل الحالي؛ طابق المراجعة قبل الاستيراد.", "Data as of": "البيانات حتى", "Data as of this load": "البيانات عند هذا التحميل", "this period": "هذه الفترة", "generated": "تم الإنشاء", " — pulled from Bounced Cheques, Cheque Clearance, Collections Detail, and Occupancy.": " — مستمدة من الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال.", " — pulled from Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections.": " — مستمدة من إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل.", " — pulled from Harbor's monthly achievement report for the Dubai Police portfolio (aggregate figures only — no per-record workbook has been shared yet).": " — مستمدة من تقرير إنجاز Harbor الشهري لمحفظة شرطة دبي (أرقام مجمّعة فقط؛ لم يُشارك ملف عمل على مستوى السجل بعد).", "July 2026": "يوليو 2026", "Cross-checks": "الفحوص المتقاطعة", "Not applicable": "لا ينطبق", "no per-record data to cross-validate yet": "لا توجد بيانات على مستوى السجل للتحقق المتقاطع بعد", "Staff — PM User Workload": "الموظفون — عبء عمل مستخدمي PM", "Staff — Agent Workload": "الموظفون — عبء عمل الوكلاء", "All totals on this tab": "جميع إجماليات هذا التبويب", "Payment detail and installment distribution": "تفاصيل السداد وتوزيع الأقساط", "Recent changes to {portfolio} reports": "التغييرات الأخيرة في تقارير {portfolio}"};
+const REMAINING_UI = {"New Targets & trends on the Executive Summary: set a target for each key figure and see how the month and the recent trend compare against it.": "جديد: «الأهداف والاتجاهات» في الملخص التنفيذي: حدّد هدفًا لكل رقم رئيسي وشاهد كيف يقارن الشهر والاتجاه الأخير به.", "Panels now open in the centre of the screen, like What's New.": "تُفتح اللوحات الآن في وسط الشاشة، مثل «الجديد».", "Buttons are tidied across every tab: same style, same order, Print / Export PDF moved into the top row, and no more empty gaps.": "تم ترتيب الأزرار في كل التبويبات: شكل واحد وترتيب واحد، ونُقل زر الطباعة / تصدير PDF إلى الصف العلوي، دون فراغات.", "New Needs attention button on each report tab: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk and explained line by line. The rules are defaults and can be changed in the panel.": "زر جديد «يحتاج إلى متابعة» في كل تبويب تقرير: قائمة بالعقود القريبة من الانتهاء دون تجديد والشيكات المرتجعة اللافتة، مرتبة حسب الخطورة مع شرح السبب. القواعد افتراضية ويمكن تغييرها من اللوحة.", "The buttons at the top of each report now sit in the same order on every tab, with Updates always last.": "أصبحت الأزرار أعلى كل تقرير بالترتيب نفسه في كل تبويب، ويأتي زر التحديثات دائمًا في الآخر.", "Export Excel on every report tab: it downloads the month's original Excel file, with all its sheets and columns, or the file you loaded yourself.": "تصدير إلى Excel في كل تقرير: يحمّل ملف Excel الأصلي للشهر بجميع أوراقه وأعمدته، أو الملف الذي حمّلته بنفسك.", "Click any figure on a report tab to see the contracts behind it. Each list checks itself against the figure and shows a green tick when they match. Click a contract number to see everything about that contract across the four reports, and use the Contract number box at the top of each report to jump straight to one.": "انقر على أي رقم في تبويب التقرير لعرض العقود التي يتكوّن منها. تتحقق كل قائمة من نفسها مقابل الرقم وتُظهر علامة خضراء عند التطابق. انقر على رقم العقد لرؤية كل ما يخصه في التقارير الأربعة، واستخدم خانة رقم العقد أعلى كل تقرير للانتقال إليه مباشرة.", "The dashboard now reopens on the portfolio, month and tab you were last viewing.": "تُعيد اللوحة فتح المحفظة والشهر والتبويب الذي كنت تعرضه آخر مرة.", "Every headline figure on the Awqaf report tabs for August and September now opens the list of contracts behind it, checked against the figure itself.": "كل رقم رئيسي في تبويبات تقارير الأوقاف لشهري أغسطس وسبتمبر يفتح الآن قائمة العقود التي يتكوّن منها، بعد التحقق منها مقابل الرقم نفسه.", "Export Excel on the Awqaf reports returns the original August and September workbooks, so the sheets and columns match the files you keep.": "يعيد تصدير Excel في تقارير الأوقاف ملفات أغسطس وسبتمبر الأصلية، فتتطابق الأوراق والأعمدة مع الملفات التي تحتفظون بها.", "New TV button in the header: a full-screen wallboard for an office screen that rotates through Overview, Bounced cheques, Leasing and Requests every 20 seconds, in English or Arabic. Press Esc to exit.": "زر جديد للتلفاز في الأعلى: شاشة عرض كاملة لشاشة المكتب تتنقل كل 20 ثانية بين النظرة العامة والشيكات المرتجعة والتأجير والطلبات، بالإنجليزية أو العربية. اضغط Esc للخروج.", "Charts now animate in: bars grow, donuts sweep and trend lines draw when a tab opens, when you switch a filter or chip, and as you scroll down to them. Fast scrolling skips the animation, and it is turned off for reduced-motion settings and printing.": "أصبحت الرسوم البيانية متحركة: تنمو الأعمدة وتدور الرسوم الدائرية وتُرسم خطوط الاتجاه عند فتح التبويب أو تبديل المرشح أو عند التمرير إليها. يتخطى التمرير السريع الحركة، وتُعطّل عند تفعيل خيار تقليل الحركة وعند الطباعة.", "The dashboard now loads without the page jumping around: the Overview and data-health areas keep their space while the reports load.": "تُحمَّل اللوحة الآن دون قفز في الصفحة: تحتفظ النظرة العامة وحالة البيانات بمساحتها أثناء تحميل التقارير.", "September 2026 is loaded for all four Awqaf reports (Cheque Count, Bounced Cheques, Lease Activity, Request Count) and cross-checked against the source workbooks.": "تم تحميل بيانات سبتمبر 2026 لتقارير الأوقاف الأربعة (عدد الشيكات والشيكات المرتجعة ونشاط التأجير وعدد الطلبات) والتحقق منها مقابل ملفات المصدر.", "September bounced cheques: 31 cheques worth AED 415K, 1.8% of recorded value, under the 2% target.": "الشيكات المرتجعة في سبتمبر: 31 شيكاً بقيمة 415 ألف درهم، أي 1.8% من القيمة المسجلة، وهي دون الهدف البالغ 2%.", "Lease Activity: 515 lease contracts (501 renewals, 14 new), with AED 785K annual rent on the new leases, up from 11 new leases in the previous period.": "نشاط التأجير: 515 عقد إيجار (501 تجديد و14 جديداً)، بإيجار سنوي 785 ألف درهم للعقود الجديدة، مقابل 11 عقداً جديداً في الفترة السابقة.", "This dashboard is now behind a login - each approved viewer is scoped to their own portfolio automatically, instead of everyone seeing the full portfolio switcher.": "أصبحت اللوحة خلف تسجيل دخول؛ يُوجّه كل مستخدم معتمد تلقائياً إلى محفظته بدلاً من عرض جميع المحافظ.", "New Backup button in the header: download everything you've uploaded in this browser as a file, and load it back in later (or on a new device) without losing saved months.": "أُضيف زر النسخ الاحتياطي لحفظ الملخصات الشهرية والإعدادات في ملف واستعادتها لاحقاً أو على جهاز آخر. ملفات العمل الأصلية ليست ضمن النسخة.", "Every upload button now says clearly that uploading a file only previews it in your own browser - it's never shared with other viewers.": "توضح أزرار رفع الملفات أن الملف يُعرض في متصفحك فقط ولا يُشارك مع المستخدمين الآخرين.", "Cleaned up the wording on every report tab so status messages describe what's actually shown, instead of leftover build notes.": "نُقّحت عبارات تبويبات التقارير لتصف رسائل الحالة البيانات المعروضة فعلياً بدلاً من ملاحظات التطوير القديمة.", "New guided tour for first-time viewers - walks through the sidebar, search, Needs Attention, Executive Summary, Compare, and Board Pack. Reopen it anytime from the Tour button in the header.": "أُضيفت جولة للمستخدمين الجدد تشمل الشريط الجانبي والبحث وما يستدعي الانتباه والملخص التنفيذي والمقارنة وحزمة مجلس الإدارة. يمكن إعادة فتحها من زر الجولة.", "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Recorded, or a drop in occupancy (Al Naser) vs the last saved month. Swing size is configurable from the Thresholds button.": "ترصد لوحة ما يستدعي الانتباه التغيرات الشهرية تلقائياً: ارتفاع معدل الارتجاع أو انخفاض إجمالي المسجّل أو إشغال نادي النصر مقارنةً بآخر شهر محفوظ. يمكن ضبط حجم التغير من إعدادات الحدود.", "Executive Summary now shows exactly which bounced cheques are new vs resolved compared to last month, once 2+ real months are on record.": "يعرض الملخص التنفيذي الشيكات المرتجعة الجديدة وتلك التي تمت معالجتها مقارنةً بالشهر السابق، عند توفر شهرين فعليين أو أكثر.", "Compare tab: added a Print/Export PDF button and a CSV download of the comparison table.": "أُضيف إلى المقارنة زر للطباعة أو تصدير PDF وتنزيل جدول المقارنة بصيغة CSV.", "Executive Summary now tracks month-over-month trend automatically once 2+ months are uploaded (a real bar chart, plus quarterly/yearly views).": "يتابع الملخص التنفيذي الاتجاه الشهري تلقائياً عند رفع شهرين أو أكثر، برسم أعمدة وعروض ربع سنوية وسنوية.", "Uploaded reports now persist automatically — reload the page and everything you loaded is still there, no re-uploading.": "تُحفظ التقارير المرفوعة تلقائياً؛ تبقى الملفات المحمّلة متاحة بعد إعادة تحميل الصفحة دون رفعها مجدداً.", "New Compare tab: put any two portfolios side by side, with dropdowns to choose which ones and click-to-expand daily trend charts.": "أُضيف تبويب مقارنة محفظتين جنباً إلى جنب، مع قوائم اختيار ورسوم اتجاه يومية قابلة للتوسيع.", "Overview KPI cards now show a small trend sparkline under each headline number.": "تعرض بطاقات النظرة العامة رسماً مصغّراً للاتجاه أسفل كل قيمة رئيسية.", "Al Naser Club's 4 report types added to the demo dashboard with realistic synthetic data.": "أُضيفت أنواع تقارير نادي النصر الأربعة إلى اللوحة التجريبية باستخدام بيانات اصطناعية واقعية.", "Click any day on the Activity heatmap to see exactly which reports contributed to that day's total.": "اضغط على يوم في خريطة النشاط لمعرفة التقارير التي ساهمت في إجمالي ذلك اليوم.", "Added a light/dark mode toggle and a dedicated Executive Summary tab with headline KPI cards and a plain-English summary.": "أُضيف تبديل الوضع الفاتح والداكن وتبويب مستقل للملخص التنفيذي ببطاقات مؤشرات رئيسية وملخص مبسّط بالإنجليزية.", "Fixed a real layout bug on Bounced Cheques: the Summary card's text box wasn't stretching to match the Status Breakdown chart beside it, leaving a blank gap - it now fills the card properly.": "أُصلح خلل في تقرير الشيكات المرتجعة: لم يكن مربع نص الملخص يتمدد لمجاراة رسم تفصيل الحالات المجاور، مما ترك فراغاً؛ وأصبح يملأ البطاقة.", "Ran a full accuracy audit across all 4 RTA reports (Occupancy, Renewals, Bounced Cheques, Collections) - checked every KPI, chart total, filter, and CSV export against the underlying data. No data errors found.": "أُجري تدقيق دقة للتقارير الأربعة في RTA (الإشغال والتجديدات والشيكات المرتجعة والتحصيل)، شمل المؤشرات وإجماليات الرسوم وعوامل التصفية وتصدير CSV مقابل البيانات الأصلية. لم تُكتشف أخطاء بيانات في ذلك التدقيق.", "Fixed the \"Activity by Day\" heatmap, which was stuck on \"Waiting for reports to finish loading\" - Renewals and Bounced Cheques now report day-by-day activity like the other portfolios.": "أُصلحت خريطة النشاط اليومي التي كانت عالقة عند انتظار تحميل التقارير؛ وأصبحت التجديدات والشيكات المرتجعة تعرض نشاطاً يومياً كالمحافظ الأخرى.", "Fixed uneven card widths and bar-chart sizing on Bounced Cheques and Renewals Tracking.": "أُصلح تفاوت عرض البطاقات وأحجام رسوم الأعمدة في الشيكات المرتجعة ومتابعة التجديدات.", "Rebuilt the charts and filter panel on all 4 RTA reports to be fully interactive - click a chart segment to filter the table, multi-select filters, search, and CSV export, matching Awqaf and Al Naser Club.": "أُعيد تجهيز الرسوم ولوحات التصفية لتقارير RTA الأربعة بالتصفية عبر الرسوم والاختيار المتعدد والبحث وتصدير CSV، على غرار الأوقاف ونادي النصر.", "Added RTA as a full portfolio: Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections, built from the Rent Roll workbook and the July 2026 monthly report.": "أُضيفت محفظة RTA بتقارير إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل، اعتماداً على ملف Rent Roll وتقرير يوليو 2026 الشهري.", "Al Naser Club's 4 reports (Bounced Cheques, Cheque Clearance, Collections Detail, Occupancy) added to the dashboard with realistic data.": "أُضيفت تقارير نادي النصر الأربعة (الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال) إلى اللوحة ببيانات واقعية.", "Original Awqaf build: report tabs, cross-checks, and Data Quality tracking all in place - the first portfolio this dashboard supported.": "الإصدار الأول للأوقاف: تبويبات التقارير والفحوص المتقاطعة ومتابعة جودة البيانات؛ وكانت أول محفظة تدعمها اللوحة.", "What's new": "المستجدات", "Recent additions to this dashboard": "الإضافات الأخيرة إلى هذه اللوحة", "Updates": "التحديثات", "Recent changes to this portfolio's reports": "التغييرات الأخيرة في تقارير هذه المحفظة", "No portfolio-specific updates logged yet.": "لم تُسجّل تحديثات خاصة بهذه المحفظة بعد.", "Metric": "المؤشر", "Period": "الفترة", "Bounce Rate": "معدل الارتجاع", "Bounced / At Risk": "المرتجع / المعرّض للخطر", "Report": "التقرير", "Count": "العدد", "What is counted": "ما الذي يُعدّ", "Total": "الإجمالي", "That doesn't look like a Dashboard backup file.": "لا يبدو هذا ملف نسخة احتياطية للوحة المعلومات الرئيسية.", "Unsupported backup identity or version. Production backups require separate provenance review before migration.": "هوية النسخة الاحتياطية أو إصدارها غير مدعوم. تتطلب نسخ الإنتاج مراجعة مستقلة لمصدرها قبل ترحيلها.", "Unknown portfolio or invalid history.": "محفظة غير معروفة أو سجل غير صالح.", "Invalid or duplicate reporting month.": "شهر تقرير غير صالح أو مكرر.", "History conflict: an existing month differs. Current history is retained; reconcile the revision before import.": "تعارض في السجل: يختلف شهر محفوظ عن النسخة. تم الاحتفاظ بالسجل الحالي؛ طابق المراجعة قبل الاستيراد.", "Data as of": "البيانات حتى", "Data as of this load": "البيانات عند هذا التحميل", "this period": "هذه الفترة", "generated": "تم الإنشاء", " — pulled from Bounced Cheques, Cheque Clearance, Collections Detail, and Occupancy.": " — مستمدة من الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال.", " — pulled from Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections.": " — مستمدة من إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل.", " — pulled from Harbor's monthly achievement report for the Dubai Police portfolio (aggregate figures only — no per-record workbook has been shared yet).": " — مستمدة من تقرير إنجاز Harbor الشهري لمحفظة شرطة دبي (أرقام مجمّعة فقط؛ لم يُشارك ملف عمل على مستوى السجل بعد).", "July 2026": "يوليو 2026", "Cross-checks": "الفحوص المتقاطعة", "Not applicable": "لا ينطبق", "no per-record data to cross-validate yet": "لا توجد بيانات على مستوى السجل للتحقق المتقاطع بعد", "Staff — PM User Workload": "الموظفون — عبء عمل مستخدمي PM", "Staff — Agent Workload": "الموظفون — عبء عمل الوكلاء", "All totals on this tab": "جميع إجماليات هذا التبويب", "Payment detail and installment distribution": "تفاصيل السداد وتوزيع الأقساط", "Recent changes to {portfolio} reports": "التغييرات الأخيرة في تقارير {portfolio}"};
 function remainingText(value){ return currentLang === 'ar' && Object.prototype.hasOwnProperty.call(REMAINING_UI,value) ? REMAINING_UI[value] : value; }
 
 function t(key, fallback){
@@ -11915,6 +11978,9 @@ if(monthSelectEl){
 // aspirational or a roadmap item.
 const WHATS_NEW = [
   { date: '2026-10-22', items: [
+    "New Targets & trends on the Executive Summary: set a target for each key figure and see how the month and the recent trend compare against it.",
+    "Panels now open in the centre of the screen, like What's New.",
+    "Buttons are tidied across every tab: same style, same order, Print / Export PDF moved into the top row, and no more empty gaps.",
     "New Needs attention button on each report tab: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk and explained line by line. The rules are defaults and can be changed in the panel.",
     "The buttons at the top of each report now sit in the same order on every tab, with Updates always last.",
     "Export Excel on every report tab: it downloads the month's original Excel file, with all its sheets and columns, or the file you loaded yourself.",
@@ -12050,6 +12116,7 @@ const PORTFOLIO_UPDATES = {
   ],
   'awqaf': [
     { date: '2026-10-22', items: [
+      "New Targets & trends on the Executive Summary: set a target for each key figure and see how the month and the recent trend compare against it.",
       "New Needs attention button on each report tab: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk and explained line by line. The rules are defaults and can be changed in the panel.",
     "Every headline figure on the Awqaf report tabs for August and September now opens the list of contracts behind it, checked against the figure itself.",
     "Export Excel on the Awqaf reports returns the original August and September workbooks, so the sheets and columns match the files you keep.",
@@ -13966,6 +14033,7 @@ function cols(d, color){
         {en: 'September 2026 is included for Awqaf: 1,609 installments on 405 contracts, AED 22.81M recorded, 31 bounced cheques (1.8%).', ar: 'تم إدراج سبتمبر 2026 للأوقاف: 1,609 دفعات على 405 عقداً، و22.81 مليون درهم مسجلة، و31 شيكاً مرتجعاً (1.8%).'}]}
     ],
     'execsummary': [
+      {date: '2026-10-22', items: [{"en": "New Targets & trends on the Executive Summary: set a target for each key figure and see how the month and the recent trend compare against it.", "ar": "جديد: «الأهداف والاتجاهات» في الملخص التنفيذي: حدّد هدفًا لكل رقم رئيسي وشاهد كيف يقارن الشهر والاتجاه الأخير به."}, {"en": "Buttons are tidied: Copy summary, Print / Export PDF, Targets & trends and Updates sit on one row.", "ar": "تم ترتيب الأزرار: نسخ الملخص وطباعة / تصدير PDF والأهداف والاتجاهات والتحديثات في صف واحد."}]},
       {date: '2026-10-16', items: [{en: 'September 2026 is included, with the changes against the previous period.', ar: 'تم إدراج سبتمبر 2026 مع التغيرات مقارنة بالفترة السابقة.'}]}
     ],
     'compare': [
@@ -14211,6 +14279,183 @@ function cols(d, color){
   document.addEventListener('click', function(e){ if(e.target && e.target.id === 'langBtn') setTimeout(function(){ decorate(); render(); }, 80); });
   setInterval(decorate, 1000); setTimeout(decorate, 400);
   window.MDRisk = {compute: compute, open: open, rules: loadRules, defaults: DEF};
+})();
+
+</script>
+<script id="vfWeek4">
+/* Week 4 (trial v19): "Targets & trends" panel on the Executive Summary tab.
+   Reads the months this browser has already recorded (the same store the Executive Summary and Compare tabs use).
+   Shows this month against last month and the average of the months loaded, plus an optional target per measure with a status.
+   Targets are typed in by the viewer and kept in this browser only. Nothing here changes any calculation or embedded figure. */
+(function(){
+  if(window.MDTargets) return;
+  var BAND_KEY = 'vfTargetBand', BAND_DEF = 10;
+  var AR = {
+    'Targets & trends':'الأهداف والاتجاهات','Print / Export PDF':'طباعة / تصدير PDF','This month':'هذا الشهر','Last month':'الشهر السابق','Change':'التغيّر','Average of months loaded':'متوسط الأشهر المحمّلة','Target':'الهدف','Gap':'الفرق','Status':'الحالة','Trend':'الاتجاه','Measure':'المؤشر',
+    'On track':'على المسار','Watch':'يحتاج متابعة','Off track':'خارج المسار','Year to date':'منذ بداية السنة','Same month last year':'الشهر نفسه من العام السابق',
+    'Total collected (AED)':'إجمالي المحصّل (درهم)','Net collected (AED)':'صافي المحصّل (درهم)','Bounce rate (%)':'نسبة الارتجاع (%)','Bounced cheques':'الشيكات المرتجعة','New lease contracts':'عقود الإيجار الجديدة','Renewal lease contracts':'عقود التجديد','New lease rent value (AED)':'قيمة إيجار العقود الجديدة (درهم)','Requests':'الطلبات',
+    'Watch band':'هامش المتابعة','% of the target':'% من الهدف',
+    'Higher is better; a measure is on track at or above its target, on watch within the band below it, and off track beyond that. For bounce measures lower is better.':'الأعلى أفضل؛ يكون المؤشر على المسار عند الهدف أو أعلى، وتحت المتابعة ضمن الهامش دونه، وخارج المسار بعد ذلك. أما مؤشرات الارتجاع فالأقل أفضل.',
+    'Set in Thresholds':'يُحدَّد من الحدود','Type a target':'اكتب هدفًا',
+    'Only {n} month is recorded in this browser, so comparisons need a second month. Open the Executive Summary for another month to record it.':'تم تسجيل شهر واحد فقط ({n}) في هذا المتصفح، وتحتاج المقارنة إلى شهر ثانٍ. افتح الملخص التنفيذي لشهر آخر لتسجيله.',
+    'This month is not recorded yet. Open the Executive Summary tab once, then reopen this panel.':'لم يُسجَّل هذا الشهر بعد. افتح تبويب الملخص التنفيذي مرة واحدة ثم أعد فتح هذه اللوحة.',
+    'Targets are typed by you and kept in this browser only. Trends and the year-to-date column get richer as more months are loaded.':'الأهداف تكتبها أنت وتُحفظ في هذا المتصفح فقط. تزداد الاتجاهات وعمود منذ بداية السنة ثراءً كلما حُمّلت أشهر أكثر.',
+    'months':'أشهر','Close':'إغلاق','Export Excel':'تصدير إلى Excel','Based on':'بناءً على'
+  };
+  try{ if(typeof REMAINING_UI === 'object') Object.keys(AR).forEach(function(k){ if(!(k in REMAINING_UI)) REMAINING_UI[k] = AR[k]; }); }catch(e){}
+  function tr(s){ try{ return typeof remainingText === 'function' ? remainingText(s) : s; }catch(e){ return s; } }
+  function T(s, v){ var o = tr(s); if(v) Object.keys(v).forEach(function(k){ o = o.split('{' + k + '}').join(v[k]); }); return o; }
+  function el(tag, cls, txt){ var e = document.createElement(tag); if(cls) e.className = cls; if(txt != null) e.textContent = txt; return e; }
+  var M = [
+    {k: 'totalCollected', l: 'Total collected (AED)', f: 'aed', dir: 1, add: 1},
+    {k: 'netCollected', l: 'Net collected (AED)', f: 'aed', dir: 1, add: 1},
+    {k: 'bounceRatePct', l: 'Bounce rate (%)', f: 'pct', dir: -1, thr: 'bounceTarget'},
+    {k: 'bouncedCount', l: 'Bounced cheques', f: 'int', dir: -1, add: 1},
+    {k: 'newLeaseContracts', l: 'New lease contracts', f: 'int', dir: 1, add: 1},
+    {k: 'renewalLeaseContracts', l: 'Renewal lease contracts', f: 'int', dir: 1, add: 1},
+    {k: 'leaseRentValue', l: 'New lease rent value (AED)', f: 'aed', dir: 1, add: 1},
+    {k: 'totalRequests', l: 'Requests', f: 'int', dir: 1, add: 1}
+  ];
+  function fmt(v, f){ if(v == null || isNaN(v)) return '—'; if(f === 'pct') return Number(v).toFixed(2) + '%'; return Number(v).toLocaleString('en-US', {maximumFractionDigits: 0}); }
+  function pf(){ try{ return currentPortfolio; }catch(e){ return 'awqaf'; } }
+  function tkey(){ return 'vfTargets__' + pf(); }
+  function loadT(){ try{ return JSON.parse(localStorage.getItem(tkey()) || '{}') || {}; }catch(e){ return {}; } }
+  function saveT(o){ try{ localStorage.setItem(tkey(), JSON.stringify(o)); }catch(e){} }
+  function band(){ try{ var n = +localStorage.getItem(BAND_KEY); return n > 0 && n <= 100 ? n : BAND_DEF; }catch(e){ return BAND_DEF; } }
+  function hist(){ try{ return getMonthlyHistory(pf()) || []; }catch(e){ return []; } }
+  function thrTarget(m){ try{ var v = THRESHOLDS[pf()][m.thr]; return typeof v === 'number' ? v : null; }catch(e){ return null; } }
+  function statusOf(m, actual, target, b){
+    if(target == null || actual == null) return null;
+    var p = b / 100;
+    if(m.dir > 0) return actual >= target ? 'ok' : (actual >= target * (1 - p) ? 'watch' : 'off');
+    return actual <= target ? 'ok' : (actual <= target * (1 + p) ? 'watch' : 'off');
+  }
+  function spark(vals){
+    var v = vals.filter(function(x){ return x != null; }); if(v.length < 2) return null;
+    var mn = Math.min.apply(null, v), mx = Math.max.apply(null, v), w = 70, h = 22, r = (mx - mn) || 1;
+    var pts = v.map(function(y, i){ return (i * (w - 4) / (v.length - 1) + 2).toFixed(1) + ',' + (h - 3 - (y - mn) / r * (h - 6)).toFixed(1); }).join(' ');
+    var ns = 'http://www.w3.org/2000/svg', s = document.createElementNS(ns, 'svg'); s.setAttribute('width', w); s.setAttribute('height', h); s.setAttribute('viewBox', '0 0 ' + w + ' ' + h); s.setAttribute('aria-hidden', 'true');
+    var pl = document.createElementNS(ns, 'polyline'); pl.setAttribute('points', pts); pl.setAttribute('fill', 'none'); pl.setAttribute('stroke', '#5b8cff'); pl.setAttribute('stroke-width', '2'); pl.setAttribute('stroke-linejoin', 'round'); pl.setAttribute('stroke-linecap', 'round'); s.appendChild(pl);
+    return s;
+  }
+  function compute(){
+    var H = hist().slice().sort(function(a, b){ return a.periodKey < b.periodKey ? -1 : 1; }), cm = ''; try{ cm = currentMonth; }catch(e){}
+    var ci = -1; H.forEach(function(h, i){ if(h.periodKey === cm) ci = i; });
+    var out = {months: H.length, cur: ci >= 0 ? H[ci] : null, prev: ci > 0 ? H[ci - 1] : null, H: H, ci: ci, cm: cm, rows: [], lastYear: null};
+    var yr = cm.slice(0, 4), mo = cm.slice(5, 7), ly = (+yr - 1) + '-' + mo; H.forEach(function(h){ if(h.periodKey === ly) out.lastYear = h; });
+    var T0 = loadT(), b = band();
+    M.forEach(function(m){
+      var a = out.cur ? out.cur[m.k] : null; if(a == null) return;
+      var pv = out.prev ? out.prev[m.k] : null, vals = H.map(function(h){ return h[m.k]; }).filter(function(x){ return x != null; });
+      var avg = vals.length ? vals.reduce(function(s, x){ return s + x; }, 0) / vals.length : null;
+      var tgt = m.thr ? thrTarget(m) : (T0[m.k] != null ? T0[m.k] : null);
+      var ytd = null; if(m.add){ var s = 0, n = 0; H.forEach(function(h){ if(h.periodKey.slice(0, 4) === yr && h.periodKey <= cm && h[m.k] != null){ s += h[m.k]; n++; } }); ytd = n ? s : null; }
+      out.rows.push({m: m, a: a, pv: pv, avg: avg, n: vals.length, tgt: tgt, fixed: !!m.thr, status: statusOf(m, a, tgt, b), ytd: ytd, ly: out.lastYear ? out.lastYear[m.k] : null, series: H.map(function(h){ return h[m.k]; })});
+    });
+    return out;
+  }
+  var dlg, body;
+  function ensure(){ if(dlg) return; dlg = document.createElement('dialog'); dlg.className = 'vf-drawer vf-targets'; dlg.setAttribute('aria-label', 'Targets & trends'); body = el('div', 'vf-d-body'); dlg.appendChild(body); dlg.addEventListener('click', function(e){ if(e.target === dlg) close(); }); document.body.appendChild(dlg); }
+  function close(){ if(dlg){ try{ dlg.close(); }catch(e){ dlg.removeAttribute('open'); } } }
+  function csv(res){
+    var esc = function(v){ v = v == null ? '' : String(v); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var rows = [[tr('Measure'), tr('This month'), tr('Last month'), tr('Change'), tr('Average of months loaded'), tr('Year to date'), tr('Target'), tr('Gap'), tr('Status')]];
+    res.rows.forEach(function(r){ rows.push([tr(r.m.l), r.a, r.pv, r.pv != null ? r.a - r.pv : '', r.avg != null ? Math.round(r.avg * 100) / 100 : '', r.ytd != null ? r.ytd : '', r.tgt != null ? r.tgt : '', r.tgt != null ? Math.round((r.a - r.tgt) * 100) / 100 : '', r.status ? tr({ok: 'On track', watch: 'Watch', off: 'Off track'}[r.status]) : '']); });
+    var b = new Blob(['﻿' + rows.map(function(r){ return r.map(esc).join(','); }).join('\r\n')], {type: 'text/csv;charset=utf-8'});
+    var a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'Targets-and-trends_' + pf() + '_' + res.cm + '.csv'; document.body.appendChild(a); a.click(); setTimeout(function(){ try{ URL.revokeObjectURL(a.href); }catch(e){} a.remove(); }, 500);
+  }
+  function signed(d, f){ return (d > 0 ? '+' : '') + (f === 'pct' ? d.toFixed(2) + ' pts' : Math.round(d).toLocaleString('en-US')); }
+  function render(){
+    if(!dlg || !dlg.open) return; var res = compute(); body.innerHTML = '';
+    var h = el('div', 'vf-d-head'), t = el('div', 'vf-d-titles'); t.appendChild(el('div', 'vf-d-title', tr('Targets & trends')));
+    var lbl = ''; try{ lbl = (PORTFOLIO_LABELS && PORTFOLIO_LABELS[pf()]) || pf(); }catch(e){}
+    t.appendChild(el('div', 'vf-d-sub', lbl + ' · ' + res.cm + ' · ' + tr('Based on') + ' ' + res.months + ' ' + tr('months'))); h.appendChild(t);
+    var act = el('div', 'vf-d-actions');
+    if(res.rows.length){ var ex = el('button', 'vf-btn', tr('Export Excel')); ex.type = 'button'; ex.addEventListener('click', function(){ csv(res); }); act.appendChild(ex); }
+    var x = el('button', 'vf-btn vf-x', '✕'); x.type = 'button'; x.setAttribute('aria-label', tr('Close')); x.addEventListener('click', close); act.appendChild(x); h.appendChild(act); body.appendChild(h);
+    var bar = el('div', 'vf-risk-rules'); var bl = el('label', 'vf-risk-rule'); bl.appendChild(el('span', null, tr('Watch band')));
+    var bi = el('input', 'vf-risk-num'); bi.type = 'number'; bi.min = 1; bi.max = 100; bi.value = band(); bi.setAttribute('data-band', '1');
+    bi.addEventListener('change', function(){ var n = Math.round(+bi.value); if(!(n >= 1)) n = BAND_DEF; if(n > 100) n = 100; try{ localStorage.setItem(BAND_KEY, String(n)); }catch(e){} render(); });
+    bl.appendChild(bi); bl.appendChild(el('span', null, tr('% of the target'))); bar.appendChild(bl);
+    bar.appendChild(el('div', 'vf-risk-x', tr('Higher is better; a measure is on track at or above its target, on watch within the band below it, and off track beyond that. For bounce measures lower is better.'))); body.appendChild(bar);
+    var wrap = el('div', 'vf-d-tablewrap');
+    if(!res.cur){ wrap.appendChild(el('div', 'vf-empty', tr('This month is not recorded yet. Open the Executive Summary tab once, then reopen this panel.'))); }
+    else {
+      if(res.months < 2) wrap.appendChild(el('div', 'vf-risk-note', T('Only {n} month is recorded in this browser, so comparisons need a second month. Open the Executive Summary for another month to record it.', {n: res.months})));
+      var showLY = res.rows.some(function(r){ return r.ly != null; });
+      var cols = ['Measure', 'This month', 'Last month', 'Change', 'Average of months loaded', 'Year to date'].concat(showLY ? ['Same month last year'] : []).concat(['Trend', 'Target', 'Gap', 'Status']);
+      var tb = el('table', 'vf-table'), th = el('thead'), hr = el('tr'); cols.forEach(function(c){ hr.appendChild(el('th', null, tr(c))); }); th.appendChild(hr); tb.appendChild(th);
+      var tbody = el('tbody'), T0 = loadT();
+      res.rows.forEach(function(r){
+        var m = r.m, row = el('tr'); row.appendChild(el('td', null, tr(m.l)));
+        row.appendChild(el('td', 'num', fmt(r.a, m.f))); row.appendChild(el('td', 'num', fmt(r.pv, m.f)));
+        var cd = el('td', 'num');
+        if(r.pv != null){ var d = r.a - r.pv, p = r.pv ? d / r.pv * 100 : null, good = d === 0 ? 0 : (d * m.dir > 0 ? 1 : -1); cd.textContent = signed(d, m.f) + (p != null && m.f !== 'pct' ? ' (' + (p > 0 ? '+' : '') + p.toFixed(1) + '%)' : ''); if(good > 0) cd.className += ' vf-good'; else if(good < 0) cd.className += ' vf-bad'; } else cd.textContent = '—';
+        row.appendChild(cd);
+        row.appendChild(el('td', 'num', r.n >= 2 ? fmt(r.avg, m.f) : '—')); row.appendChild(el('td', 'num', r.ytd != null ? fmt(r.ytd, m.f) : '—'));
+        if(showLY) row.appendChild(el('td', 'num', fmt(r.ly, m.f)));
+        var sp = el('td'), s = spark(r.series); if(s) sp.appendChild(s); else sp.textContent = '—'; row.appendChild(sp);
+        var tt = el('td', 'num');
+        if(r.fixed){ tt.textContent = r.tgt != null ? fmt(r.tgt, m.f) : '—'; tt.title = tr('Set in Thresholds'); }
+        else {
+          var ti = el('input', 'vf-risk-num vf-tgt'); ti.type = 'number'; ti.step = 'any'; ti.placeholder = '—'; ti.setAttribute('data-tgt', m.k); ti.setAttribute('aria-label', tr('Type a target') + ': ' + tr(m.l)); if(T0[m.k] != null) ti.value = T0[m.k];
+          ti.addEventListener('change', function(){ var o = loadT(); if(ti.value === '' || isNaN(+ti.value)) delete o[m.k]; else o[m.k] = +ti.value; saveT(o); render(); }); tt.appendChild(ti);
+        }
+        row.appendChild(tt);
+        row.appendChild(el('td', 'num', r.tgt != null ? signed(r.a - r.tgt, m.f) : '—'));
+        var st = el('td'); if(r.status) st.appendChild(el('span', 'vf-risk-pill vf-st-' + r.status, tr({ok: 'On track', watch: 'Watch', off: 'Off track'}[r.status]))); else st.textContent = '—'; row.appendChild(st);
+        tbody.appendChild(row);
+      });
+      tb.appendChild(tbody); wrap.appendChild(tb);
+      wrap.appendChild(el('div', 'vf-risk-note', tr('Targets are typed by you and kept in this browser only. Trends and the year-to-date column get richer as more months are loaded.')));
+    }
+    body.appendChild(wrap);
+  }
+  function open(){ ensure(); if(!dlg.open){ try{ dlg.showModal(); }catch(e){ dlg.setAttribute('open', ''); } } render(); }
+  function decorate(){
+    var p = document.querySelector('.report-pane[data-report="execsummary"]'); if(!p) return;
+    var bar = p.querySelector(':scope > .vf-bar'); if(!bar) return;
+    var b = bar.querySelector('[data-vf-targets]');
+    if(!b){ b = el('button', 'theme-switch', tr('Targets & trends')); b.type = 'button'; b.setAttribute('data-vf-targets', '1'); b.addEventListener('click', open); bar.insertBefore(b, bar.firstChild); }
+    else { var t = tr('Targets & trends'); if(b.textContent !== t) b.textContent = t; }
+  }
+  document.addEventListener('click', function(e){ if(e.target && e.target.id === 'langBtn') setTimeout(function(){ decorate(); render(); }, 80); });
+  setInterval(decorate, 1000); setTimeout(decorate, 500);
+
+  // Tidy the four embedded reports' own buttons: period + Print on one line; Load / Export CSV on the left and Filters on the right of one row
+  var REP_CSS = '#printBtn,#exportCsvBtn{display:none!important}.btn,.period,.filters-toggle-btn{border-radius:999px!important;padding:.5rem 1.05rem!important;font-size:13.5px!important;font-weight:600!important;line-height:1.2!important;min-height:2.4rem;box-sizing:border-box;display:inline-flex!important;align-items:center;justify-content:center;white-space:nowrap}.period{font-weight:500!important}' + 'header .header-actions{flex-direction:row!important;align-items:center!important;gap:10px!important;flex-wrap:wrap;justify-content:flex-end}' +
+    '.toolbar{display:flex!important;flex-wrap:wrap;align-items:center;gap:10px}' +
+    '.toolbar>.toolbar-row-actions{display:contents!important}' +
+    '.toolbar .btn-group{order:1}' +
+    '.toolbar .filters-toggle-btn{order:2;margin:0!important;margin-inline-start:auto!important}' +
+    '.toolbar .status.empty-state-note,.toolbar .toolbar-row-actions>.status{order:3;flex:1 1 100%!important}' +
+    '.toolbar>#filterPanel,.toolbar>#filterActionsRow,.toolbar>#rangePanel{order:4;flex:1 1 100%;margin-top:4px!important}';
+  function tidyReports(){
+    var w; try{ w = (typeof embeddedWindows !== 'undefined') ? embeddedWindows : null; }catch(e){} if(!w) return;
+    Object.keys(w).forEach(function(k){
+      try{
+        var d = w[k] && w[k].document; if(!d || !d.head || d.getElementById('vfRepTidy')) return;
+        var st = d.createElement('style'); st.id = 'vfRepTidy'; st.textContent = REP_CSS; d.head.appendChild(st);
+      }catch(e){}
+    });
+  }
+  setInterval(tidyReports, 1200); setTimeout(tidyReports, 600);
+
+  var PRINT_IDS = ['count-report','bounced-cheques','new-lease','request-count'];
+  function decoratePrint(){
+    PRINT_IDS.forEach(function(id){
+      var p = document.querySelector('.report-pane[data-report="' + id + '"]'); if(!p) return;
+      var bar = p.querySelector(':scope > .vf-bar'); if(!bar) return;
+      var b = bar.querySelector('[data-vf-print]');
+      if(!b){
+        b = el('button', 'theme-switch', tr('Print / Export PDF')); b.type = 'button'; b.setAttribute('data-vf-print', id);
+        b.addEventListener('click', function(){ try{ var w = embeddedWindows[id]; var pb = w && w.document.getElementById('printBtn'); if(pb) pb.click(); }catch(e){} });
+        bar.appendChild(b);
+      } else { var t = tr('Print / Export PDF'); if(b.textContent !== t) b.textContent = t; }
+    });
+  }
+  setInterval(decoratePrint, 1000); setTimeout(decoratePrint, 500);
+  window.MDTargets = {compute: compute, open: open};
 })();
 
 </script>

@@ -1,0 +1,60 @@
+/* Week 4 (trial v19): Targets & trends */
+.vf-bar [data-vf-targets]{order:3}
+.vf-good{color:var(--ok,#3ecf8e)}
+.vf-bad{color:#ff8d8d}
+.vf-st-ok{background:rgba(62,207,142,.16);color:var(--ok,#3ecf8e);border:1px solid rgba(62,207,142,.5)}
+.vf-st-watch{background:rgba(232,168,56,.16);color:var(--amber,#e8a838);border:1px solid rgba(232,168,56,.5)}
+.vf-st-off{background:rgba(224,82,82,.18);color:#ff8d8d;border:1px solid rgba(224,82,82,.5)}
+.vf-tgt{width:6.5rem}
+dialog.vf-targets .vf-table td.num{text-align:end}
+
+/* All panels (contract lists, Needs attention, Targets & trends) open as a centred window like What's New and Updates, not a side drawer */
+dialog.vf-drawer{margin:auto!important;inset:0!important;height:auto!important;max-height:86vh!important;width:min(1180px,94vw)!important;max-width:94vw!important;border:1px solid var(--border,#33405c)!important;border-radius:14px!important;box-shadow:0 20px 60px rgba(0,0,0,.35)!important;overflow:hidden}
+dialog.vf-drawer::backdrop{background:rgba(10,13,22,.55)}
+dialog.vf-drawer .vf-d-body{height:auto;max-height:86vh}
+dialog.vf-drawer .vf-d-head{padding:1rem 1.3rem .75rem}
+
+/* Executive Summary is a fixed grid: pin the toolbar to the top-right of the first row, beside the title, and leave room for it */
+#pane-execsummary.exec-fit > .vf-bar{grid-column:1 / -1;grid-row:1;justify-self:end;align-self:start;margin:0!important;padding:0!important;border:0!important;z-index:3;position:relative}
+#pane-execsummary.exec-fit > .exec-header-row{padding-inline-end:15.5rem}
+#pane-execsummary.exec-fit > .exec-header-row{gap:.5rem}
+#pane-execsummary.exec-fit > .exec-header-row > div:first-child{flex:1 1 auto}
+#pane-execsummary.exec-fit > .exec-header-row > button{align-self:flex-start;padding:.42rem .95rem;font-size:.85rem;line-height:1.2;white-space:nowrap}
+#pane-execsummary.exec-fit > .vf-bar>button{padding:.42rem .95rem;font-size:.85rem;line-height:1.2}
+#pane-execsummary.exec-fit > .exec-header-row{padding-inline-end:14.5rem}
+#pane-execsummary.exec-fit > .exec-header-row{padding-inline-end:21rem}
+#pane-execsummary.exec-fit > .exec-header-row > button,#pane-execsummary.exec-fit > .vf-bar>button{height:2.4rem;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;margin-top:0!important}
+#pane-execsummary.exec-fit > .vf-bar{align-self:start;margin-top:0!important}
+
+/* Toolbar groups: Find (search, contracts, needs attention) | Output (Export Excel, Print, Updates) */
+.vf-bar [data-vf-print]{order:5}
+.vf-bar [data-vf-tabupd]{order:6}
+.vf-bar>[data-vf-export]{margin-inline-start:1rem!important}
+.vf-bar>button,.vf-bar .vf-find{min-height:2.4rem;box-sizing:border-box}
+#pane-execsummary.exec-fit > .exec-header-row > button{border-radius:999px!important}
+/* Fill the empty left side of the toolbar: Find group on the left, Output group pushed to the right */
+.vf-bar{justify-content:flex-start!important}
+.vf-bar .vf-find{flex:0 1 18rem!important}
+.vf-bar>[data-vf-export]{margin-inline-start:auto!important}
+#pane-execsummary.exec-fit > .exec-header-row{padding-inline-end:20.6rem}
+/* Compare / Data Quality / Lease Activity have no report buttons of their own: pin Updates to the title row instead of giving it a row (and divider) of its own */
+.report-pane[data-report="compare"],.report-pane[data-report="dataquality"],.report-pane[data-report="lease-activity"]{position:relative}
+.report-pane[data-report="compare"]>.vf-bar,.report-pane[data-report="dataquality"]>.vf-bar,.report-pane[data-report="lease-activity"]>.vf-bar{position:absolute;top:14px;inset-inline-end:16px;margin:0!important;padding:0!important;border:0!important;width:auto;z-index:3}
+.report-pane[data-report="dataquality"]>.vf-bar,.report-pane[data-report="lease-activity"]>.vf-bar{top:10px}
+.report-pane[data-report="dataquality"]>.vf-bar>button,.report-pane[data-report="lease-activity"]>.vf-bar>button{min-height:2rem!important;height:2rem;padding:.2rem .9rem!important}
+
+/* Compare: one row, same pills as the other tabs. Export CSV dropped; Print stays in its own spot and Updates sits beside it */
+.report-pane[data-report="compare"]>.vf-bar{top:12px;inset-inline-end:14px}
+.report-pane[data-report="compare"]>.vf-bar>button{height:2.4rem;min-height:2.4rem;border-radius:999px;padding:.42rem .95rem;font-size:.85rem}
+.report-pane[data-report="compare"] .exec-header-row{padding-inline-end:7.9rem}
+.report-pane[data-report="compare"] .exec-header-row button[onclick="exportCompareCsv()"]{display:none!important}
+.report-pane[data-report="compare"] .exec-header-row .exec-print-btn{height:2.4rem;border-radius:999px;padding:.42rem .95rem;font-size:.85rem;margin-top:0;display:inline-flex;align-items:center;justify-content:center}
+
+/* Data Quality: air between the title row (with Updates) and the banner */
+#pane-dataquality>h2{margin-bottom:18px!important;min-height:2rem}
+
+/* Top buttons: tighter so all ten fit on one row with the sidebar open (English labels are the longest) */
+header .header-actions{gap:6px!important;flex-wrap:wrap}
+header .header-actions>.theme-switch,header .header-actions>button{padding:.36rem .56rem!important;font-size:13px!important;gap:5px}
+/* Keyboard focus ring on the sidebar: keep it for keyboard users, but inside the item and thinner so it reads as focus, not as a stray box */
+.sidebar .tab-btn:focus-visible{outline:1.5px solid var(--accent)!important;outline-offset:-3px!important;border-radius:10px}
