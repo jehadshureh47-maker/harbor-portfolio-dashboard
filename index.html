@@ -1983,6 +1983,31 @@ dialog.vf-drawer::backdrop{background:rgba(8,11,20,.55)}
 @media print{.vf-tabupd{display:none!important}}
 
 </style>
+<style id="vfWeek3Css">
+/* Week 3 (trial v18): Needs attention list */
+.vf-risk-rules{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.4rem;padding:.8rem 1.3rem;border-bottom:1px solid var(--border,#33405c);background:var(--card2,#1b2338)}
+.vf-risk-rt{font-weight:700;font-size:.85rem;color:var(--sub,#93a0bd);text-transform:uppercase;letter-spacing:.04em}
+.vf-risk-rule{display:flex;align-items:center;gap:.4rem;font-size:.88rem}
+.vf-risk-num{width:4.2rem;padding:.3rem .5rem;border-radius:8px;border:1px solid var(--border,#33405c);background:var(--card,#161d2e);color:var(--text,#eef1f8);font:inherit;text-align:center}
+.vf-risk-pill{display:inline-block;padding:.12rem .6rem;border-radius:999px;font-size:.78rem;font-weight:700}
+.vf-risk-high{background:rgba(224,82,82,.18);color:#ff8d8d;border:1px solid rgba(224,82,82,.5)}
+.vf-risk-medium{background:rgba(232,168,56,.16);color:var(--amber,#e8a838);border:1px solid rgba(232,168,56,.5)}
+.vf-risk-x{color:var(--sub,#93a0bd);font-size:.8rem;margin-top:.15rem}
+.vf-risk-note{padding:.8rem 1.3rem;color:var(--sub,#93a0bd);font-size:.8rem}
+dialog.vf-risk .vf-table td{white-space:normal;overflow-wrap:anywhere;vertical-align:top}
+
+/* Toolbar: same order on every tab, Updates always last (rightmost), compact and evenly spaced */
+.vf-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:.5rem;margin:0 0 .75rem;padding:0 0 .65rem;border-bottom:1px solid var(--border,#33405c)}
+.vf-bar>*{margin:0!important}
+.vf-bar .vf-find{order:1;flex:0 1 13rem}
+.vf-bar [data-vf-contracts]{order:2}
+.vf-bar [data-vf-risk]{order:3}
+.vf-bar [data-vf-export]{order:4}
+.vf-bar [data-vf-tabupd]{order:5}
+.vf-bar>button{padding:.42rem .95rem;font-size:.85rem;line-height:1.2;white-space:nowrap}
+.vf-bar .vf-find{padding:.42rem .8rem;font-size:.85rem;line-height:1.2}
+
+</style>
 </head>
 <body>
 <div id="errBar" hidden role="alert" style="position:fixed;top:0;left:0;right:0;z-index:3000;display:flex;gap:12px;align-items:center;justify-content:center;padding:8px 14px;background:#7a2430;color:#fff;font-size:13px;"><span></span><button type="button" onclick="this.parentNode.hidden=true" aria-label="Close" style="background:transparent;border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:6px;padding:2px 8px;cursor:pointer;">✕</button></div>
@@ -3249,7 +3274,7 @@ const TRANSLATIONS = {
 const SHELL_LABEL_KEYS = {"Asset Occupancy": "shell.label.0", "Renewals Tracking": "shell.label.1", "Bounced Cheques": "shell.label.2", "Collections": "shell.label.3", "Collections Detail": "shell.label.4", "Cheque Clearance": "shell.label.5", "Occupancy": "shell.label.6", "Total Recorded": "shell.label.7", "Bounced / At Risk": "shell.label.8", "Net Recorded": "shell.label.9", "Occupancy Rate": "shell.label.10", "Collections Detail, this month": "shell.label.11", "Collected minus bounced": "shell.label.12", "Residential + commercial": "shell.label.13", "Rent": "shell.label.14", "Other fees": "shell.label.15", "Residential": "shell.label.16", "Commercial": "shell.label.17", "Vacant units": "shell.label.18", "Cleared": "shell.label.19", "Bounced": "shell.label.20", "Settled": "shell.label.21", "Pending": "shell.label.22", "Total amount": "shell.label.23", "Still open": "shell.label.24", "Resolved": "shell.label.25", "By value": "shell.label.26", "Renewed": "shell.label.27", "In progress": "shell.label.28", "Not renewing": "shell.label.29", "Leased": "shell.label.30", "Vacant": "shell.label.31", "Suspended": "shell.label.32", "Total assets": "shell.label.33", "Collected + Penalty": "shell.label.34", "With Legal Affairs": "shell.label.35", "Pending Collection": "shell.label.36"};
 function shellLabel(value){ return Object.prototype.hasOwnProperty.call(SHELL_LABEL_KEYS,value) ? t(SHELL_LABEL_KEYS[value],value) : value; }
 
-const REMAINING_UI = {"Export Excel on every report tab: it downloads the month's original Excel file, with all its sheets and columns, or the file you loaded yourself.": "تصدير إلى Excel في كل تقرير: يحمّل ملف Excel الأصلي للشهر بجميع أوراقه وأعمدته، أو الملف الذي حمّلته بنفسك.", "Click any figure on a report tab to see the contracts behind it. Each list checks itself against the figure and shows a green tick when they match. Click a contract number to see everything about that contract across the four reports, and use the Contract number box at the top of each report to jump straight to one.": "انقر على أي رقم في تبويب التقرير لعرض العقود التي يتكوّن منها. تتحقق كل قائمة من نفسها مقابل الرقم وتُظهر علامة خضراء عند التطابق. انقر على رقم العقد لرؤية كل ما يخصه في التقارير الأربعة، واستخدم خانة رقم العقد أعلى كل تقرير للانتقال إليه مباشرة.", "The dashboard now reopens on the portfolio, month and tab you were last viewing.": "تُعيد اللوحة فتح المحفظة والشهر والتبويب الذي كنت تعرضه آخر مرة.", "Every headline figure on the Awqaf report tabs for August and September now opens the list of contracts behind it, checked against the figure itself.": "كل رقم رئيسي في تبويبات تقارير الأوقاف لشهري أغسطس وسبتمبر يفتح الآن قائمة العقود التي يتكوّن منها، بعد التحقق منها مقابل الرقم نفسه.", "Export Excel on the Awqaf reports returns the original August and September workbooks, so the sheets and columns match the files you keep.": "يعيد تصدير Excel في تقارير الأوقاف ملفات أغسطس وسبتمبر الأصلية، فتتطابق الأوراق والأعمدة مع الملفات التي تحتفظون بها.", "New TV button in the header: a full-screen wallboard for an office screen that rotates through Overview, Bounced cheques, Leasing and Requests every 20 seconds, in English or Arabic. Press Esc to exit.": "زر جديد للتلفاز في الأعلى: شاشة عرض كاملة لشاشة المكتب تتنقل كل 20 ثانية بين النظرة العامة والشيكات المرتجعة والتأجير والطلبات، بالإنجليزية أو العربية. اضغط Esc للخروج.", "Charts now animate in: bars grow, donuts sweep and trend lines draw when a tab opens, when you switch a filter or chip, and as you scroll down to them. Fast scrolling skips the animation, and it is turned off for reduced-motion settings and printing.": "أصبحت الرسوم البيانية متحركة: تنمو الأعمدة وتدور الرسوم الدائرية وتُرسم خطوط الاتجاه عند فتح التبويب أو تبديل المرشح أو عند التمرير إليها. يتخطى التمرير السريع الحركة، وتُعطّل عند تفعيل خيار تقليل الحركة وعند الطباعة.", "The dashboard now loads without the page jumping around: the Overview and data-health areas keep their space while the reports load.": "تُحمَّل اللوحة الآن دون قفز في الصفحة: تحتفظ النظرة العامة وحالة البيانات بمساحتها أثناء تحميل التقارير.", "September 2026 is loaded for all four Awqaf reports (Cheque Count, Bounced Cheques, Lease Activity, Request Count) and cross-checked against the source workbooks.": "تم تحميل بيانات سبتمبر 2026 لتقارير الأوقاف الأربعة (عدد الشيكات والشيكات المرتجعة ونشاط التأجير وعدد الطلبات) والتحقق منها مقابل ملفات المصدر.", "September bounced cheques: 31 cheques worth AED 415K, 1.8% of recorded value, under the 2% target.": "الشيكات المرتجعة في سبتمبر: 31 شيكاً بقيمة 415 ألف درهم، أي 1.8% من القيمة المسجلة، وهي دون الهدف البالغ 2%.", "Lease Activity: 515 lease contracts (501 renewals, 14 new), with AED 785K annual rent on the new leases, up from 11 new leases in the previous period.": "نشاط التأجير: 515 عقد إيجار (501 تجديد و14 جديداً)، بإيجار سنوي 785 ألف درهم للعقود الجديدة، مقابل 11 عقداً جديداً في الفترة السابقة.", "This dashboard is now behind a login - each approved viewer is scoped to their own portfolio automatically, instead of everyone seeing the full portfolio switcher.": "أصبحت اللوحة خلف تسجيل دخول؛ يُوجّه كل مستخدم معتمد تلقائياً إلى محفظته بدلاً من عرض جميع المحافظ.", "New Backup button in the header: download everything you've uploaded in this browser as a file, and load it back in later (or on a new device) without losing saved months.": "أُضيف زر النسخ الاحتياطي لحفظ الملخصات الشهرية والإعدادات في ملف واستعادتها لاحقاً أو على جهاز آخر. ملفات العمل الأصلية ليست ضمن النسخة.", "Every upload button now says clearly that uploading a file only previews it in your own browser - it's never shared with other viewers.": "توضح أزرار رفع الملفات أن الملف يُعرض في متصفحك فقط ولا يُشارك مع المستخدمين الآخرين.", "Cleaned up the wording on every report tab so status messages describe what's actually shown, instead of leftover build notes.": "نُقّحت عبارات تبويبات التقارير لتصف رسائل الحالة البيانات المعروضة فعلياً بدلاً من ملاحظات التطوير القديمة.", "New guided tour for first-time viewers - walks through the sidebar, search, Needs Attention, Executive Summary, Compare, and Board Pack. Reopen it anytime from the Tour button in the header.": "أُضيفت جولة للمستخدمين الجدد تشمل الشريط الجانبي والبحث وما يستدعي الانتباه والملخص التنفيذي والمقارنة وحزمة مجلس الإدارة. يمكن إعادة فتحها من زر الجولة.", "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Recorded, or a drop in occupancy (Al Naser) vs the last saved month. Swing size is configurable from the Thresholds button.": "ترصد لوحة ما يستدعي الانتباه التغيرات الشهرية تلقائياً: ارتفاع معدل الارتجاع أو انخفاض إجمالي المسجّل أو إشغال نادي النصر مقارنةً بآخر شهر محفوظ. يمكن ضبط حجم التغير من إعدادات الحدود.", "Executive Summary now shows exactly which bounced cheques are new vs resolved compared to last month, once 2+ real months are on record.": "يعرض الملخص التنفيذي الشيكات المرتجعة الجديدة وتلك التي تمت معالجتها مقارنةً بالشهر السابق، عند توفر شهرين فعليين أو أكثر.", "Compare tab: added a Print/Export PDF button and a CSV download of the comparison table.": "أُضيف إلى المقارنة زر للطباعة أو تصدير PDF وتنزيل جدول المقارنة بصيغة CSV.", "Executive Summary now tracks month-over-month trend automatically once 2+ months are uploaded (a real bar chart, plus quarterly/yearly views).": "يتابع الملخص التنفيذي الاتجاه الشهري تلقائياً عند رفع شهرين أو أكثر، برسم أعمدة وعروض ربع سنوية وسنوية.", "Uploaded reports now persist automatically — reload the page and everything you loaded is still there, no re-uploading.": "تُحفظ التقارير المرفوعة تلقائياً؛ تبقى الملفات المحمّلة متاحة بعد إعادة تحميل الصفحة دون رفعها مجدداً.", "New Compare tab: put any two portfolios side by side, with dropdowns to choose which ones and click-to-expand daily trend charts.": "أُضيف تبويب مقارنة محفظتين جنباً إلى جنب، مع قوائم اختيار ورسوم اتجاه يومية قابلة للتوسيع.", "Overview KPI cards now show a small trend sparkline under each headline number.": "تعرض بطاقات النظرة العامة رسماً مصغّراً للاتجاه أسفل كل قيمة رئيسية.", "Al Naser Club's 4 report types added to the demo dashboard with realistic synthetic data.": "أُضيفت أنواع تقارير نادي النصر الأربعة إلى اللوحة التجريبية باستخدام بيانات اصطناعية واقعية.", "Click any day on the Activity heatmap to see exactly which reports contributed to that day's total.": "اضغط على يوم في خريطة النشاط لمعرفة التقارير التي ساهمت في إجمالي ذلك اليوم.", "Added a light/dark mode toggle and a dedicated Executive Summary tab with headline KPI cards and a plain-English summary.": "أُضيف تبديل الوضع الفاتح والداكن وتبويب مستقل للملخص التنفيذي ببطاقات مؤشرات رئيسية وملخص مبسّط بالإنجليزية.", "Fixed a real layout bug on Bounced Cheques: the Summary card's text box wasn't stretching to match the Status Breakdown chart beside it, leaving a blank gap - it now fills the card properly.": "أُصلح خلل في تقرير الشيكات المرتجعة: لم يكن مربع نص الملخص يتمدد لمجاراة رسم تفصيل الحالات المجاور، مما ترك فراغاً؛ وأصبح يملأ البطاقة.", "Ran a full accuracy audit across all 4 RTA reports (Occupancy, Renewals, Bounced Cheques, Collections) - checked every KPI, chart total, filter, and CSV export against the underlying data. No data errors found.": "أُجري تدقيق دقة للتقارير الأربعة في RTA (الإشغال والتجديدات والشيكات المرتجعة والتحصيل)، شمل المؤشرات وإجماليات الرسوم وعوامل التصفية وتصدير CSV مقابل البيانات الأصلية. لم تُكتشف أخطاء بيانات في ذلك التدقيق.", "Fixed the \"Activity by Day\" heatmap, which was stuck on \"Waiting for reports to finish loading\" - Renewals and Bounced Cheques now report day-by-day activity like the other portfolios.": "أُصلحت خريطة النشاط اليومي التي كانت عالقة عند انتظار تحميل التقارير؛ وأصبحت التجديدات والشيكات المرتجعة تعرض نشاطاً يومياً كالمحافظ الأخرى.", "Fixed uneven card widths and bar-chart sizing on Bounced Cheques and Renewals Tracking.": "أُصلح تفاوت عرض البطاقات وأحجام رسوم الأعمدة في الشيكات المرتجعة ومتابعة التجديدات.", "Rebuilt the charts and filter panel on all 4 RTA reports to be fully interactive - click a chart segment to filter the table, multi-select filters, search, and CSV export, matching Awqaf and Al Naser Club.": "أُعيد تجهيز الرسوم ولوحات التصفية لتقارير RTA الأربعة بالتصفية عبر الرسوم والاختيار المتعدد والبحث وتصدير CSV، على غرار الأوقاف ونادي النصر.", "Added RTA as a full portfolio: Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections, built from the Rent Roll workbook and the July 2026 monthly report.": "أُضيفت محفظة RTA بتقارير إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل، اعتماداً على ملف Rent Roll وتقرير يوليو 2026 الشهري.", "Al Naser Club's 4 reports (Bounced Cheques, Cheque Clearance, Collections Detail, Occupancy) added to the dashboard with realistic data.": "أُضيفت تقارير نادي النصر الأربعة (الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال) إلى اللوحة ببيانات واقعية.", "Original Awqaf build: report tabs, cross-checks, and Data Quality tracking all in place - the first portfolio this dashboard supported.": "الإصدار الأول للأوقاف: تبويبات التقارير والفحوص المتقاطعة ومتابعة جودة البيانات؛ وكانت أول محفظة تدعمها اللوحة.", "What's new": "المستجدات", "Recent additions to this dashboard": "الإضافات الأخيرة إلى هذه اللوحة", "Updates": "التحديثات", "Recent changes to this portfolio's reports": "التغييرات الأخيرة في تقارير هذه المحفظة", "No portfolio-specific updates logged yet.": "لم تُسجّل تحديثات خاصة بهذه المحفظة بعد.", "Metric": "المؤشر", "Period": "الفترة", "Bounce Rate": "معدل الارتجاع", "Bounced / At Risk": "المرتجع / المعرّض للخطر", "Report": "التقرير", "Count": "العدد", "What is counted": "ما الذي يُعدّ", "Total": "الإجمالي", "That doesn't look like a Dashboard backup file.": "لا يبدو هذا ملف نسخة احتياطية للوحة المعلومات الرئيسية.", "Unsupported backup identity or version. Production backups require separate provenance review before migration.": "هوية النسخة الاحتياطية أو إصدارها غير مدعوم. تتطلب نسخ الإنتاج مراجعة مستقلة لمصدرها قبل ترحيلها.", "Unknown portfolio or invalid history.": "محفظة غير معروفة أو سجل غير صالح.", "Invalid or duplicate reporting month.": "شهر تقرير غير صالح أو مكرر.", "History conflict: an existing month differs. Current history is retained; reconcile the revision before import.": "تعارض في السجل: يختلف شهر محفوظ عن النسخة. تم الاحتفاظ بالسجل الحالي؛ طابق المراجعة قبل الاستيراد.", "Data as of": "البيانات حتى", "Data as of this load": "البيانات عند هذا التحميل", "this period": "هذه الفترة", "generated": "تم الإنشاء", " — pulled from Bounced Cheques, Cheque Clearance, Collections Detail, and Occupancy.": " — مستمدة من الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال.", " — pulled from Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections.": " — مستمدة من إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل.", " — pulled from Harbor's monthly achievement report for the Dubai Police portfolio (aggregate figures only — no per-record workbook has been shared yet).": " — مستمدة من تقرير إنجاز Harbor الشهري لمحفظة شرطة دبي (أرقام مجمّعة فقط؛ لم يُشارك ملف عمل على مستوى السجل بعد).", "July 2026": "يوليو 2026", "Cross-checks": "الفحوص المتقاطعة", "Not applicable": "لا ينطبق", "no per-record data to cross-validate yet": "لا توجد بيانات على مستوى السجل للتحقق المتقاطع بعد", "Staff — PM User Workload": "الموظفون — عبء عمل مستخدمي PM", "Staff — Agent Workload": "الموظفون — عبء عمل الوكلاء", "All totals on this tab": "جميع إجماليات هذا التبويب", "Payment detail and installment distribution": "تفاصيل السداد وتوزيع الأقساط", "Recent changes to {portfolio} reports": "التغييرات الأخيرة في تقارير {portfolio}"};
+const REMAINING_UI = {"New Needs attention button on each report tab: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk and explained line by line. The rules are defaults and can be changed in the panel.": "زر جديد «يحتاج إلى متابعة» في كل تبويب تقرير: قائمة بالعقود القريبة من الانتهاء دون تجديد والشيكات المرتجعة اللافتة، مرتبة حسب الخطورة مع شرح السبب. القواعد افتراضية ويمكن تغييرها من اللوحة.", "The buttons at the top of each report now sit in the same order on every tab, with Updates always last.": "أصبحت الأزرار أعلى كل تقرير بالترتيب نفسه في كل تبويب، ويأتي زر التحديثات دائمًا في الآخر.", "Export Excel on every report tab: it downloads the month's original Excel file, with all its sheets and columns, or the file you loaded yourself.": "تصدير إلى Excel في كل تقرير: يحمّل ملف Excel الأصلي للشهر بجميع أوراقه وأعمدته، أو الملف الذي حمّلته بنفسك.", "Click any figure on a report tab to see the contracts behind it. Each list checks itself against the figure and shows a green tick when they match. Click a contract number to see everything about that contract across the four reports, and use the Contract number box at the top of each report to jump straight to one.": "انقر على أي رقم في تبويب التقرير لعرض العقود التي يتكوّن منها. تتحقق كل قائمة من نفسها مقابل الرقم وتُظهر علامة خضراء عند التطابق. انقر على رقم العقد لرؤية كل ما يخصه في التقارير الأربعة، واستخدم خانة رقم العقد أعلى كل تقرير للانتقال إليه مباشرة.", "The dashboard now reopens on the portfolio, month and tab you were last viewing.": "تُعيد اللوحة فتح المحفظة والشهر والتبويب الذي كنت تعرضه آخر مرة.", "Every headline figure on the Awqaf report tabs for August and September now opens the list of contracts behind it, checked against the figure itself.": "كل رقم رئيسي في تبويبات تقارير الأوقاف لشهري أغسطس وسبتمبر يفتح الآن قائمة العقود التي يتكوّن منها، بعد التحقق منها مقابل الرقم نفسه.", "Export Excel on the Awqaf reports returns the original August and September workbooks, so the sheets and columns match the files you keep.": "يعيد تصدير Excel في تقارير الأوقاف ملفات أغسطس وسبتمبر الأصلية، فتتطابق الأوراق والأعمدة مع الملفات التي تحتفظون بها.", "New TV button in the header: a full-screen wallboard for an office screen that rotates through Overview, Bounced cheques, Leasing and Requests every 20 seconds, in English or Arabic. Press Esc to exit.": "زر جديد للتلفاز في الأعلى: شاشة عرض كاملة لشاشة المكتب تتنقل كل 20 ثانية بين النظرة العامة والشيكات المرتجعة والتأجير والطلبات، بالإنجليزية أو العربية. اضغط Esc للخروج.", "Charts now animate in: bars grow, donuts sweep and trend lines draw when a tab opens, when you switch a filter or chip, and as you scroll down to them. Fast scrolling skips the animation, and it is turned off for reduced-motion settings and printing.": "أصبحت الرسوم البيانية متحركة: تنمو الأعمدة وتدور الرسوم الدائرية وتُرسم خطوط الاتجاه عند فتح التبويب أو تبديل المرشح أو عند التمرير إليها. يتخطى التمرير السريع الحركة، وتُعطّل عند تفعيل خيار تقليل الحركة وعند الطباعة.", "The dashboard now loads without the page jumping around: the Overview and data-health areas keep their space while the reports load.": "تُحمَّل اللوحة الآن دون قفز في الصفحة: تحتفظ النظرة العامة وحالة البيانات بمساحتها أثناء تحميل التقارير.", "September 2026 is loaded for all four Awqaf reports (Cheque Count, Bounced Cheques, Lease Activity, Request Count) and cross-checked against the source workbooks.": "تم تحميل بيانات سبتمبر 2026 لتقارير الأوقاف الأربعة (عدد الشيكات والشيكات المرتجعة ونشاط التأجير وعدد الطلبات) والتحقق منها مقابل ملفات المصدر.", "September bounced cheques: 31 cheques worth AED 415K, 1.8% of recorded value, under the 2% target.": "الشيكات المرتجعة في سبتمبر: 31 شيكاً بقيمة 415 ألف درهم، أي 1.8% من القيمة المسجلة، وهي دون الهدف البالغ 2%.", "Lease Activity: 515 lease contracts (501 renewals, 14 new), with AED 785K annual rent on the new leases, up from 11 new leases in the previous period.": "نشاط التأجير: 515 عقد إيجار (501 تجديد و14 جديداً)، بإيجار سنوي 785 ألف درهم للعقود الجديدة، مقابل 11 عقداً جديداً في الفترة السابقة.", "This dashboard is now behind a login - each approved viewer is scoped to their own portfolio automatically, instead of everyone seeing the full portfolio switcher.": "أصبحت اللوحة خلف تسجيل دخول؛ يُوجّه كل مستخدم معتمد تلقائياً إلى محفظته بدلاً من عرض جميع المحافظ.", "New Backup button in the header: download everything you've uploaded in this browser as a file, and load it back in later (or on a new device) without losing saved months.": "أُضيف زر النسخ الاحتياطي لحفظ الملخصات الشهرية والإعدادات في ملف واستعادتها لاحقاً أو على جهاز آخر. ملفات العمل الأصلية ليست ضمن النسخة.", "Every upload button now says clearly that uploading a file only previews it in your own browser - it's never shared with other viewers.": "توضح أزرار رفع الملفات أن الملف يُعرض في متصفحك فقط ولا يُشارك مع المستخدمين الآخرين.", "Cleaned up the wording on every report tab so status messages describe what's actually shown, instead of leftover build notes.": "نُقّحت عبارات تبويبات التقارير لتصف رسائل الحالة البيانات المعروضة فعلياً بدلاً من ملاحظات التطوير القديمة.", "New guided tour for first-time viewers - walks through the sidebar, search, Needs Attention, Executive Summary, Compare, and Board Pack. Reopen it anytime from the Tour button in the header.": "أُضيفت جولة للمستخدمين الجدد تشمل الشريط الجانبي والبحث وما يستدعي الانتباه والملخص التنفيذي والمقارنة وحزمة مجلس الإدارة. يمكن إعادة فتحها من زر الجولة.", "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Recorded, or a drop in occupancy (Al Naser) vs the last saved month. Swing size is configurable from the Thresholds button.": "ترصد لوحة ما يستدعي الانتباه التغيرات الشهرية تلقائياً: ارتفاع معدل الارتجاع أو انخفاض إجمالي المسجّل أو إشغال نادي النصر مقارنةً بآخر شهر محفوظ. يمكن ضبط حجم التغير من إعدادات الحدود.", "Executive Summary now shows exactly which bounced cheques are new vs resolved compared to last month, once 2+ real months are on record.": "يعرض الملخص التنفيذي الشيكات المرتجعة الجديدة وتلك التي تمت معالجتها مقارنةً بالشهر السابق، عند توفر شهرين فعليين أو أكثر.", "Compare tab: added a Print/Export PDF button and a CSV download of the comparison table.": "أُضيف إلى المقارنة زر للطباعة أو تصدير PDF وتنزيل جدول المقارنة بصيغة CSV.", "Executive Summary now tracks month-over-month trend automatically once 2+ months are uploaded (a real bar chart, plus quarterly/yearly views).": "يتابع الملخص التنفيذي الاتجاه الشهري تلقائياً عند رفع شهرين أو أكثر، برسم أعمدة وعروض ربع سنوية وسنوية.", "Uploaded reports now persist automatically — reload the page and everything you loaded is still there, no re-uploading.": "تُحفظ التقارير المرفوعة تلقائياً؛ تبقى الملفات المحمّلة متاحة بعد إعادة تحميل الصفحة دون رفعها مجدداً.", "New Compare tab: put any two portfolios side by side, with dropdowns to choose which ones and click-to-expand daily trend charts.": "أُضيف تبويب مقارنة محفظتين جنباً إلى جنب، مع قوائم اختيار ورسوم اتجاه يومية قابلة للتوسيع.", "Overview KPI cards now show a small trend sparkline under each headline number.": "تعرض بطاقات النظرة العامة رسماً مصغّراً للاتجاه أسفل كل قيمة رئيسية.", "Al Naser Club's 4 report types added to the demo dashboard with realistic synthetic data.": "أُضيفت أنواع تقارير نادي النصر الأربعة إلى اللوحة التجريبية باستخدام بيانات اصطناعية واقعية.", "Click any day on the Activity heatmap to see exactly which reports contributed to that day's total.": "اضغط على يوم في خريطة النشاط لمعرفة التقارير التي ساهمت في إجمالي ذلك اليوم.", "Added a light/dark mode toggle and a dedicated Executive Summary tab with headline KPI cards and a plain-English summary.": "أُضيف تبديل الوضع الفاتح والداكن وتبويب مستقل للملخص التنفيذي ببطاقات مؤشرات رئيسية وملخص مبسّط بالإنجليزية.", "Fixed a real layout bug on Bounced Cheques: the Summary card's text box wasn't stretching to match the Status Breakdown chart beside it, leaving a blank gap - it now fills the card properly.": "أُصلح خلل في تقرير الشيكات المرتجعة: لم يكن مربع نص الملخص يتمدد لمجاراة رسم تفصيل الحالات المجاور، مما ترك فراغاً؛ وأصبح يملأ البطاقة.", "Ran a full accuracy audit across all 4 RTA reports (Occupancy, Renewals, Bounced Cheques, Collections) - checked every KPI, chart total, filter, and CSV export against the underlying data. No data errors found.": "أُجري تدقيق دقة للتقارير الأربعة في RTA (الإشغال والتجديدات والشيكات المرتجعة والتحصيل)، شمل المؤشرات وإجماليات الرسوم وعوامل التصفية وتصدير CSV مقابل البيانات الأصلية. لم تُكتشف أخطاء بيانات في ذلك التدقيق.", "Fixed the \"Activity by Day\" heatmap, which was stuck on \"Waiting for reports to finish loading\" - Renewals and Bounced Cheques now report day-by-day activity like the other portfolios.": "أُصلحت خريطة النشاط اليومي التي كانت عالقة عند انتظار تحميل التقارير؛ وأصبحت التجديدات والشيكات المرتجعة تعرض نشاطاً يومياً كالمحافظ الأخرى.", "Fixed uneven card widths and bar-chart sizing on Bounced Cheques and Renewals Tracking.": "أُصلح تفاوت عرض البطاقات وأحجام رسوم الأعمدة في الشيكات المرتجعة ومتابعة التجديدات.", "Rebuilt the charts and filter panel on all 4 RTA reports to be fully interactive - click a chart segment to filter the table, multi-select filters, search, and CSV export, matching Awqaf and Al Naser Club.": "أُعيد تجهيز الرسوم ولوحات التصفية لتقارير RTA الأربعة بالتصفية عبر الرسوم والاختيار المتعدد والبحث وتصدير CSV، على غرار الأوقاف ونادي النصر.", "Added RTA as a full portfolio: Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections, built from the Rent Roll workbook and the July 2026 monthly report.": "أُضيفت محفظة RTA بتقارير إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل، اعتماداً على ملف Rent Roll وتقرير يوليو 2026 الشهري.", "Al Naser Club's 4 reports (Bounced Cheques, Cheque Clearance, Collections Detail, Occupancy) added to the dashboard with realistic data.": "أُضيفت تقارير نادي النصر الأربعة (الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال) إلى اللوحة ببيانات واقعية.", "Original Awqaf build: report tabs, cross-checks, and Data Quality tracking all in place - the first portfolio this dashboard supported.": "الإصدار الأول للأوقاف: تبويبات التقارير والفحوص المتقاطعة ومتابعة جودة البيانات؛ وكانت أول محفظة تدعمها اللوحة.", "What's new": "المستجدات", "Recent additions to this dashboard": "الإضافات الأخيرة إلى هذه اللوحة", "Updates": "التحديثات", "Recent changes to this portfolio's reports": "التغييرات الأخيرة في تقارير هذه المحفظة", "No portfolio-specific updates logged yet.": "لم تُسجّل تحديثات خاصة بهذه المحفظة بعد.", "Metric": "المؤشر", "Period": "الفترة", "Bounce Rate": "معدل الارتجاع", "Bounced / At Risk": "المرتجع / المعرّض للخطر", "Report": "التقرير", "Count": "العدد", "What is counted": "ما الذي يُعدّ", "Total": "الإجمالي", "That doesn't look like a Dashboard backup file.": "لا يبدو هذا ملف نسخة احتياطية للوحة المعلومات الرئيسية.", "Unsupported backup identity or version. Production backups require separate provenance review before migration.": "هوية النسخة الاحتياطية أو إصدارها غير مدعوم. تتطلب نسخ الإنتاج مراجعة مستقلة لمصدرها قبل ترحيلها.", "Unknown portfolio or invalid history.": "محفظة غير معروفة أو سجل غير صالح.", "Invalid or duplicate reporting month.": "شهر تقرير غير صالح أو مكرر.", "History conflict: an existing month differs. Current history is retained; reconcile the revision before import.": "تعارض في السجل: يختلف شهر محفوظ عن النسخة. تم الاحتفاظ بالسجل الحالي؛ طابق المراجعة قبل الاستيراد.", "Data as of": "البيانات حتى", "Data as of this load": "البيانات عند هذا التحميل", "this period": "هذه الفترة", "generated": "تم الإنشاء", " — pulled from Bounced Cheques, Cheque Clearance, Collections Detail, and Occupancy.": " — مستمدة من الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال.", " — pulled from Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections.": " — مستمدة من إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل.", " — pulled from Harbor's monthly achievement report for the Dubai Police portfolio (aggregate figures only — no per-record workbook has been shared yet).": " — مستمدة من تقرير إنجاز Harbor الشهري لمحفظة شرطة دبي (أرقام مجمّعة فقط؛ لم يُشارك ملف عمل على مستوى السجل بعد).", "July 2026": "يوليو 2026", "Cross-checks": "الفحوص المتقاطعة", "Not applicable": "لا ينطبق", "no per-record data to cross-validate yet": "لا توجد بيانات على مستوى السجل للتحقق المتقاطع بعد", "Staff — PM User Workload": "الموظفون — عبء عمل مستخدمي PM", "Staff — Agent Workload": "الموظفون — عبء عمل الوكلاء", "All totals on this tab": "جميع إجماليات هذا التبويب", "Payment detail and installment distribution": "تفاصيل السداد وتوزيع الأقساط", "Recent changes to {portfolio} reports": "التغييرات الأخيرة في تقارير {portfolio}"};
 function remainingText(value){ return currentLang === 'ar' && Object.prototype.hasOwnProperty.call(REMAINING_UI,value) ? REMAINING_UI[value] : value; }
 
 function t(key, fallback){
@@ -11890,6 +11915,8 @@ if(monthSelectEl){
 // aspirational or a roadmap item.
 const WHATS_NEW = [
   { date: '2026-10-22', items: [
+    "New Needs attention button on each report tab: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk and explained line by line. The rules are defaults and can be changed in the panel.",
+    "The buttons at the top of each report now sit in the same order on every tab, with Updates always last.",
     "Export Excel on every report tab: it downloads the month's original Excel file, with all its sheets and columns, or the file you loaded yourself.",
     "Click any figure on a report tab to see the contracts behind it. Each list checks itself against the figure and shows a green tick when they match. Click a contract number to see everything about that contract across the four reports, and use the Contract number box at the top of each report to jump straight to one.",
     "The dashboard now reopens on the portfolio, month and tab you were last viewing.",
@@ -12023,6 +12050,7 @@ const PORTFOLIO_UPDATES = {
   ],
   'awqaf': [
     { date: '2026-10-22', items: [
+      "New Needs attention button on each report tab: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk and explained line by line. The rules are defaults and can be changed in the panel.",
     "Every headline figure on the Awqaf report tabs for August and September now opens the list of contracts behind it, checked against the figure itself.",
     "Export Excel on the Awqaf reports returns the original August and September workbooks, so the sheets and columns match the files you keep.",
     ]},
@@ -13929,6 +13957,7 @@ function cols(d, color){
   if(window.TAB_UPDATES) return;
   var EXPORT = {en: "Export Excel returns the month's original workbook, with all its sheets and columns.", ar: 'يعيد تصدير Excel ملف Excel الأصلي للشهر بجميع أوراقه وأعمدته.'};
   var DRILL = {en: 'Click any figure to see the contracts behind it. Each list checks itself against the figure and shows a green tick when they match. Click a contract number for everything about that contract across the four reports, or type one into the Contract number box.', ar: 'انقر على أي رقم لعرض العقود التي يتكوّن منها. تتحقق كل قائمة من نفسها مقابل الرقم وتُظهر علامة خضراء عند التطابق. انقر على رقم العقد لرؤية كل ما يخصه في التقارير الأربعة، أو اكتب رقماً في خانة رقم العقد.'};
+  var RISK = {en: 'New Needs attention button: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk. The rules are defaults and can be changed in the panel.', ar: 'زر جديد «يحتاج إلى متابعة»: قائمة بالعقود القريبة من الانتهاء دون تجديد والشيكات المرتجعة اللافتة، مرتبة حسب الخطورة. القواعد افتراضية ويمكن تغييرها من اللوحة.'};
   window.TAB_UPDATES = {
     'overview': [
       {date: '2026-10-22', items: [{en: 'The dashboard reopens on the portfolio, month and tab you were last viewing.', ar: 'تُعيد اللوحة فتح المحفظة والشهر والتبويب الذي كنت تعرضه آخر مرة.'}]},
@@ -13949,19 +13978,19 @@ function cols(d, color){
       {date: '2026-10-16', items: [{en: 'September 2026: 515 lease contracts (501 renewals, 14 new), with AED 785K rent on the new leases.', ar: 'سبتمبر 2026: 515 عقد إيجار (501 تجديد و14 جديداً)، بإيجار 785 ألف درهم للعقود الجديدة.'}]}
     ],
     'request-count': [
-      {date: '2026-10-22', items: [EXPORT, DRILL]},
+      {date: '2026-10-22', items: [EXPORT, DRILL, RISK]},
       {date: '2026-10-16', items: [{en: 'September 2026: 412 requests worth AED 585K.', ar: 'سبتمبر 2026: 412 طلباً بقيمة 585 ألف درهم.'}]}
     ],
     'new-lease': [
-      {date: '2026-10-22', items: [EXPORT, DRILL, {en: 'Tenant names appear in the lists, taken from Cheque Count by contract number.', ar: 'تظهر أسماء المستأجرين في القوائم، مأخوذة من تقرير عدد الشيكات بحسب رقم العقد.'}]},
+      {date: '2026-10-22', items: [EXPORT, DRILL, RISK, {en: 'Tenant names appear in the lists, taken from Cheque Count by contract number.', ar: 'تظهر أسماء المستأجرين في القوائم، مأخوذة من تقرير عدد الشيكات بحسب رقم العقد.'}]},
       {date: '2026-10-16', items: [{en: 'September 2026: 14 new leases, AED 785K rent value and AED 885K fees recorded.', ar: 'سبتمبر 2026: 14 عقداً جديداً، بقيمة إيجار 785 ألف درهم ورسوم مسجلة 885 ألف درهم.'}]}
     ],
     'bounced-cheques': [
-      {date: '2026-10-22', items: [EXPORT, DRILL]},
+      {date: '2026-10-22', items: [EXPORT, DRILL, RISK]},
       {date: '2026-10-16', items: [{en: 'September 2026: 31 bounced cheques worth AED 415K, 1.8% of recorded value, under the 2% target.', ar: 'سبتمبر 2026: 31 شيكاً مرتجعاً بقيمة 415 ألف درهم، أي 1.8% من القيمة المسجلة، دون الهدف 2%.'}]}
     ],
     'count-report': [
-      {date: '2026-10-22', items: [EXPORT, DRILL]},
+      {date: '2026-10-22', items: [EXPORT, DRILL, RISK]},
       {date: '2026-10-16', items: [{en: 'September 2026: 1,609 installments on 405 contracts, AED 22.81M recorded.', ar: 'سبتمبر 2026: 1,609 دفعات على 405 عقداً، و22.81 مليون درهم مسجلة.'}]}
     ]
   };
@@ -14032,6 +14061,156 @@ function cols(d, color){
   if(panes){ new MutationObserver(decorate).observe(panes, {childList: true}); }
   decorate(); setInterval(decorate, 1000);
   window.TabUpdates = {open: open, decorate: decorate, unseen: unseen};
+})();
+
+</script>
+<script id="vfWeek3">
+/* Week 3 (trial v18): "Needs attention" list - renewal and bounced-cheque risk flags.
+   Rules are plain, visible and adjustable (defaults below are labelled as defaults until confirmed by the leasing and front-desk teams).
+   Reads the report data already on the page. It never changes embedded data and never touches the bounce-rate calculation. */
+(function(){
+  if(window.MDRisk) return;
+  var KEY = 'vfRiskRules';
+  var DEF = {days: 90, bounces: 2, topPct: 10};
+  var AR = {
+    'Needs attention':'يحتاج إلى متابعة','Ranked by risk. These are default rules — change any number and the list updates.':'مرتبة حسب الخطورة. هذه قواعد افتراضية — غيّر أي رقم وستتحدث القائمة.',
+    'Rules':'القواعد','Lease ends within':'ينتهي العقد خلال','days with no renewal':'يومًا دون تجديد','Tenant has':'لدى المستأجر','or more bounced cheques':'شيكات مرتجعة أو أكثر',
+    'Bounced cheque in the top':'شيك مرتجع ضمن أعلى','% by amount this month':'% من حيث المبلغ هذا الشهر','Reset to defaults':'استعادة الافتراضي','Export Excel':'تصدير إلى Excel',
+    'Risk':'الخطورة','High':'مرتفعة','Medium':'متوسطة','Tenant':'المستأجر','Contract':'العقد','Why flagged':'سبب الإشارة','Nothing needs attention under these rules':'لا شيء يحتاج إلى متابعة وفق هذه القواعد',
+    'Lease ends {d} (in {n} days) — no later contract found for this tenant and unit':'ينتهي العقد في {d} (بعد {n} يومًا) — لا يوجد عقد لاحق لهذا المستأجر والوحدة',
+    'Lease ended {d} ({n} days ago) — no later contract found for this tenant and unit':'انتهى العقد في {d} (قبل {n} يومًا) — لا يوجد عقد لاحق لهذا المستأجر والوحدة',
+    '{n} bounced cheques this month':'{n} شيكات مرتجعة هذا الشهر','Bounced cheque of AED {a} — top {p}% this month':'شيك مرتجع بمبلغ {a} درهم — ضمن أعلى {p}% هذا الشهر',
+    'Status: {s}':'الحالة: {s}','flagged':'مُشار إليه','Cheque Count and Bounced Cheques must be loaded':'يجب تحميل تقريري عدد الشيكات والشيكات المرتجعة',
+    'Open this contract':'افتح هذا العقد','Close':'إغلاق','Search…':'بحث…','Needs attention list':'قائمة المتابعة','Rule for lease ends and renewals is based on contracts loaded for this month':'قاعدة انتهاء العقد والتجديد مبنية على العقود المحمّلة لهذا الشهر'
+  };
+  try{ if(typeof REMAINING_UI === 'object') Object.keys(AR).forEach(function(k){ if(!(k in REMAINING_UI)) REMAINING_UI[k] = AR[k]; }); }catch(e){}
+  function tr(s){ try{ return typeof remainingText === 'function' ? remainingText(s) : s; }catch(e){ return s; } }
+  function T(s, v){ var o = tr(s); if(v) Object.keys(v).forEach(function(k){ o = o.split('{' + k + '}').join(v[k]); }); return o; }
+  function el(tag, cls, txt){ var e = document.createElement(tag); if(cls) e.className = cls; if(txt != null) e.textContent = txt; return e; }
+  function fmt(n){ return Number(n).toLocaleString('en-US', {maximumFractionDigits: 0}); }
+  function nk(s){ return String(s == null ? '' : s).trim().toUpperCase().replace(/\s+/g, ' '); }
+  function loadRules(){
+    var r = {days: DEF.days, bounces: DEF.bounces, topPct: DEF.topPct};
+    try{ var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if(s){ ['days','bounces','topPct'].forEach(function(k){ var n = +s[k]; if(isFinite(n) && n > 0) r[k] = n; }); } }catch(e){}
+    return r;
+  }
+  function saveRules(r){ try{ localStorage.setItem(KEY, JSON.stringify(r)); }catch(e){} }
+  function monthEnd(){ var m = ''; try{ m = currentMonth; }catch(e){} var y = +m.slice(0, 4), mo = +m.slice(5, 7); if(!y || !mo) return null; return new Date(Date.UTC(y, mo, 0)); }
+  function dayDiff(iso, ref){ var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); if(!p) return null; return Math.round((Date.UTC(+p[1], +p[2] - 1, +p[3]) - ref.getTime()) / 864e5); }
+
+  /* ---------- the rules ---------- */
+  function compute(rules){
+    var D = window.MDDrill; if(!D) return null;
+    var cr = D.records('count-report', false), bc = D.records('bounced-cheques', false), ref = monthEnd();
+    var out = {items: [], loaded: {count: !!(cr && cr.list.length), bounced: !!(bc && bc.list.length)}};
+    var map = {};
+    function item(ck, contract, tenant){ tenant = String(tenant || '').trim(); var it = map[ck]; if(!it){ it = map[ck] = {ck: ck, contract: contract || ck, tenant: tenant || '', reasons: [], score: 0, extra: ''}; out.items.push(it); } if(!it.tenant && tenant) it.tenant = tenant; return it; }
+    /* Rule 1: lease ending soon with no later contract for the same tenant and unit */
+    if(cr && ref){
+      var byCk = {}, byTU = {};
+      cr.list.forEach(function(x){ if(!x.ck) return; var c = byCk[x.ck]; if(!c){ c = byCk[x.ck] = {ck: x.ck, contract: x.contract, tenant: x.tenant, start: x.startISO || '', end: x.endISO || '', tu: nk(x.tenant) + '|' + nk(x.property) + '|' + nk(x.unit)}; } else { if(!c.end && x.endISO) c.end = x.endISO; if(!c.start && x.startISO) c.start = x.startISO; } });
+      Object.keys(byCk).forEach(function(k){ var c = byCk[k]; if(c.tu.indexOf('||') < 0 && nk(c.tenant)){ (byTU[c.tu] = byTU[c.tu] || []).push(c); } });
+      var monthStart = new Date(Date.UTC(ref.getUTCFullYear(), ref.getUTCMonth(), 1));
+      Object.keys(byCk).forEach(function(k){
+        var c = byCk[k]; if(!c.end) return;
+        var dEnd = dayDiff(c.end, ref), dStart = dayDiff(c.end, monthStart);
+        if(dEnd == null || dStart == null || dStart < 0 || dEnd > rules.days) return;
+        var peers = byTU[c.tu] || [], renewed = peers.some(function(p){ return p.ck !== c.ck && p.start && c.start && p.start > c.start; });
+        if(renewed) return;
+        var it = item(c.ck, c.contract, c.tenant);
+        it.reasons.push(dEnd >= 0 ? T('Lease ends {d} (in {n} days) — no later contract found for this tenant and unit', {d: c.end, n: dEnd}) : T('Lease ended {d} ({n} days ago) — no later contract found for this tenant and unit', {d: c.end, n: -dEnd}));
+        it.score += 40 + Math.max(0, Math.round((rules.days - Math.max(dEnd, 0)) / rules.days * 20)); it.end = c.end;
+      });
+    }
+    /* Rules 2 and 3: bounced cheques */
+    if(bc && bc.list.length){
+      var byT = {};
+      bc.list.forEach(function(x){ var t = nk(x.tenant) || ('C:' + x.ck); (byT[t] = byT[t] || []).push(x); });
+      Object.keys(byT).forEach(function(t){ var l = byT[t]; if(l.length >= rules.bounces){ l.forEach(function(x, i){ if(i) return; var it = item(x.ck || t, x.contract, x.tenant); it.reasons.push(T('{n} bounced cheques this month', {n: l.length})); it.score += 50 + 10 * (l.length - rules.bounces); }); } });
+      var am = bc.list.map(function(x){ return x.amountN || 0; }).sort(function(a, b){ return b - a; });
+      var k = Math.max(1, Math.ceil(am.length * rules.topPct / 100)), cut = am[Math.min(k, am.length) - 1];
+      bc.list.forEach(function(x){ if(x.amountN > 0 && x.amountN >= cut){ var it = item(x.ck || nk(x.tenant), x.contract, x.tenant); it.reasons.push(T('Bounced cheque of AED {a} — top {p}% this month', {a: fmt(x.amountN), p: rules.topPct})); if(x.status) it.extra = T('Status: {s}', {s: x.status}); it.score += 30; it.amount = (it.amount || 0) + x.amountN; } });
+    }
+    out.items.sort(function(a, b){ return b.score - a.score || String(a.tenant).localeCompare(String(b.tenant)); });
+    out.items.forEach(function(it){ it.level = it.score >= 70 ? 'High' : 'Medium'; });
+    return out;
+  }
+
+  /* ---------- dialog ---------- */
+  var dlg, body, rules = loadRules();
+  function ensure(){
+    if(dlg) return;
+    dlg = document.createElement('dialog'); dlg.className = 'vf-drawer vf-risk'; dlg.setAttribute('aria-label', 'Needs attention');
+    body = el('div', 'vf-d-body'); dlg.appendChild(body);
+    dlg.addEventListener('click', function(e){ if(e.target === dlg) close(); });
+    document.body.appendChild(dlg);
+  }
+  function close(){ if(!dlg) return; try{ dlg.close(); }catch(e){ dlg.removeAttribute('open'); } }
+  function csv(res){
+    var esc = function(v){ v = v == null ? '' : String(v); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var rows = [[tr('Risk'), tr('Tenant'), tr('Contract'), tr('Why flagged')]].concat(res.items.map(function(it){ return [tr(it.level), it.tenant, it.contract, it.reasons.join(' | ')]; }));
+    var b = new Blob(['﻿' + rows.map(function(r){ return r.map(esc).join(','); }).join('\r\n')], {type: 'text/csv;charset=utf-8'});
+    var a = document.createElement('a'); a.href = URL.createObjectURL(b); var m = ''; try{ m = currentMonth; }catch(e){} a.download = 'Needs-attention_' + m + '.csv'; document.body.appendChild(a); a.click(); setTimeout(function(){ try{ URL.revokeObjectURL(a.href); }catch(e){} a.remove(); }, 500);
+  }
+  function numInput(key, min, max){
+    var i = el('input', 'vf-risk-num'); i.type = 'number'; i.min = min; i.max = max; i.step = 1; i.value = rules[key]; i.setAttribute('data-rule', key);
+    i.addEventListener('change', function(){ var n = Math.round(+i.value); if(!isFinite(n) || n < min) n = min; if(n > max) n = max; rules[key] = n; saveRules(rules); render(); });
+    return i;
+  }
+  function ruleRow(pre, key, post, min, max){ var r = el('label', 'vf-risk-rule'); r.appendChild(el('span', null, tr(pre))); r.appendChild(numInput(key, min, max)); r.appendChild(el('span', null, tr(post))); return r; }
+  function render(){
+    if(!dlg || !dlg.open) return;
+    var res = compute(rules); body.innerHTML = '';
+    var h = el('div', 'vf-d-head'), t = el('div', 'vf-d-titles');
+    t.appendChild(el('div', 'vf-d-title', tr('Needs attention')));
+    t.appendChild(el('div', 'vf-d-sub', tr('Ranked by risk. These are default rules — change any number and the list updates.')));
+    h.appendChild(t);
+    var act = el('div', 'vf-d-actions');
+    if(res && res.items.length){ var ex = el('button', 'vf-btn', tr('Export Excel')); ex.type = 'button'; ex.addEventListener('click', function(){ csv(res); }); act.appendChild(ex); }
+    var x = el('button', 'vf-btn vf-x', '✕'); x.type = 'button'; x.setAttribute('aria-label', tr('Close')); x.addEventListener('click', close); act.appendChild(x);
+    h.appendChild(act); body.appendChild(h);
+    var rb = el('div', 'vf-risk-rules'); rb.appendChild(el('div', 'vf-risk-rt', tr('Rules')));
+    rb.appendChild(ruleRow('Lease ends within', 'days', 'days with no renewal', 1, 365));
+    rb.appendChild(ruleRow('Tenant has', 'bounces', 'or more bounced cheques', 2, 20));
+    rb.appendChild(ruleRow('Bounced cheque in the top', 'topPct', '% by amount this month', 1, 50));
+    var rs = el('button', 'vf-btn', tr('Reset to defaults')); rs.type = 'button'; rs.addEventListener('click', function(){ rules = {days: DEF.days, bounces: DEF.bounces, topPct: DEF.topPct}; saveRules(rules); render(); }); rb.appendChild(rs);
+    body.appendChild(rb);
+    var wrap = el('div', 'vf-d-tablewrap');
+    if(!res || (!res.loaded.count && !res.loaded.bounced)){ wrap.appendChild(el('div', 'vf-empty', tr('Cheque Count and Bounced Cheques must be loaded'))); }
+    else if(!res.items.length){ wrap.appendChild(el('div', 'vf-empty', tr('Nothing needs attention under these rules'))); }
+    else {
+      var tb = el('table', 'vf-table'), th = el('thead'), hr = el('tr');
+      ['Risk', 'Tenant', 'Contract', 'Why flagged'].forEach(function(c){ hr.appendChild(el('th', null, tr(c))); }); th.appendChild(hr); tb.appendChild(th);
+      var tbody = el('tbody');
+      res.items.forEach(function(it){
+        var tr1 = el('tr'); var rk = el('td'); rk.appendChild(el('span', 'vf-risk-pill vf-risk-' + it.level.toLowerCase(), tr(it.level))); tr1.appendChild(rk);
+        tr1.appendChild(el('td', null, it.tenant || '—'));
+        var ct = el('td'); var a = el('button', 'vf-link', it.contract); a.type = 'button'; a.title = tr('Open this contract'); a.addEventListener('click', function(){ close(); try{ window.MDDrill.openContract(it.contract); }catch(e){} }); ct.appendChild(a); tr1.appendChild(ct);
+        var why = el('td'); it.reasons.forEach(function(r){ why.appendChild(el('div', null, r)); }); if(it.extra) why.appendChild(el('div', 'vf-risk-x', it.extra)); tr1.appendChild(why);
+        tbody.appendChild(tr1);
+      });
+      tb.appendChild(tbody); wrap.appendChild(tb);
+      wrap.appendChild(el('div', 'vf-risk-note', res.items.length + ' ' + tr('flagged') + ' · ' + tr('Rule for lease ends and renewals is based on contracts loaded for this month')));
+    }
+    body.appendChild(wrap);
+  }
+  function open(){ ensure(); rules = loadRules(); if(!dlg.open){ try{ dlg.showModal(); }catch(e){ dlg.setAttribute('open', ''); } } render(); }
+
+  /* ---------- button on each report toolbar ---------- */
+  var IDS = {'bounced-cheques':1, 'new-lease':1, 'count-report':1, 'request-count':1};
+  function decorate(){
+    document.querySelectorAll('.report-pane[data-report]').forEach(function(p){
+      if(!IDS[p.dataset.report]) return;
+      var bar = p.querySelector(':scope > .vf-bar'); if(!bar) return;
+      var b = bar.querySelector('[data-vf-risk]');
+      if(!b){ b = el('button', 'theme-switch', tr('Needs attention')); b.type = 'button'; b.setAttribute('data-vf-risk', '1'); b.addEventListener('click', open); bar.insertBefore(b, bar.firstChild); }
+      else { var t = tr('Needs attention'); if(b.textContent !== t) b.textContent = t; }
+    });
+    if(dlg && dlg.open){ var t2 = tr('Needs attention'); var tt = dlg.querySelector('.vf-d-title'); if(tt && tt.textContent !== t2) render(); }
+  }
+  document.addEventListener('click', function(e){ if(e.target && e.target.id === 'langBtn') setTimeout(function(){ decorate(); render(); }, 80); });
+  setInterval(decorate, 1000); setTimeout(decorate, 400);
+  window.MDRisk = {compute: compute, open: open, rules: loadRules, defaults: DEF};
 })();
 
 </script>

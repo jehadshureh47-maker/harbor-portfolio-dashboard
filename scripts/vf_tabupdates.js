@@ -4,6 +4,7 @@
   if(window.TAB_UPDATES) return;
   var EXPORT = {en: "Export Excel returns the month's original workbook, with all its sheets and columns.", ar: 'يعيد تصدير Excel ملف Excel الأصلي للشهر بجميع أوراقه وأعمدته.'};
   var DRILL = {en: 'Click any figure to see the contracts behind it. Each list checks itself against the figure and shows a green tick when they match. Click a contract number for everything about that contract across the four reports, or type one into the Contract number box.', ar: 'انقر على أي رقم لعرض العقود التي يتكوّن منها. تتحقق كل قائمة من نفسها مقابل الرقم وتُظهر علامة خضراء عند التطابق. انقر على رقم العقد لرؤية كل ما يخصه في التقارير الأربعة، أو اكتب رقماً في خانة رقم العقد.'};
+  var RISK = {en: 'New Needs attention button: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk. The rules are defaults and can be changed in the panel.', ar: 'زر جديد «يحتاج إلى متابعة»: قائمة بالعقود القريبة من الانتهاء دون تجديد والشيكات المرتجعة اللافتة، مرتبة حسب الخطورة. القواعد افتراضية ويمكن تغييرها من اللوحة.'};
   window.TAB_UPDATES = {
     'overview': [
       {date: '2026-10-22', items: [{en: 'The dashboard reopens on the portfolio, month and tab you were last viewing.', ar: 'تُعيد اللوحة فتح المحفظة والشهر والتبويب الذي كنت تعرضه آخر مرة.'}]},
@@ -24,19 +25,19 @@
       {date: '2026-10-16', items: [{en: 'September 2026: 515 lease contracts (501 renewals, 14 new), with AED 785K rent on the new leases.', ar: 'سبتمبر 2026: 515 عقد إيجار (501 تجديد و14 جديداً)، بإيجار 785 ألف درهم للعقود الجديدة.'}]}
     ],
     'request-count': [
-      {date: '2026-10-22', items: [EXPORT, DRILL]},
+      {date: '2026-10-22', items: [EXPORT, DRILL, RISK]},
       {date: '2026-10-16', items: [{en: 'September 2026: 412 requests worth AED 585K.', ar: 'سبتمبر 2026: 412 طلباً بقيمة 585 ألف درهم.'}]}
     ],
     'new-lease': [
-      {date: '2026-10-22', items: [EXPORT, DRILL, {en: 'Tenant names appear in the lists, taken from Cheque Count by contract number.', ar: 'تظهر أسماء المستأجرين في القوائم، مأخوذة من تقرير عدد الشيكات بحسب رقم العقد.'}]},
+      {date: '2026-10-22', items: [EXPORT, DRILL, RISK, {en: 'Tenant names appear in the lists, taken from Cheque Count by contract number.', ar: 'تظهر أسماء المستأجرين في القوائم، مأخوذة من تقرير عدد الشيكات بحسب رقم العقد.'}]},
       {date: '2026-10-16', items: [{en: 'September 2026: 14 new leases, AED 785K rent value and AED 885K fees recorded.', ar: 'سبتمبر 2026: 14 عقداً جديداً، بقيمة إيجار 785 ألف درهم ورسوم مسجلة 885 ألف درهم.'}]}
     ],
     'bounced-cheques': [
-      {date: '2026-10-22', items: [EXPORT, DRILL]},
+      {date: '2026-10-22', items: [EXPORT, DRILL, RISK]},
       {date: '2026-10-16', items: [{en: 'September 2026: 31 bounced cheques worth AED 415K, 1.8% of recorded value, under the 2% target.', ar: 'سبتمبر 2026: 31 شيكاً مرتجعاً بقيمة 415 ألف درهم، أي 1.8% من القيمة المسجلة، دون الهدف 2%.'}]}
     ],
     'count-report': [
-      {date: '2026-10-22', items: [EXPORT, DRILL]},
+      {date: '2026-10-22', items: [EXPORT, DRILL, RISK]},
       {date: '2026-10-16', items: [{en: 'September 2026: 1,609 installments on 405 contracts, AED 22.81M recorded.', ar: 'سبتمبر 2026: 1,609 دفعات على 405 عقداً، و22.81 مليون درهم مسجلة.'}]}
     ]
   };
