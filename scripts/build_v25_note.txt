@@ -1,0 +1,1 @@
+v25 = v24 with the vfArNumJs script body replaced by scripts/vf_arnum.js (same step 1 as build_v24.py). Nothing else changed.
