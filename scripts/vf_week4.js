@@ -14,6 +14,7 @@
     'Set in Thresholds':'يُحدَّد من الحدود','Type a target':'اكتب هدفًا',
     'Only {n} month is recorded in this browser, so comparisons need a second month. Open the Executive Summary for another month to record it.':'تم تسجيل شهر واحد فقط ({n}) في هذا المتصفح، وتحتاج المقارنة إلى شهر ثانٍ. افتح الملخص التنفيذي لشهر آخر لتسجيله.',
     'This month is not recorded yet. Open the Executive Summary tab once, then reopen this panel.':'لم يُسجَّل هذا الشهر بعد. افتح تبويب الملخص التنفيذي مرة واحدة ثم أعد فتح هذه اللوحة.',
+    'There are no fixed monthly targets for leases, new-lease rent, cheque value or requests (property administrator, 22 Oct 2026), so these stay blank unless you type one. The bounce target is set in Thresholds.':'لا توجد أهداف شهرية ثابتة لعقود الإيجار أو إيجار العقود الجديدة أو قيمة الشيكات أو الطلبات (مديرة الأملاك، 22 أكتوبر 2026)، لذا تبقى فارغة ما لم تكتب هدفًا. يُحدَّد هدف الارتداد في «الحدود».',
     'Targets are typed by you and kept in this browser only. Trends and the year-to-date column get richer as more months are loaded.':'الأهداف تكتبها أنت وتُحفظ في هذا المتصفح فقط. تزداد الاتجاهات وعمود منذ بداية السنة ثراءً كلما حُمّلت أشهر أكثر.',
     'months':'أشهر','Close':'إغلاق','Export Excel':'تصدير إلى Excel','Based on':'بناءً على'
   };
@@ -122,6 +123,7 @@
         tbody.appendChild(row);
       });
       tb.appendChild(tbody); wrap.appendChild(tb);
+      wrap.appendChild(el('div', 'vf-risk-note', tr('There are no fixed monthly targets for leases, new-lease rent, cheque value or requests (property administrator, 22 Oct 2026), so these stay blank unless you type one. The bounce target is set in Thresholds.')));
       wrap.appendChild(el('div', 'vf-risk-note', tr('Targets are typed by you and kept in this browser only. Trends and the year-to-date column get richer as more months are loaded.')));
     }
     body.appendChild(wrap);

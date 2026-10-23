@@ -4,11 +4,14 @@
 (function(){
   if(window.MDRisk) return;
   var KEY = 'vfRiskRules';
-  var DEF = {days: 90, bounces: 2, topPct: 10};
+  /* Defaults follow the property administrator's reply of 22 Oct 2026: reminder 90 days before expiry; flag a tenant with MORE THAN 3 bounced cheques (so 4 or more); no value-based priority, so the top-% rule is a warning only. */
+  var DEF = {days: 90, bounces: 4, topPct: 10}, RULES_VER = 2;
   var AR = {
     'Needs attention':'يحتاج إلى متابعة','Ranked by risk. These are default rules — change any number and the list updates.':'مرتبة حسب الخطورة. هذه قواعد افتراضية — غيّر أي رقم وستتحدث القائمة.',
     'Rules':'القواعد','Lease ends within':'ينتهي العقد خلال','days with no renewal':'يومًا دون تجديد','Tenant has':'لدى المستأجر','or more bounced cheques':'شيكات مرتجعة أو أكثر',
     'Bounced cheque in the top':'شيك مرتجع ضمن أعلى','% by amount this month':'% من حيث المبلغ هذا الشهر','Reset to defaults':'استعادة الافتراضي','Export Excel':'تصدير إلى Excel',
+    'or more bounced cheques (all loaded months)':'شيكات مرتجعة أو أكثر (في كل الأشهر المحمّلة)','Warn on a bounced cheque in the top':'تنبيه عند شيك مرتجع ضمن أعلى','% by amount this month (warning only)':'% من حيث المبلغ هذا الشهر (تنبيه فقط)',
+    '{n} bounced cheques across loaded months ({m} this month)':'{n} شيكات مرتجعة عبر الأشهر المحمّلة ({m} هذا الشهر)','Warning: bounced cheque of AED {a} — top {p}% this month (all bounced cheques have the same priority)':'تنبيه: شيك مرتجع بمبلغ {a} درهم — ضمن أعلى {p}% هذا الشهر (جميع الشيكات المرتجعة بنفس الأولوية)','Low':'منخفضة',
     'Risk':'الخطورة','High':'مرتفعة','Medium':'متوسطة','Tenant':'المستأجر','Contract':'العقد','Why flagged':'سبب الإشارة','Nothing needs attention under these rules':'لا شيء يحتاج إلى متابعة وفق هذه القواعد',
     'Lease ends {d} (in {n} days) — no later contract found for this tenant and unit':'ينتهي العقد في {d} (بعد {n} يومًا) — لا يوجد عقد لاحق لهذا المستأجر والوحدة',
     'Lease ended {d} ({n} days ago) — no later contract found for this tenant and unit':'انتهى العقد في {d} (قبل {n} يومًا) — لا يوجد عقد لاحق لهذا المستأجر والوحدة',
@@ -24,10 +27,29 @@
   function nk(s){ return String(s == null ? '' : s).trim().toUpperCase().replace(/\s+/g, ' '); }
   function loadRules(){
     var r = {days: DEF.days, bounces: DEF.bounces, topPct: DEF.topPct};
-    try{ var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if(s){ ['days','bounces','topPct'].forEach(function(k){ var n = +s[k]; if(isFinite(n) && n > 0) r[k] = n; }); } }catch(e){}
+    try{ var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if(s && s.ver === RULES_VER){ ['days','bounces','topPct'].forEach(function(k){ var n = +s[k]; if(isFinite(n) && n > 0) r[k] = n; }); } }catch(e){}
     return r;
   }
-  function saveRules(r){ try{ localStorage.setItem(KEY, JSON.stringify(r)); }catch(e){} }
+  function saveRules(r){ try{ var o = {ver: RULES_VER}; Object.keys(r).forEach(function(k){ o[k] = r[k]; }); localStorage.setItem(KEY, JSON.stringify(o)); }catch(e){} }
+  /* Bounced cheques of the other loaded months (read from the original workbooks kept in the page), so repeat bounces count across months. */
+  var PB_CACHE = {};
+  function priorBounces(){
+    var out = [], O = window.__VF_ORIGINALS, p, cur, w;
+    try{ p = currentPortfolio; cur = currentMonth; w = embeddedWindows['bounced-cheques']; }catch(e){ return out; }
+    if(!cur || !O || !O[p] || !w || !w.eval) return out;
+    var fn; try{ fn = w.eval('(function(u){var wb=XLSX.read(u,{type:"array",cellDates:true});var raw=XLSX.utils.sheet_to_json(wb.Sheets[pickBestSheet(wb)],{header:1,raw:true,defval:null});var m=detectColumnMapping(raw[0]||[]);var o=[];for(var i=1;i<raw.length;i++){var r=raw[i];if(!r||!r.some(function(v){return v!==null&&String(v).trim()!==""}))continue;o.push([m.tenant>=0&&m.tenant!=null?r[m.tenant]:"",m.contract>=0&&m.contract!=null?r[m.contract]:""]);}return JSON.stringify(o);})'); }catch(e){ return out; }
+    Object.keys(O[p]).forEach(function(mo){
+      if(mo === cur) return; var f = O[p][mo] && O[p][mo]['bounced-cheques']; if(!f || !f.d) return;
+      var hit = PB_CACHE[mo];
+      if(!hit || hit.d !== f.d){
+        hit = {d: f.d, rows: []};
+        try{ var bin = atob(f.d), u = new w.Uint8Array(bin.length); for(var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); hit.rows = JSON.parse(fn(u)); }catch(e){ hit.rows = []; }
+        PB_CACHE[mo] = hit;
+      }
+      hit.rows.forEach(function(r){ out.push({month: mo, tenant: r[0], contract: r[1]}); });
+    });
+    return out;
+  }
   function monthEnd(){ var m = ''; try{ m = currentMonth; }catch(e){} var y = +m.slice(0, 4), mo = +m.slice(5, 7); if(!y || !mo) return null; return new Date(Date.UTC(y, mo, 0)); }
   function dayDiff(iso, ref){ var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); if(!p) return null; return Math.round((Date.UTC(+p[1], +p[2] - 1, +p[3]) - ref.getTime()) / 864e5); }
 
@@ -59,13 +81,15 @@
     if(bc && bc.list.length){
       var byT = {};
       bc.list.forEach(function(x){ var t = nk(x.tenant) || ('C:' + x.ck); (byT[t] = byT[t] || []).push(x); });
-      Object.keys(byT).forEach(function(t){ var l = byT[t]; if(l.length >= rules.bounces){ l.forEach(function(x, i){ if(i) return; var it = item(x.ck || t, x.contract, x.tenant); it.reasons.push(T('{n} bounced cheques this month', {n: l.length})); it.score += 50 + 10 * (l.length - rules.bounces); }); } });
+      var prior = {}; priorBounces().forEach(function(p){ var t = nk(p.tenant); if(t) prior[t] = (prior[t] || 0) + 1; });
+      var tenantItem = {};
+      Object.keys(byT).forEach(function(t){ var l = byT[t], pr = prior[t] || 0, tot = l.length + pr; if(tot >= rules.bounces){ l.forEach(function(x, i){ if(i) return; var it = item(x.ck || t, x.contract, x.tenant); tenantItem[t] = it; it.reasons.push(pr ? T('{n} bounced cheques across loaded months ({m} this month)', {n: tot, m: l.length}) : T('{n} bounced cheques this month', {n: tot})); it.score += 50 + 10 * (tot - rules.bounces); }); } });
       var am = bc.list.map(function(x){ return x.amountN || 0; }).sort(function(a, b){ return b - a; });
       var k = Math.max(1, Math.ceil(am.length * rules.topPct / 100)), cut = am[Math.min(k, am.length) - 1];
-      bc.list.forEach(function(x){ if(x.amountN > 0 && x.amountN >= cut){ var it = item(x.ck || nk(x.tenant), x.contract, x.tenant); it.reasons.push(T('Bounced cheque of AED {a} — top {p}% this month', {a: fmt(x.amountN), p: rules.topPct})); if(x.status) it.extra = T('Status: {s}', {s: x.status}); it.score += 30; it.amount = (it.amount || 0) + x.amountN; } });
+      bc.list.forEach(function(x){ if(x.amountN > 0 && x.amountN >= cut){ var it = tenantItem[nk(x.tenant) || ('C:' + x.ck)] || item(x.ck || nk(x.tenant), x.contract, x.tenant); it.reasons.push(T('Warning: bounced cheque of AED {a} — top {p}% this month (all bounced cheques have the same priority)', {a: fmt(x.amountN), p: rules.topPct})); if(x.status) it.extra = T('Status: {s}', {s: x.status}); it.amount = (it.amount || 0) + x.amountN; } });
     }
     out.items.sort(function(a, b){ return b.score - a.score || String(a.tenant).localeCompare(String(b.tenant)); });
-    out.items.forEach(function(it){ it.level = it.score >= 70 ? 'High' : 'Medium'; });
+    out.items.forEach(function(it){ it.level = it.score >= 70 ? 'High' : (it.score > 0 ? 'Medium' : 'Low'); });
     return out;
   }
 
@@ -104,8 +128,8 @@
     h.appendChild(act); body.appendChild(h);
     var rb = el('div', 'vf-risk-rules'); rb.appendChild(el('div', 'vf-risk-rt', tr('Rules')));
     rb.appendChild(ruleRow('Lease ends within', 'days', 'days with no renewal', 1, 365));
-    rb.appendChild(ruleRow('Tenant has', 'bounces', 'or more bounced cheques', 2, 20));
-    rb.appendChild(ruleRow('Bounced cheque in the top', 'topPct', '% by amount this month', 1, 50));
+    rb.appendChild(ruleRow('Tenant has', 'bounces', 'or more bounced cheques (all loaded months)', 2, 20));
+    rb.appendChild(ruleRow('Warn on a bounced cheque in the top', 'topPct', '% by amount this month (warning only)', 1, 50));
     var rs = el('button', 'vf-btn', tr('Reset to defaults')); rs.type = 'button'; rs.addEventListener('click', function(){ rules = {days: DEF.days, bounces: DEF.bounces, topPct: DEF.topPct}; saveRules(rules); render(); }); rb.appendChild(rs);
     body.appendChild(rb);
     var wrap = el('div', 'vf-d-tablewrap');
