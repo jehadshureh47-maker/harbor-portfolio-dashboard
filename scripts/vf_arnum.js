@@ -13,7 +13,7 @@
     'مستخدم':['مستخدم','مستخدمان','مستخدمين'], 'صف':['صف','صفان','صفوف'], 'عنصر':['عنصر','عنصران','عناصر'],
     'ملف':['ملف','ملفان','ملفات'], 'اختلاف':['اختلاف','اختلافان','اختلافات'], 'تحذير':['تحذير','تحذيران','تحذيرات'],
     'ملاحظة':['ملاحظة','ملاحظتان','ملاحظات'], 'فحص':['فحص','فحصان','فحوصات'], 'مستأجر':['مستأجر','مستأجران','مستأجرين'],
-    'وحدة':['وحدة','وحدتان','وحدات'], 'مبنى':['مبنى','مبنيان','مباني'], 'اجتماع':['اجتماع','اجتماعان','اجتماعات']
+    'وحدة':['وحدة','وحدتان','وحدات'], 'مبنى':['مبنى','مبنيان','مباني'], 'اجتماع':['اجتماع','اجتماعان','اجتماعات'], 'معلومة':['معلومة','معلومتان','معلومات']
   };
   var form = {}, TAN = ['', 'اً', 'ًا', 'ً'];
   Object.keys(L).forEach(function(k){
@@ -23,8 +23,8 @@
   });
   var alt = Object.keys(form).sort(function(a, b){ return b.length - a.length; }).join('|');
   // what may follow a counted noun for 11+ (tanween is only right when nothing is in construct with it)
-  var OK11 = '(?=$|[^\\u0600-\\u06FF\\s]|[،؛؟]|\\s+[^\\u0600-\\u06FF\\s]|\\s+(?:من|في|على|عبر|مقابل|لدى|مع|بعد|قبل|حتى|إلى|عن|منها|فقط|يوم|بتاريخ|تحتاج|هذه|هذا)(?![\\u0600-\\u06FF])|\\s*و\\d)';
-  var ADJW = 'مسجلة|مسجل|مرتجعة|مرتجع|جديدة|جديد|مقدّم|موقّع';
+  var OK11 = '(?=$|[^\\u0600-\\u06FF\\s]|[،؛؟]|\\s+[^\\u0600-\\u06FF\\s]|\\s+(?:من|في|على|عبر|مقابل|لدى|مع|بعد|قبل|حتى|إلى|عن|منها|فقط|يوم|بتاريخ|تحتاج|هذه|هذا|له|تظهر|تمت|ظهرت)(?![\\u0600-\\u06FF])|\\s*و\\d)';
+  var ADJW = 'مسجلاً|مرتجعاً|جديداً|مقدّماً|موقّعاً|مسجلة|مسجل|مرتجعة|مرتجع|جديدة|جديد|مقدّم|موقّع';
   var RX = new RegExp('(?<![\\d.,٫])(\\d+(?:,\\d{3})*)(\\s+)(' + alt + ')(?![ء-يً-ْ])(?:(\\s+)(' + ADJW + ')(?![ء-يً-ْ]))?', 'g');
   var ADJ_ACC = {'مسجلة':'مسجلاً','مسجل':'مسجلاً','مرتجعة':'مرتجعاً','مرتجع':'مرتجعاً','جديد':'جديداً','جديدة':'جديداً','مقدّم':'مقدّماً','موقّع':'موقّعاً'};
   var ADJ_PL = {'مسجل':'مسجلة','مرتجع':'مرتجعة','جديد':'جديدة','موقّع':'موقّعة','مقدّم':'مقدّمة'};
@@ -37,9 +37,10 @@
       var n = parseInt(num.replace(/,/g, ''), 10), k = form[w];
       if(isNaN(n) || !k) return m;
       var f = L[k], out = null, adj = null, prev = off > 0 ? str.charAt(off - 1) : '';
+      if(n >= 11 && w === acc(f[0]) && !(prev === '-' || prev === '−')) return m;
       if(prev === '-' || prev === '−'){ out = f[0]; }
       else if(n === 1) out = f[0];
-      else if(n === 2) out = f[1];
+      else if(n === 2) out = (/(^|\s)من\s$/.test(str.slice(Math.max(0, off - 4), off))) ? f[1].replace(/ان$/, 'ين') : f[1];
       else if(n >= 3 && n <= 10){ out = f[2]; if(MASC[k]) adj = ADJ_PL; }
       else if(n >= 11){
         if(aw || new RegExp('^' + OK11).test(after)){ out = acc(f[0]); if(MASC[k]) adj = ADJ_ACC; }
@@ -73,6 +74,7 @@
     'total (filtered)':'الإجمالي (بعد التصفية)', 'al naser club':'نادي النصر', 'no change':'دون تغيير',
     'automatic checks between overlapping reports.':'فحوصات تلقائية بين التقارير المتداخلة.', 'activity by day across the four reports.':'النشاط اليومي عبر التقارير الأربعة.',
     'report tabs':'تبويبات التقارير', 'how to read this dashboard':'كيفية قراءة هذه اللوحة', 'switch to light mode':'التبديل إلى الوضع الفاتح', 'switch to dark mode':'التبديل إلى الوضع الداكن', 'toggle light/dark mode':'تبديل الوضع الفاتح/الداكن', "what's changed in this portfolio's reports":'ما الذي تغيّر في تقارير هذه المحفظة', 'updates for this portfolio':'مستجدات هذه المحفظة',
+    'executive summary views':'عروض الملخص التنفيذي', 'narrative report only':'من التقرير السردي فقط',
     'installments per day':'أقساط يومياً', 'rent installments per day':'أقساط الإيجار يومياً',
     'no filters applied — showing all values.':'لا توجد مرشحات مطبّقة — تُعرض كل القيم.'
   };
@@ -82,13 +84,10 @@
   var DIR = function(w){ return /^under$/i.test(w) ? 'أقل من' : 'أعلى من'; };
   var SRC = [[/Bounced Cheque List/g,'قائمة الشيكات المرتجعة'],[/Cheque Clearance/g,'مقاصة الشيكات'],[/Harbor Collections in Detail/g,'تفاصيل التحصيل'],[/\bOccupancy\b/g,'الإشغال']];
   var PARTS = [
+    [/the Rent Roll pivot\/renewals sheets and the monthly report[’']s Bounced Cheques and Collections tables/g, 'ورقتي جدول الإيجارات المحوري والتجديدات، وجدولي الشيكات المرتجعة والتحصيل في التقرير الشهري'],
+    [/the merged 2026 Renewal (?:&|&amp;) New Lease \/ Admin Fees workbook \(Commercial Leases\) and the property occupancy summary \(Residential Occupancy\)/g, 'مصنّف التجديدات والعقود الجديدة / الرسوم الإدارية المدمج لعام 2026 (العقود التجارية) وملخص الإشغال العقاري (الإشغال السكني)'],
+    [/Meetings, site visits, violations, and handover counts are still from Harbor[’']s narrative monthly achievement report, not a per-record workbook\./g, 'ما تزال الاجتماعات والزيارات الميدانية والمخالفات وأعداد التسليم من تقرير الإنجاز الشهري السردي لهاربر، وليست من مصنّف تفصيلي.'],
     // --- full sentences (run first) ---
-    [/(\d{2}\/\d{2} – \d{2}\/\d{2}) · ([\d,]+) installments on ([\d,]+) contracts, ([\d.,]+[MK]?) د\.إ recorded; (\d+) bounced \(([\d.]+)% of value, (under|above|over) the ([\d.]+)% target\)\. ([\d,]+) lease contracts \((\d+)% renewals\) and ([\d,]+) requests processed\./g,
-      function(m,a,b,c,d,e,f,g,h,i,j,k){ return a + ' · ' + b + ' قسط على ' + c + ' عقد، بقيمة مسجلة ' + d + ' د.إ؛ منها ' + e + ' شيك مرتجع (' + f + '% من القيمة، ' + DIR(g) + ' الهدف ' + h + '%). ' + i + ' عقد إيجار (' + j + '% تجديدات) و' + k + ' طلب تمت معالجتها.'; }],
-    [/(\S+ \d{4}) · Recorded ([\d.,]+[MK]?) د\.إ, of which ([\d.,]+[MK]?) د\.إ \(([\d.]+)%\) bounced — (under|above|over) the ([\d.]+)% target\. ([\d,]+) lease contracts \((\d+)% renewals\), ([\d,]+) new leases worth ([\d.,]+[MK]?) د\.إ\. (\d+) cross-checks? need a second look/g,
-      function(m,a,b,c,d,e,f,g,h,i,j,k){ return a + ' · القيمة المسجلة ' + b + ' د.إ، منها ' + c + ' د.إ (' + d + '%) مرتجعة — ' + DIR(e) + ' الهدف ' + f + '%. ' + g + ' عقد إيجار (' + h + '% تجديدات)، و' + i + ' عقد جديد بقيمة ' + j + ' د.إ. الفحوصات المتقاطعة التي تحتاج مراجعة: ' + k; }],
-    [/(\d+) critical · (\d+) \S+ · (\d+) notes? across the reports, plus (\d+) cross-checks? to review \(see Overview\)\.?/g,
-      '$1 حرجة · $2 تحذير · $3 ملاحظة في التقارير، إضافة إلى فحوصات متقاطعة للمراجعة: $4 (راجع النظرة العامة).'],
     [/Leasing at a glance, from (.+?) and (.+?)\. Each figure shows its source\. Fee detail is in (.+)/g, 'نظرة سريعة على التأجير من $1 و$2. يوضح كل رقم مصدره. تفاصيل الرسوم في $3'],
     [/Showing (.+?) · (.+?), from (?:the )?(.+?)\./g, function(m,a,b,c){ var r = c.replace(/,?\s+and\s+/, '، و').replace(/,\s*/g, '، '); SRC.forEach(function(x){ r = r.replace(x[0], x[1]); }); r = r.replace(/\s*sheets?$/, ''); return 'عرض ' + a + ' · ' + b + '، من ' + r + '.'; }],
     [/Harbor Fees\(([^)]*)\)/gi, function(m,a){ var r = a; FEES.forEach(function(x){ r = r.replace(x[0], x[1]); }); return 'رسوم هاربر (' + r + ')'; }],
@@ -96,16 +95,36 @@
     [/This month[’']s own figures above are still real\.?/g, 'أرقام هذا الشهر أعلاه حقيقية.'],
     [/(\d[\d,]*) (?:أيام|يوماً|يوم) نشاط/g, '$1 يوم من النشاط'],
     [/(\d+) جديد \/ (\d+) تجديد/g, '$1 جديدة / $2 تجديدات'],
-    [/الذروة (\d[\d,]*) (?:يوماً|يومًا|أيام|يوم) /g, 'الذروة $1 في يوم '],
+    [/الذروة (\d[\d,]*) (?:يوماً|يومًا|أيام|يوم|في يوم) /g, 'الذروة $1 · '],
     [/\b(January|February|March|April|May|June|July|August|September|October|November|December) (\d{4})\b/g, function(m,a,b){ return MONF[a] + ' ' + b; }],
     [/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) '(\d{2})\b/g, function(m,a,b){ return MON3[a] + " '" + b; }],
     [/\bin (يناير|فبراير|مارس|أبريل|مايو|يونيو|يوليو|أغسطس|سبتمبر|أكتوبر|نوفمبر|ديسمبر) '/g, 'في $1 \''],
     [/([+−-]?[\d.]+) pts\b/g, '$1 نقطة مئوية'],
     [/\bTotal (?=القيمة)/g, 'إجمالي '], [/\bNet (?=القيمة)/g, 'صافي '],
-    [/\bvs\b\.?/g, 'مقارنة بـ'],
+    [/(\d{2}\/\d{2}) vs\b/g, '$1 مقارنة بـ'],
     [/(\S+ \d{4}) reports ·/g, 'تقارير $1 ·'],
     [/\bUnder Legal Action(?=\s*:?\s*\d)/g, 'قيد الإجراء القانوني'], [/\bUnder Process(?=\s*:?\s*\d)/g, 'قيد المعالجة'], [/\bPaid(?=\s*:?\s*\d)/g, 'مسدّد'],
     [/\bRenewal(?=\s*:?\s*\d)/g, 'تجديد'], [/\bThis month(?=\s*:\s*\d)/g, 'هذا الشهر'],
+    [/([\d.,]+[MK]?) د\.إ recorded;/g, 'بقيمة مسجلة $1 د.إ؛'],
+    [/\bRecorded (?=[\d])/g, 'القيمة المسجلة '], [/, of which /g, '، منها '], [/(\d+) bounced \(/g, '$1 شيك مرتجع ('], [/\) bounced — /g, ') مرتجعة — '],
+    [/([\d.]+)% of value, (under|above|over) the ([\d.]+)% target\)/g, function(m,a,b,c){ return a + '% من القيمة، ' + DIR(b) + ' هدف ' + c + '%)'; }],
+    [/(under|above|over) the ([\d.]+)% target/g, function(m,a,b){ return DIR(a) + ' هدف ' + b + '%'; }],
+    [/(?:installments?|قسط\S*) on (?=\d)/g, 'قسط على '], [/(?:installments?|قسط\S*) given on (?=\d)/g, 'قسط على '], [/\(sheet and Details differ by (\d+)\)/g, '(الفرق بين الورقة والتفاصيل $1)'],
+    [/lease (?:contracts?|عقد\S*) \((\d+)% renewals\)/g, 'عقد إيجار ($1% تجديدات)'],
+    [/ and (\d[\d,]*) (?:requests?|طلب\S*) processed\./g, ' و$1 طلب تمت معالجتها.'], [/(\d+) new leases worth/g, '$1 عقد إيجار جديد بقيمة'],
+    [/(\d+) cross-checks? need(?:s)? a second look/g, 'فحوصات متقاطعة تحتاج مراجعة: $1'],
+    [/(\d+) critical\b/g, '$1 حرجة'], [/(\d+) notes?\b/g, '$1 ملاحظة'],
+    [/across the reports, plus (\d+) cross-checks? to review \(see Overview\)\.?/g, 'في التقارير، إضافة إلى فحوصات متقاطعة للمراجعة: $1 (راجع النظرة العامة).'],
+    [/Critical: a required column was not found, so totals may be wrong/g, 'حرج: لم يُعثر على عمود مطلوب، لذا قد تكون الإجماليات غير صحيحة'],
+    [/Warning — some entries were skipped or normalized; remaining totals are still usable/g, 'تحذير — تم تخطي بعض الإدخالات أو توحيدها؛ تبقى الإجماليات المتبقية صالحة للاستخدام'],
+    [/\bCheque Count\b/g, 'عدد الشيكات'], [/rent installments per day/g, 'أقساط الإيجار يومياً'],
+    [/(\d+) row\(s\) had a building name with inconsistent spacing or casing[^.]*\./g, '$1 صف بها اسم مبنى بمسافات أو أحرف غير متسقة، وقد جرى توحيدها تلقائياً للتجميع والعرض.'],
+    [/(\d+) row\(s\) have an amount 5×\+ the typical row on this sheet \(median ([\d.,]+) د\.إ\) — worth a quick look/g, '$1 صف مبلغه 5 أضعاف الصف المعتاد أو أكثر في هذه الورقة (الوسيط $2 د.إ) — يستحق نظرة سريعة'],
+    [/target: under ([\d.]+)%/g, 'الهدف: أقل من $1%'], [/target: ([\d.]+)%\+/g, 'الهدف: $1%+'],
+    [/(\d[\d,]*) of (\d[\d,]*) units/g, '$1 من $2 وحدة'], [/(\d+) vacant of (\d[\d,]*) units/g, '$1 شاغرة من $2 وحدة'], [/ · (\d+) vacant\b/g, ' · $1 شاغرة'],
+    [/From Harbor[’']s narrative monthly report — not backed by a per-record workbook/g, 'من التقرير الشهري السردي لهاربر — غير مدعوم بمصنّف تفصيلي'],
+    [/([ء-ْ)]), (?=[ء-ي])/g, '$1، '], [/\), (?=\d)/g, '), '.replace('),', ')،')],
+    [/(\d[\d,]*\.\d{2}), د\.إ (\d)/g, '$1 د.إ، $2'], [/عقود عقود/g, 'عقود'],
     [/(\d[\d,]*) contracts?\b/g, '$1 عقد'],
     [/(\d[\d,]*) payments?\b/g, '$1 دفعة'], [/(\d[\d,]*) requests?\b/g, '$1 طلب'], [/(\d[\d,]*) installments?\b/g, '$1 قسط'],
     [/\bOther \/ Unclassified\b/g, 'أخرى / غير مصنّفة'], [/\bSettlement\b/g, 'تسوية'], [/\bLegal Fees\b/g, 'رسوم قانونية'], [/\bGovernment Fees\b/g, 'رسوم حكومية'],
@@ -171,7 +190,7 @@
     var pe = n.previousSibling;
     if(pe && pe.nodeType === 1 && /^[\d,]+$/.test(pe.textContent || '') && /^\s+\S/.test(s)){
       var pp = pe.previousSibling, ppv = pp && pp.nodeType === 3 ? pp.nodeValue : '';
-      if(/الذروة\s*$/.test(ppv)) r = r.replace(/^(\s*)(?:يوماً|يومًا|أيام|يوم)(\s)/, '$1في يوم$2');
+      if(/الذروة\s*$/.test(ppv)) r = r.replace(/^(\s*)(?:يوماً|يومًا|أيام|يوم)(\s)/, '$1·$2');
       var num = pe.textContent, c = fix(num + r);
       r = c.indexOf(num) === 0 ? c.slice(num.length) : r;
     } else {
