@@ -2192,7 +2192,7 @@ header .header-actions>.theme-switch,header .header-actions>button{padding:.36re
   // later language toggle, so this inline map only needs to match at boot.
   var SIDEBAR_TOGGLE_TEXT = {
     en: { collapse: 'Collapse sidebar', expand: 'Expand sidebar' },
-    ar: { collapse: 'طي الشريط الجانبي', expand: 'إظهار الشريط الجانبي' }
+    ar: { collapse: 'إخفاء الشريط الجانبي', expand: 'إظهار الشريط الجانبي' }
   };
   function sidebarToggleLang(){
     var l = null;
@@ -2807,13 +2807,13 @@ const TRANSLATIONS = {
 "shell.health.40": "الإشغال",
 "shell.health.39": "معدل الارتجاع",
 "shell.health.38": "يحتاج إلى مراجعة إضافية",
-"shell.health.37": "الفحوص المتقاطعة الناجحة",
+"shell.health.37": "الفحوصات المتقاطعة الناجحة",
 "shell.label.0": "إشغال الأصول",
 "shell.label.1": "متابعة التجديدات",
 "shell.label.2": "الشيكات المرتجعة",
 "shell.label.3": "التحصيل",
 "shell.label.4": "تفاصيل التحصيل",
-"shell.label.5": "تحصيل الشيكات",
+"shell.label.5": "مقاصة الشيكات",
 "shell.label.6": "الإشغال",
 "shell.label.7": "إجمالي المسجّل",
 "shell.label.8": "المرتجع / المعرّض للخطر",
@@ -2827,7 +2827,7 @@ const TRANSLATIONS = {
 "shell.label.16": "سكني",
 "shell.label.17": "تجاري",
 "shell.label.18": "الوحدات الشاغرة",
-"shell.label.19": "تم التحصيل",
+"shell.label.19": "تمت المقاصة",
 "shell.label.20": "مرتجع",
 "shell.label.21": "تمت التسوية",
 "shell.label.22": "قيد الانتظار",
@@ -2846,22 +2846,22 @@ const TRANSLATIONS = {
 "shell.label.35": "لدى الشؤون القانونية",
 "shell.label.36": "قيد التحصيل",
 
-"utility.tour.title.0": "مرحباً بك في لوحة المعلومات الرئيسية",
+"utility.tour.title.0": "مرحباً بك في لوحة المعلومات",
 "utility.tour.body.0": "تجمع هذه اللوحة التقارير الشهرية لكل محفظة في مكان واحد، وتفحصها تلقائياً بحثاً عن المشكلات، وتوفر عرضاً تفصيلياً وتنفيذياً. تستعرض هذه الجولة الأقسام الرئيسية؛ يمكنك تخطيها وإعادة فتحها من زر الجولة في أعلى الصفحة.",
 "utility.tour.title.1": "الشريط الجانبي وتبويبات التقارير",
-"utility.tour.body.1": "لكل نوع تقرير في المحفظة الحالية (الشيكات المرتجعة والتحصيل والإشغال وغيرها) تبويب في الشريط الجانبي. اضغط على السهم أعلاه لطيّه وتوفير مساحة على الشاشة.",
+"utility.tour.body.1": "لكل نوع تقرير في المحفظة الحالية (الشيكات المرتجعة والتحصيل والإشغال وغيرها) تبويب خاص به في الشريط الجانبي. اضغط على السهم في أعلى الشريط الجانبي لطيّه وتوفير مساحة على الشاشة.",
 "utility.tour.title.2": "البحث",
-"utility.tour.body.2": "ينقلك حقل البحث فوق قائمة التبويبات مباشرةً إلى تبويب التقرير، وهو مفيد عند تحميل تقارير متعددة للمحفظة.",
+"utility.tour.body.2": "ينقلك حقل البحث فوق قائمة التبويبات مباشرةً إلى أي تبويب تقرير، وهو مفيد عند تحميل عدة تقارير للمحفظة نفسها.",
 "utility.tour.title.3": "المحفظة والشهر",
-"utility.tour.body.3": "تتيح قائمتا المحفظة والشهر فوق شريط الملخص التنقل بين المحافظ التي حُمّلت تقاريرها. لكل تبويب تقرير زر لرفع ملف عمل مباشرةً؛ لا يُحمّل ملف جديد تلقائياً.",
-"utility.tour.title.4": "ما يستدعي الانتباه وحالة البيانات",
-"utility.tour.body.4": "يعرض تبويب النظرة العامة ما يستدعي الانتباه وحالة البيانات (جيدة / مراجعة / تستدعي الانتباه، مع أعداد واضحة للملاحظات الحرجة والتحذيرية والمعلوماتية)، اعتماداً على فحوص جودة البيانات نفسها. تُخفى لوحة التنبيهات عند عدم وجود ما يستدعي الانتباه. حد الارتجاع ثابت عند 2%. ويمكن تعديل إعدادات التنبيه الأخرى المتاحة من زر الحدود في أعلى الصفحة.",
+"utility.tour.body.3": "تتيح قائمتا المحفظة والشهر فوق شريط الملخص التنقل بين المحافظ التي حُمّلت تقاريرها. لكل تبويب تقرير زر لرفع مصنّف Excel مباشرةً؛ ولا يُحمَّل أي شيء تلقائياً.",
+"utility.tour.title.4": "ما يتطلب الانتباه وحالة البيانات",
+"utility.tour.body.4": "يعرض تبويب النظرة العامة لوحة «يتطلب الانتباه» وحالة البيانات (جيد / مراجعة / يتطلب الانتباه، مع أعداد واضحة للملاحظات الحرجة والتحذيرية والمعلوماتية)، وكلاهما مبني على فحوصات جودة البيانات نفسها التي تعمل في الخلفية. تُخفى هذه اللوحة عند عدم وجود ما يتطلب الانتباه. حد الارتجاع ثابت عند 2%. ويمكن تعديل إعدادات التنبيه الأخرى المتاحة من زر الحدود في أعلى الصفحة.",
 "utility.tour.title.5": "الملخص التنفيذي",
-"utility.tour.body.5": "يوفر تبويب الملخص التنفيذي عرضاً مختصراً للمؤشرات الرئيسية للإدارة، شهرياً أو ربع سنوي أو سنوياً، مع إمكانية الطباعة والتصدير.",
+"utility.tour.body.5": "يوفر تبويب الملخص التنفيذي عرضاً مختصراً للمؤشرات الرئيسية للإدارة، شهرياً أو ربع سنوياً أو سنوياً، مع إمكانية الطباعة والتصدير.",
 "utility.tour.title.6": "المقارنة",
-"utility.tour.body.6": "يعرض تبويب المقارنة محفظتين جنباً إلى جنب مع رسوم مؤشرات تفاعلية، ويمكن تصديره بصيغة CSV أو طباعته منفرداً.",
+"utility.tour.body.6": "يعرض تبويب المقارنة محفظتين جنباً إلى جنب مع رسوم بيانية تفاعلية للمؤشرات، ويمكن تصديره بصيغة CSV أو طباعته بشكل مستقل.",
 "utility.tour.title.7": "حزمة مجلس الإدارة والطباعة",
-"utility.tour.body.7": "يجمع زر حزمة مجلس الإدارة في أعلى الصفحة الملخص التنفيذي وما يستدعي الانتباه والمقارنة في مستند واحد للطباعة، مع روابط تعيدك إلى التبويب أو التصفية المعروضة.",
+"utility.tour.body.7": "يجمع زر حزمة مجلس الإدارة في أعلى الصفحة الملخص التنفيذي وما يتطلب الانتباه والمقارنة في ملف واحد قابل للطباعة والتصدير، مع روابط تعيدك مباشرةً إلى التبويب أو عامل التصفية الذي كنت تعرضه.",
 "utility.tour.title.8": "الاختصارات والمستجدات",
 "utility.tour.body.8": "اضغط على ? لعرض اختصارات لوحة المفاتيح، وافتح زر المستجدات للاطلاع على سجل إضافات اللوحة. انتهت الجولة وأصبحت جاهزاً.",
 "utility.tour.step": "الخطوة {step} من {total}",
@@ -2869,9 +2869,9 @@ const TRANSLATIONS = {
 "utility.openLive": "فتح لوحة المعلومات المباشرة ↗",
 "utility.backup.empty": "لا توجد ملخصات شهرية محفوظة في هذا المتصفح بعد.",
 "utility.backup.months": "الأشهر المحفوظة: {n}",
-"utility.backup.downloaded": "تم التنزيل: {n} محافظ، وإعدادات الحدود. لا تشمل النسخة ملفات العمل المرفوعة.",
+"utility.backup.downloaded": "تم التنزيل: {n} من المحافظ، بالإضافة إلى إعدادات الحدود. لا تشمل النسخة المصنّفات المرفوعة.",
 "utility.backup.reading": "جارٍ قراءة {file}…",
-"utility.backup.restored": "تمت استعادة {months} شهراً ضمن {portfolios} محافظ. جارٍ إعادة التحميل…",
+"utility.backup.restored": "تمت استعادة {months} من الأشهر ضمن {portfolios} من المحافظ. جارٍ إعادة التحميل…",
 "utility.backup.error": "تعذّرت استعادة هذا الملف: {error}",
 "utility.backup.readError": "تعذّرت قراءة هذا الملف.",
 
@@ -2881,37 +2881,37 @@ const TRANSLATIONS = {
 "utility.tour.next": "التالي",
 "utility.shortcuts.title": "اختصارات لوحة المفاتيح",
 "utility.shortcuts.sub": "تعمل في جميع أنحاء الصفحة باستثناء حقول النص",
-"utility.shortcuts.note": "لا تتجاوز الاختصارات اختصارات المتصفح أو النظام المستخدمة مع Cmd/Ctrl/Alt.",
+"utility.shortcuts.note": "لا تحلّ الاختصارات محلّ اختصارات المتصفح أو النظام التي تُستخدم مع Cmd/Ctrl/Alt.",
 "utility.shortcuts.disable": "تعطيل اختصارات لوحة المفاتيح على هذا الجهاز",
 "utility.backup.title": "نسخ بياناتك احتياطياً",
 "utility.backup.local": "محفوظة على هذا الجهاز فقط",
 "utility.backup.download": "تنزيل ملف النسخة الاحتياطية",
 "utility.backup.restore": "استعادة من ملف نسخة احتياطية…",
-"utility.backup.scope": "تحتوي هذه النسخة على الملخصات الشهرية المحفوظة وإعدادات الحدود فقط. ولا تشمل ملفات العمل المرفوعة أو ذاكرة التقارير المؤقتة. احتفظ بملفات Excel الأصلية بشكل منفصل. تؤثر استعادة النسخة الاحتياطية على البيانات المحفوظة في هذا المتصفح فقط.",
+"utility.backup.scope": "تحتوي هذه النسخة على الملخصات الشهرية المحفوظة وإعدادات الحدود فقط، ولا تشمل المصنّفات المرفوعة أو ذاكرة التقارير المؤقتة. احتفظ بملفات Excel الأصلية على حدة. تؤثر استعادة النسخة الاحتياطية في بيانات هذا المتصفح المحفوظة فقط.",
 "utility.shortcut.0": "الانتقال إلى حقل البحث",
-"utility.shortcut.1": "الانتقال إلى التبويب الأول حتى التاسع في الشريط الجانبي",
+"utility.shortcut.1": "الانتقال إلى أحد التبويبات من الأول إلى التاسع في الشريط الجانبي",
 "utility.shortcut.2": "تبديل الوضع الفاتح / الداكن",
 "utility.shortcut.3": "طباعة التبويب الحالي (الملخص التنفيذي أو المقارنة)",
 "utility.shortcut.4": "عرض لوحة الاختصارات",
 "utility.shortcut.5": "إغلاق أي لوحة مفتوحة",
 
 "nav.switchLanguage": "تبديل اللغة",
-"board.title": "لوحة المعلومات الرئيسية — حزمة مجلس الإدارة",
+"board.title": "لوحة المعلومات — حزمة مجلس الإدارة",
 "board.generated": "تم الإنشاء",
-"board.empty": "لا توجد أمور تستدعي الانتباه حالياً.",
+"board.empty": "لا يوجد ما يتطلب الانتباه حالياً.",
 
     "th.title": "حدود التنبيه",
-    "th.local": "تُحفظ على هذا الجهاز فقط",
+    "th.local": "محفوظة على هذا الجهاز فقط",
     "th.close": "إغلاق",
-    "th.awqaf": "الأوقاف — حد التنبيه لنسبة الشيكات المرتجعة",
-    "th.naser": "نادي النصر — النسبة المستهدفة للشيكات المرتجعة",
+    "th.awqaf": "الأوقاف — حد التنبيه لمعدل الارتجاع",
+    "th.naser": "نادي النصر — المعدل المستهدف للارتجاع",
     "th.occupancy": "نادي النصر — نسبة الإشغال المستهدفة",
-    "th.mom": "تنبيهات التغير الشهري — مقدار التغير مقارنة بآخر شهر محفوظ قبل ظهوره في «يحتاج إلى اهتمام»: ",
-    "th.bounceSwing": "التغير في نسبة الشيكات المرتجعة",
-    "th.collectedDrop": "انخفاض إجمالي التحصيل",
+    "th.mom": "تنبيهات التغير الشهري — مقدار التغير مقارنة بآخر شهر محفوظ قبل أن يُبرزه «يتطلب الانتباه»:",
+    "th.bounceSwing": "التغير في معدل الارتجاع",
+    "th.collectedDrop": "انخفاض إجمالي المسجّل",
     "th.occupancyDrop": "انخفاض الإشغال (النصر)",
     "th.leaseSwing": "التغير في عقود الإيجار / قيمتها (الأوقاف)",
-    "th.note": "حد الشيكات المرتجعة ثابت عند 2% في جميع المحافظ. تُطبق إعدادات التنبيه الأخرى فوراً على النظرة العامة والملخص التنفيذي.",
+    "th.note": "حد الارتجاع ثابت عند 2% في جميع المحافظ. تُطبَّق إعدادات التنبيه الأخرى فوراً على النظرة العامة والملخص التنفيذي.",
     "th.reset": "استعادة الإعدادات الافتراضية",
     "th.pp": "نقطة مئوية",
 
@@ -2929,21 +2929,21 @@ const TRANSLATIONS = {
     'execsum.v5.ledgerNote': 'قيمة مسجلة وليست مقاصة بنكية',
     'nav.tour': 'جولة',
     'nav.tourAria': 'جولة إرشادية',
-    'nav.tourTitle': 'خذ جولة إرشادية في لوحة المعلومات هذه',
-    'nav.whatsNew': 'الجديد',
-    'nav.whatsNewAria': 'الجديد في لوحة المعلومات هذه',
+    'nav.tourTitle': 'ابدأ جولة إرشادية في لوحة المعلومات هذه',
+    'nav.whatsNew': 'المستجدات',
+    'nav.whatsNewAria': 'المستجدات في لوحة المعلومات هذه',
     'nav.shortcuts': 'الاختصارات',
     'nav.shortcutsAria': 'اختصارات لوحة المفاتيح',
     'nav.shortcutsTitle': 'اختصارات لوحة المفاتيح (اضغط ?)',
     'nav.thresholds': 'الحدود',
     'nav.thresholdsAria': 'حدود التنبيه',
-    'nav.thresholdsTitle': 'إعداد حدود تنبيه معدل الارتداد / الإشغال',
+    'nav.thresholdsTitle': 'إعداد حدود تنبيه معدل الارتجاع / الإشغال',
     'nav.backup': 'نسخ احتياطي',
     'nav.backupAria': 'نسخ احتياطي أو استعادة بياناتك',
-    'nav.backupTitle': 'انسخ احتياطيًا أو استعد سجل التقارير المحملة في هذا المتصفح',
-    'nav.boardPack': 'حزمة المجلس',
-    'nav.boardPackAria': 'طباعة أو تصدير حزمة المجلس بصيغة PDF',
-    'nav.boardPackTitle': 'حزمة المجلس: الملخص التنفيذي + يتطلب الانتباه + المقارنة في ملف PDF واحد',
+    'nav.backupTitle': 'انسخ احتياطياً سجل التقارير المرفوعة في هذا المتصفح أو استعده',
+    'nav.boardPack': 'حزمة مجلس الإدارة',
+    'nav.boardPackAria': 'طباعة أو تصدير حزمة مجلس الإدارة بصيغة PDF',
+    'nav.boardPackTitle': 'حزمة مجلس الإدارة: الملخص التنفيذي + يتطلب الانتباه + المقارنة في ملف PDF واحد',
     'selector.portfolio': 'المحفظة',
     'selector.month': 'الشهر',
     'status.good': 'جيد',
@@ -2957,37 +2957,37 @@ const TRANSLATIONS = {
     'term.renewalRequest': 'طلب تجديد',
     'term.renewalShare': 'حصة التجديد من نشاط التأجير',
     'term.chequeValueDueThisMonth': 'قيمة الشيكات المستحقة هذا الشهر',
-    'term.chequeMaturityPosition': 'موقف استحقاق الشيكات',
+    'term.chequeMaturityPosition': 'وضع استحقاق الشيكات',
     'term.requiresReview': 'يتطلب المراجعة',
     'overview.details': 'التفاصيل',
     'overview.dh.reviewDetails': 'مراجعة التفاصيل',
-    'overview.dh.clean': 'لم يتم العثور على مشاكل عبر',
+    'overview.dh.clean': 'لم يُعثر على مشكلات في',
     'overview.dh.of': 'من',
     'overview.dh.loadedReports': 'تقرير محمّل',
     'overview.aboveTarget': 'فوق الهدف',
     'leaseActivity.tabLabel': 'نشاط التأجير',
     'leaseActivity.heading': 'نشاط التأجير',
-    'leaseActivity.desc': 'نظرة سريعة على التأجير من عدد الشيكات والإيجار الجديد وعدد الطلبات. كل رقم يوضح مصدره. تفاصيل الرسوم في تفاصيل الإيجار الجديد.',
+    'leaseActivity.desc': 'نظرة سريعة على التأجير من تقارير عدد الشيكات والإيجار الجديد وعدد الطلبات. يوضح كل رقم مصدره. تفاصيل الرسوم في تقرير تفاصيل الإيجار الجديد.',
     'leaseActivity.loading': 'في انتظار انتهاء تحميل تقارير عدد الشيكات والإيجار الجديد وعدد الطلبات…',
     'leaseActivity.donut.renewal': 'تجديد',
     'leaseActivity.donut.new': 'جديد',
     'leaseActivity.s1.title': 'التجديد مقابل العقد الجديد — العقود',
-    'leaseActivity.s1.sub': 'المصدر: Cheque Count — leaseType، على مستوى العقد (تم التحقق منه)',
+    'leaseActivity.s1.sub': 'المصدر: تقرير عدد الشيكات — leaseType، على مستوى العقد (تم التحقق منه)',
     'leaseActivity.s1.unit': 'عقد',
     'leaseActivity.s1.rowNewLease': 'عقود جديدة',
     'leaseActivity.s1.rowRenewal': 'عقود التجديد',
     'leaseActivity.s1.rowOther': 'عقود أخرى / غير مصنّفة',
-    'leaseActivity.s2.title': 'عقد جديد — تفاصيل العقد',
-    'leaseActivity.s2.sub': 'المصدر: New Lease Report — عقود مميزة مرتبطة بالملخص',
+    'leaseActivity.s2.title': 'الإيجار الجديد — تفاصيل العقود',
+    'leaseActivity.s2.sub': 'المصدر: تقرير الإيجار الجديد — عقود فريدة مرتبطة بالملخص',
     'leaseActivity.s2.unit': 'عقد جديد',
     'leaseActivity.s2.rowRent': 'إجمالي قيمة الإيجار',
     'leaseActivity.s2.rowFees': 'إجمالي الرسوم',
-    'leaseActivity.s2.rowCcCross': 'عقود الإيجار الجديد في Cheque Count (مصدر منفصل — راجع الفحوصات المتقاطعة)',
+    'leaseActivity.s2.rowCcCross': 'عقود الإيجار الجديدة في تقرير عدد الشيكات (مصدر منفصل — راجع الفحوصات المتقاطعة)',
     'leaseActivity.s3.title': 'تجديد / عقد جديد — الطلبات',
-    'leaseActivity.s3.sub': 'المصدر: Request Count — على مستوى الطلب، وليس عدد العقود',
+    'leaseActivity.s3.sub': 'المصدر: تقرير عدد الطلبات — على مستوى الطلب، وليس عدد العقود',
     'leaseActivity.s3.unit': 'طلب',
     'leaseActivity.s3.rowRenewal': 'طلبات التجديد',
-    'leaseActivity.s3.rowNew': 'طلبات العقد الجديد',
+    'leaseActivity.s3.rowNew': 'طلبات العقود الجديدة',
     'metric.totalRecordedValue': 'إجمالي القيمة المسجلة',
     'metric.totalCollected': 'إجمالي المسجّل',
     'metric.recorded': 'مسجّل',
@@ -3005,22 +3005,22 @@ const TRANSLATIONS = {
     'overview.cc.big': '{n} عقد على أقساط',
     'overview.cc.sub': '{a} قسط · {b}',
     'overview.cc.row1': 'جديد / تجديد (العقود على الأقساط فقط)',
-    'overview.cc.row2': 'جميع سجلات الدفع (التفاصيل الكاملة في علامة تبويب التقرير)',
+    'overview.cc.row2': 'جميع سجلات الدفع (التفاصيل الكاملة في تبويب التقرير)',
     'overview.bc.big': '{n} شيك',
-    'overview.bc.rowLegal': 'تحت الإجراء القانوني',
+    'overview.bc.rowLegal': 'قيد الإجراء القانوني',
     'overview.bc.rowProcess': 'قيد المعالجة',
     'overview.bc.rowPaid': 'مدفوع',
     'overview.bc.rowResCom': 'سكني / تجاري',
-    'overview.bc.rowBounceRate': 'معدل الارتداد — % من جميع سجلات الدفع (عدد / قيمة)',
+    'overview.bc.rowBounceRate': 'معدل الارتجاع — النسبة من جميع سجلات الدفع (العدد / القيمة)',
     'overview.bc.rowBounceBasis': 'أساس المبلغ',
-    'overview.bc.alertText': 'معدل الارتداد {pct}% — أعلى من حد التنبيه {target}%',
+    'overview.bc.alertText': 'معدل الارتجاع {pct}% — أعلى من حد التنبيه {target}%',
     'overview.alnaser.bounceAlertText': 'معدل الارتجاع {pct}% — أعلى من الحد المستهدف {target}%',
     'overview.occupancyAlertText': 'الإشغال {pct}% — أقل من الحد المستهدف {target}%',
     'overview.rta.bounceAlertText': 'الحصة المرتجعة/القانونية {pct}% من التدفق النقدي المعروف — أعلى من الحد المستهدف {target}%',
     'overview.la.big': '{n} عقد إيجار',
     'overview.la.sub': '{renewal} تجديد · {new} جديد',
-    'overview.la.rowRentValue': 'قيمة إيجار العقود الجديدة (New Lease Report)',
-    'overview.la.rowFeesCollected': 'رسوم العقود الجديدة المحصّلة (New Lease Report)',
+    'overview.la.rowRentValue': 'قيمة إيجار العقود الجديدة (تقرير الإيجار الجديد)',
+    'overview.la.rowFeesCollected': 'رسوم العقود الجديدة المحصّلة (تقرير الإيجار الجديد)',
     'overview.la.deltaNewLease': 'تغيّر عقود الإيجار الجديدة',
     'overview.la.deltaRenewal': 'تغيّر عقود التجديد',
     'overview.la.deltaRentValue': 'تغيّر قيمة إيجار العقود الجديدة',
@@ -3030,7 +3030,7 @@ const TRANSLATIONS = {
     'overview.rc.rowNew': 'عقد جديد',
     'overview.rc.rowOther': 'أنواع أخرى',
     'overview.rc.donutOther': 'أخرى',
-    'overview.rc.rowLargest': 'الأكبر من بينها ({n} نوع)',
+    'overview.rc.rowLargest': 'الأكبر من بينها (عدد الأنواع: {n})',
     'overview.keyChangesTitle': 'أبرز التغيّرات لهذه الفترة',
     'overview.keyChangesVs': 'مقارنة بـ',
     'execsum.dataAsOfPeriod': 'البيانات كما في {period}',
@@ -3039,26 +3039,26 @@ const TRANSLATIONS = {
     'execsum.generatedLabel': 'تاريخ الإنشاء',
     'execsum.heroTotalSub': 'Cheque Count، لهذا الشهر — إجمالي مسجّل في السجل، وليس تحصيلاً بنكيًا مؤكدًا',
     'execsum.heroBouncedLabel': 'قيمة الشيكات المرتجعة المسجلة',
-    'execsum.heroNetSub': 'القيمة المسجلة ناقص المرتد',
+    'execsum.heroNetSub': 'القيمة المسجلة مطروحًا منها المرتجع',
     'execsum.heroNewLeaseLabel': 'قيمة الإيجار الجديد',
     'execsum.heroNewLeaseSub': '{n} {unit} — قيمة العقود الجديدة فقط',
     'execsum.chequeUnit': 'شيك',
-    'execsum.chequeUnitPlural': 'شيك',
+    'execsum.chequeUnitPlural': 'شيكات',
     'execsum.leaseUnit': 'عقد إيجار جديد',
-    'execsum.leaseUnitPlural': 'عقد إيجار جديد',
+    'execsum.leaseUnitPlural': 'عقود إيجار جديدة',
     'execsum.groupCollections': 'التحصيلات',
     'execsum.groupLeasing': 'التأجير',
     'execsum.groupOperations': 'العمليات',
     'execsum.rowRenewalContracts': 'عقود التجديد',
     'execsum.rowRequestsProcessed': 'الطلبات المعالجة (Request Count)',
-    'execsum.compNote': 'حسب العقد: {new} جديد · {renewal} تجديد{unclassified} من {total} {unit} هذه الفترة. قيمة الإيجار الجديد أعلاه تشمل العقود الجديدة فقط.',
+    'execsum.compNote': 'حسب العقد: {new} جديد · {renewal} تجديد{unclassified} من {total} {unit} في هذه الفترة. قيمة الإيجار الجديد أعلاه تشمل العقود الجديدة فقط.',
     'execsum.compNoteUnclassified': ' · {n} غير مصنّف',
     'execsum.compNotePriorMissing': ' ستظهر مقارنات الفترة السابقة أعلاه بمجرد تحميل شهر فعلي ثانٍ من البيانات.',
     'execsum.contractUnit': 'عقد',
     'execsum.contractUnitPlural': 'عقد',
     'execsum.crossChecksPassing': 'الفحوصات المتقاطعة الناجحة',
     'execsum.needsSecondLook': 'يتطلب نظرة ثانية',
-    'execsum.bounceRateLabel': 'معدل الارتداد',
+    'execsum.bounceRateLabel': 'معدل الارتجاع',
     'execsum.bounceThresholdNote': 'حد التنبيه: أقل من {n}%',
     'execsum.dataStatusLabel': 'حالة البيانات',
     'execsum.countCritical': 'حرج',
@@ -3068,15 +3068,15 @@ const TRANSLATIONS = {
     'execsum.moreSeeOverview': '+{n} أخرى — راجع النظرة العامة للتفاصيل الكاملة',
     'execsum.noCriticalClean': 'لا توجد مشاكل بيانات حرجة أو مراجعات معلّقة.',
     'execsum.watchReviewItem': '{name}: العلاقة بين التقارير تتطلب المراجعة.',
-    'execsum.watchBounceThreshold': 'معدل الارتداد {pct}% — عند أو أعلى من حد التنبيه {n}%.',
+    'execsum.watchBounceThreshold': 'معدل الارتجاع {pct}% — يساوي حد التنبيه {n}% أو يتجاوزه.',
     'execsum.watchCriticalFlag': '{item} — تم تصنيفه كحرج في جودة البيانات.',
     'execsum.itemsToReview': 'عناصر للمراجعة في الفترة القادمة',
     'execsum.moreItems': '+{n} أخرى',
-    'execsum.noItemsOutstanding': 'لا شيء معلّق من فحوصات اليوم والحدود وجودة البيانات.',
-    'execsum.trendNote': 'تم حفظ {n} {unit} فعلي فقط حتى الآن من السجل — سيظهر اتجاه (ارتفاع أو انخفاض بمرور الوقت) هنا بمجرد تحميل شهر فعلي ثانٍ.',
+    'execsum.noItemsOutstanding': 'لا توجد بنود معلّقة من الفحوصات المتقاطعة وحدود التنبيه وفحوصات البيانات لهذا اليوم.',
+    'execsum.trendNote': 'تم حفظ بيانات فعلية لـ{n} {unit} فقط حتى الآن — ستظهر هنا قراءة الاتجاه (ارتفاع أو انخفاض بمرور الوقت) بمجرد تحميل شهر فعلي ثانٍ.',
     'execsum.monthUnit': 'شهر',
     'execsum.monthUnitPlural': 'أشهر',
-    'dh.itemRequiredColumns': '{name}: {n} {unit} غير مكتشَف',
+    'dh.itemRequiredColumns': '{name}: لم يتم العثور على {n} {unit}',
     'dh.unitRequiredColumn': 'عمود مطلوب',
     'dh.itemDataIssue': '{name}: {n} {unit}',
     'dh.unitDataIssue': 'مشكلة بيانات',
@@ -3084,22 +3084,22 @@ const TRANSLATIONS = {
     'dh.unitMinorNote': 'ملاحظة بسيطة',
     'dh.crossCheckFallback': 'فحص متقاطع',
     'dh.itemReviewRequired': '{name}: العلاقة بين التقارير تتطلب المراجعة',
-    'dh.itemStaleSnapshot': '{name}: يعرض لقطة عمرها {n} يوم',
-    'dh.itemAlNaserCrossSheetMismatch': 'قائمة الشيكات المرتجعة مقابل تحصيل الشيكات: وُجد عدم تطابق',
-    'dh.itemAlNaserCrossSheetClean': 'قائمة الشيكات المرتجعة مقابل تحصيل الشيكات: جميع الإدخالات متطابقة',
+    'dh.itemStaleSnapshot': '{name}: يعرض لقطة قديمة، عمرها بالأيام: {n}',
+    'dh.itemAlNaserCrossSheetMismatch': 'قائمة الشيكات المرتجعة مقابل مقاصة الشيكات: وُجد عدم تطابق',
+    'dh.itemAlNaserCrossSheetClean': 'قائمة الشيكات المرتجعة مقابل مقاصة الشيكات: جميع الإدخالات متطابقة',
     'dh.statusGood': 'جيد',
     'dh.statusWarn': 'يتطلب الانتباه',
-    'dh.statusBad': 'مشاكل حرجة موجودة',
+    'dh.statusBad': 'تم العثور على مشاكل حرجة',
     'dh.reportUnit': 'تقرير',
     'dh.explGood': 'اجتازت جميع التقارير المحمّلة ({n}) فحوصاتها — لم يتم العثور على مشاكل.',
     'dh.explWarn': 'قابلة للاستخدام، لكن بعض الفحوصات بين التقارير تحتاج مراجعة.',
     'dh.explBad': 'لم يتم العثور على بعض البيانات المطلوبة، لذا قد تكون إجماليات {unit} المتأثرة غير صحيحة.',
-    'dh.reportsLoaded': 'تقرير محمّل',
+    'dh.reportsLoaded': 'تقارير محمّلة',
     'na.panelTitle': 'يتطلب الانتباه',
     'na.sevHigh': 'مرتفع',
     'na.sevMedium': 'متوسط',
     'na.sevInfo': 'معلومة',
-    'na.catThresholdAlert': 'تنبيه حد',
+    'na.catThresholdAlert': 'تنبيه تجاوز الحد',
     'na.catCrossCheck': 'فحص متقاطع',
     'na.catDataQuality': 'جودة البيانات',
     'na.catDataFreshness': 'حداثة البيانات',
@@ -3112,11 +3112,11 @@ const TRANSLATIONS = {
     'na.ctaReviewCrossCheck': 'مراجعة هذا الفحص المتقاطع',
     'na.ctaOpenDataQuality': 'فتح جودة البيانات',
     'na.titleCrossSheetCheck': 'فحص متقاطع بين الأوراق',
-    'na.ctaLoadNewer': 'تحميل تصدير أحدث لـ {name}',
+    'na.ctaLoadNewer': 'تحميل ملف تصدير أحدث لـ {name}',
     'na.ctaOpenExecSummary': 'فتح الملخص التنفيذي',
     'na.ctaView': 'عرض',
     'na.detailCrossCheckFallback': 'يعدّ التقريران أشياء مختلفة هنا — يرجى تأكيد العلاقة.',
-    'na.detailStaleSnapshot': 'لا يزال يعرض اللقطة المرفقة من {date} (عمرها {n} يوم).',
+    'na.detailStaleSnapshot': 'لا يزال يعرض اللقطة المضمّنة من {date} (عمرها بالأيام: {n}).',
     'cc.sectionNote': 'فحوصات تلقائية بين التقارير المتداخلة.',
     'dq.paneDesc': 'أمور تستحق التحقق منها في الملفات المصدر، مجمّعة حسب الورقة.',
     'dq.legend.critical': 'حرج: لم يتم العثور على عمود مطلوب، فقد تكون الإجماليات غير صحيحة',
@@ -3130,8 +3130,8 @@ const TRANSLATIONS = {
     'dq.cleanReport': 'لا توجد ملاحظات في الملف المحمّل حاليًا.',
     'dq.affectedMetric': 'المقياس المتأثر:',
     'dq.noReportsYet': 'لا توجد بيانات تفصيلية بعد، لذا لا شيء للفحص.',
-    'dq.alnaser.crossSheetCheck.name': 'فحص متقاطع بين الأوراق: قائمة الشيكات المرتجعة مقابل تحصيل الشيكات',
-    'dq.cleanAll': 'لا توجد ملاحظات عبر {n} {unit} — قرأ كل محلل ملفه بلا مشاكل.',
+    'dq.alnaser.crossSheetCheck.name': 'فحص متقاطع بين الأوراق: قائمة الشيكات المرتجعة مقابل مقاصة الشيكات',
+    'dq.cleanAll': 'لا توجد ملاحظات عبر {n} {unit} — تمت قراءة كل ملف دون مشاكل.',
     'dq.summaryBar': '{n} {noteUnit} عبر {a} من {b} تقارير — {c} حرجة، {w} تحذير، {i} معلومة',
     'dq.unit.loadedReport': 'تقرير محمّل',
     'dq.unit.note': 'ملاحظة',
@@ -3144,7 +3144,7 @@ const TRANSLATIONS = {
     'shell.overallOk': 'جميع التقارير المحمّلة تبدو سليمة',
     'shell.overallWarn': 'محمّلة وقابلة للاستخدام — بعض العناصر بين التقارير تحتاج مراجعة',
     'shell.overallCritical': 'تم التحميل، لكن توجد مشكلات بيانات حرجة — راجع جودة البيانات',
-    'shell.overallWaiting': 'بانتظار ملفات العمل',
+    'shell.overallWaiting': 'بانتظار ملفات Excel',
     'shell.navReports': 'التقارير',
     'shell.navOverview': 'نظرة عامة',
     'shell.navExecSummary': 'الملخص التنفيذي',
@@ -3153,9 +3153,9 @@ const TRANSLATIONS = {
     'shell.navNewLeaseDetail': 'تفاصيل الإيجار الجديد',
     'shell.navBouncedCheques': 'تقرير الشيكات المرتجعة',
     'shell.navChequeCount': 'عدد الشيكات',
-    'shell.portfolioNotSetUpDesc': 'لم يتم تحميل أي تقارير لهذه المحفظة بعد. عند وصول ملفات البيانات الخاصة بها، ستحصل على تبويباتها الخاصة هنا، بما يتوافق مع طريقة تنظيم تصديرات تلك المحفظة فعليًا، تمامًا كما جرى مع أوقاف والناصر كلوب.',
+    'shell.portfolioNotSetUpDesc': 'لم يتم تحميل أي تقارير لهذه المحفظة بعد. عند وصول ملفاتها، ستحصل على تبويباتها الخاصة هنا، بما يتوافق مع طريقة تنظيم تصديرات تلك المحفظة فعليًا، تمامًا كما جرى مع الأوقاف والناصر كلوب.',
     'shell.notSetUpYet': 'لم يتم إعدادها بعد',
-    'pin.enterFor': 'أدخل الرمز الخاص بـ {label}.',
+    'pin.enterFor': 'أدخل الرمز السري الخاص بـ {label}.',
     'execsum.printBtnTitle': 'طباعة أو حفظ هذا الملخص التنفيذي كملف PDF',
     'execsum.printBtnLabel': 'طباعة / تصدير PDF',
     'execsum.paneDesc': 'الأرقام الرئيسية وملخص قصير وفحص سريع للحالة.',
@@ -3166,15 +3166,15 @@ const TRANSLATIONS = {
     'selector.periodYearly': 'سنوي',
     'execsum.sectionPerformance': 'الأداء',
     'execsum.sectionPerformanceNote': 'الأرقام الرئيسية مع التغيّر مقارنة بآخر شهر محفوظ.',
-    'execsum.sectionRisk': 'المخاطر والانتباه',
+    'execsum.sectionRisk': 'المخاطر وما يتطلب الانتباه',
     'execsum.sectionRiskNote': 'الفحوصات المتقاطعة ومعدل الارتجاع مقابل الهدف وحالة البيانات.',
     'execsum.sectionForward': 'النظرة المستقبلية',
-    'execsum.sectionForwardNote': 'ما هو لا يزال مفتوحًا أو يتجه بالاتجاه الخاطئ، استنادًا فقط إلى الفحوصات المتقاطعة الفعلية والسجل المحفوظ — وليس توقعًا.',
+    'execsum.sectionForwardNote': 'ما لا يزال مفتوحًا أو يسير في الاتجاه الخاطئ، استنادًا فقط إلى الفحوصات المتقاطعة الفعلية والسجل المحفوظ — وليس توقعًا.',
     'execsum.sectionSummary': 'الملخص',
     'execsum.sectionHealthSnapshot': 'لمحة عن الحالة',
     'execsum.sectionHealthSnapshotNote': 'الفحوصات المتقاطعة والمعدل الرئيسي لهذه المحفظة.',
     'compare.printTitle': 'لوحة المعلومات — مقارنة المحافظ',
-    'compare.paneDesc': 'قارن بين محفظتين جنباً إلى جنب بنفس أرقام الملخص التنفيذي لكل منهما. المقاييس الموجودة في محفظة واحدة فقط تُعرض منفصلة. اضغط على صف الاتجاه للرسم اليومي.',
+    'compare.paneDesc': 'قارن بين محفظتين جنبًا إلى جنب بنفس أرقام الملخص التنفيذي لكل منهما. المقاييس الموجودة في محفظة واحدة فقط تُعرض منفصلة. انقر على الاتجاه لعرض الرسم اليومي.',
     'compare.exportCsvBtnTitle': 'تنزيل هذه المقارنة كملف CSV',
     'compare.exportCsvBtnLabel': 'تصدير CSV',
     'compare.printBtnTitle': 'طباعة أو حفظ هذه المقارنة كملف PDF',
@@ -3187,7 +3187,7 @@ const TRANSLATIONS = {
     'compare.labelPortfolioSingle': 'المحفظة',
     'compare.labelMonthA': 'الشهر الأقدم',
     'compare.labelMonthB': 'الشهر الأحدث',
-    'compare.monthPaneDesc': 'قارن بين شهرين محفوظين لنفس المحفظة جنباً إلى جنب، باستخدام الأرقام الفعلية التي حفظها كل شهر في سجله - دون أي إعادة حساب. اختر محفظة، ثم شهرين محفوظين منها.',
+    'compare.monthPaneDesc': 'قارن بين شهرين محفوظين لنفس المحفظة جنبًا إلى جنب، باستخدام الأرقام الفعلية التي حفظها كل شهر في سجله - دون أي إعادة حساب. اختر محفظة، ثم شهرين محفوظين منها.',
     'compare.monthWaitingNote': 'لا تملك {portfolio} شهرين محفوظين بعد. قم بتحميل تقاريرها وحفظها لشهرين مختلفين على الأقل (بزيارة تبويب الملخص التنفيذي مرة لكل شهر) لمقارنتهما هنا.',
     'compare.monthPrintSubtitle': '{portfolio}: {a} مقابل {b} — تم الإنشاء في {date}',
     'compare.sameMonthNote': 'العمودان يعرضان نفس الشهر. اختر شهرين مختلفين لرؤية التغيّر.',
@@ -3199,29 +3199,29 @@ const TRANSLATIONS = {
     'cc.awqaf.renewalCount.name': 'عدد طلبات تجديد الإيجار في Request Count يطابق عدد عقود التجديد في Cheque Count',
     'cc.awqaf.bounceOverlap.name': 'عقود الشيكات المرتجعة تظهر في Cheque Count لهذا الشهر',
     'cc.awqaf.overallTotals.name': 'Cheque Count مقابل Request Count (الإجماليات الكلية)',
-    'cc.awqaf.overallTotals.detail': 'هذه التقارير تقيس أشياء مختلفة (شيكات الإيجار مقابل طلبات العقارات)، فلا يُتوقع أن تتطابق إجمالياتها. عقود التجديد فقط تظهر في الاثنين.',
-    'cc.alnaser.bounceOverlap.name': 'قائمة الشيكات المرتجعة تتطابق مع مستأجري تحصيل الشيكات المرتجعين',
+    'cc.awqaf.overallTotals.detail': 'هذه التقارير تقيس أشياء مختلفة (شيكات الإيجار مقابل طلبات العقارات)، فلا يُتوقع أن تتطابق إجمالياتها. وحدها عقود تجديد الإيجار تظهر في كلا التقريرين.',
+    'cc.alnaser.bounceOverlap.name': 'قائمة الشيكات المرتجعة تتقاطع مع المستأجرين بحالة «مرتجع» في مقاصة الشيكات',
     'cc.alnaser.noBounced': 'لا توجد شيكات مرتجعة مسجّلة لهذه الفترة.',
-    'cc.alnaser.overlapOk': '{matched} من {total} {unit} لديهم شيك مرتجع يظهرون أيضاً كمرتجعين في متتبّع تحصيل الشيكات — متوافق.',
-    'cc.alnaser.overlapReview': 'لا يظهر أي من {total} {unit} في قائمة الشيكات المرتجعة كمرتجع في متتبّع تحصيل الشيكات — يستحق التحقق من تطابق الفترتين.',
+    'cc.alnaser.overlapOk': '{matched} من {total} {unit} لديهم شيك مرتجع ظهروا أيضًا بحالة «مرتجع» في متتبّع مقاصة الشيكات — والبيانات متسقة.',
+    'cc.alnaser.overlapReview': 'لا يظهر أي من {total} {unit} الواردين في قائمة الشيكات المرتجعة بحالة «مرتجع» في متتبّع مقاصة الشيكات — يستحق التحقق من أن الفترتين متطابقتان.',
     'cc.alnaser.unitTenant': 'مستأجر',
     'cc.rta.scope.name': 'الإشغال مقابل التجديدات مقابل الشيكات المرتجعة مقابل التحصيل',
     'cc.rta.scope.detail': 'محسوم: تتتبع هذه التقارير الأربعة شرائح مختلفة من محفظة RTA (الإشغال على مستوى الأصل، متتبّع تجديدات 2026، مبالغ ارتجاع الشيكات/الاسترداد القانوني، وتحصيل دفعات العقود)، كل منها من ورقة مصدر مختلفة. لا يوجد إجمالي طبيعي بنسبة 1:1 للتوفيق بينها.',
     'cc.unit.newLeaseRequest': 'طلب إيجار جديد',
     'cc.unit.totalNewLease': 'عقد إيجار جديد',
-    'cc.unit.newLeaseContract': 'عقد إيجار جديد مميز',
+    'cc.unit.newLeaseContract': 'عقد إيجار جديد فريد',
     'cc.unit.renewalRequest': 'طلب تجديد إيجار',
-    'cc.unit.renewalContract': 'عقد تجديد إيجار مميز',
-    'cc.unit.bouncedContract': 'عقد شيك مرتجع',
+    'cc.unit.renewalContract': 'عقد تجديد إيجار فريد',
+    'cc.unit.bouncedContract': 'عقد لديه شيك مرتجع',
     'cc.nlc.match': 'تطابق — يُظهر Request Count {a} {aUnit}، ويُظهر New Lease Report {b} {bUnit}.',
-    'cc.nlc.ok': 'سليم. {a} {aUnit} على {b} {bUnit} في تقرير العقود الجديدة. بعض العقود لها أكثر من طلب.',
-    'cc.nlc.review': '{a} {aUnit} مقابل {b} {bUnit}. تقرير العقود الجديدة فيه عقود أكثر من الطلبات. يستحق المراجعة.',
+    'cc.nlc.ok': 'سليم. {a} {aUnit} موزعة على {b} {bUnit} في New Lease Report. بعض العقود لها أكثر من طلب.',
+    'cc.nlc.review': '{a} {aUnit} مقابل {b} {bUnit}. يتضمن New Lease Report عقودًا أكثر من الطلبات. يستحق المراجعة.',
     'cc.rc.match': 'تطابق — يُظهر Request Count {a} {aUnit}، ويُظهر Cheque Count {b} {bUnit}.',
-    'cc.rc.ok': 'سليم. {a} {aUnit} على {b} {bUnit} في عدد الشيكات. بعض العقود لها أكثر من طلب.',
-    'cc.rc.review': '{a} {aUnit} مقابل {b} {bUnit}. تقرير عدد الشيكات فيه عقود أكثر من الطلبات. يستحق المراجعة.',
+    'cc.rc.ok': 'سليم. {a} {aUnit} موزعة على {b} {bUnit} في Cheque Count. بعض العقود لها أكثر من طلب.',
+    'cc.rc.review': '{a} {aUnit} مقابل {b} {bUnit}. يتضمن Cheque Count عقودًا أكثر من الطلبات. يستحق المراجعة.',
     'cc.bo.none': 'لا توجد شيكات مرتجعة مسجَّلة لهذه الفترة.',
-    'cc.bo.match': '{a} من {b} {bUnit} موجودة في عدد الشيكات لهذا الشهر. الباقي يعود لشيكات سُجلت في أشهر سابقة.',
-    'cc.bo.review': '{a} {aUnit} مقابل 0 في عدد الشيكات لهذا الشهر. تأكد أن الملفين يغطيان نفس الفترة.',
+    'cc.bo.match': '{a} من {b} {bUnit} موجودة في Cheque Count لهذا الشهر. الباقي يعود لشيكات سُجلت في أشهر سابقة.',
+    'cc.bo.review': '{a} {aUnit} مقابل 0 في Cheque Count لهذا الشهر. تأكد أن الملفين يغطيان نفس الفترة.',
     'heatmap.show': 'عرض:',
     'heatmap.activityTypeAria': 'نوع النشاط المعروض',
     'heatmap.day.sun': 'ح',
@@ -3245,7 +3245,7 @@ const TRANSLATIONS = {
     'guide.bounced': 'الشيك المرتجع: شيك أُعيد دون صرف.',
     'guide.asof': 'البيانات كما في: شهر التقرير المختار في محدد الشهر.',
     'guide.close': 'إغلاق',
-    'heatmap.noData': 'لا تحتوي هذه المحفظة على تقارير ببيانات نشاط يومية، لذا لا يوجد ما يمكن عرضه هنا بيانياً.',
+    'heatmap.noData': 'لا تحتوي هذه المحفظة على تقارير ببيانات نشاط يومية، لذا لا يوجد ما يمكن عرضه هنا بيانيًا.',
     'heatmap.loading': 'جارٍ التحميل…',
     'heatmap.waitingForType': 'في انتظار اكتمال تحميل بيانات {type}…',
     'heatmap.waitingGeneric': 'في انتظار اكتمال تحميل التقارير…',
@@ -3256,8 +3256,8 @@ const TRANSLATIONS = {
     'overview.paneLoading': 'في انتظار اكتمال تحميل التقارير الأربعة المعروفة…',
     'heatmap.clickBreakdown': 'انقر للاطلاع على التفاصيل',
     'heatmap.loaded': 'تم التحميل',
-    'heatmap.scaleNote': 'تدرج الألوان نسبي إلى أكثر يوم نشاطاً هنا، وليس وفق مقياس ثابت.',
-    'heatmap.noteTyped': '{type} اليومية، آخر {n} أسبوعاً ({unit}). {scale} اضغط على يوم للتفاصيل.',
+    'heatmap.scaleNote': 'تدرج الألوان نسبي مقارنةً بأكثر الأيام نشاطاً المعروضة هنا، وليس وفق مقياس ثابت.',
+    'heatmap.noteTyped': '{type} على أساس يومي، آخر {n} أسبوعاً ({unit}). {scale} اضغط على يوم للتفاصيل.',
     'heatmap.noteGeneric': 'النشاط اليومي عبر كل التقارير المحمّلة، آخر {n} أسبوعاً. {scale} اضغط على يوم للتفاصيل.',
     'heatmap.record.singular': 'سجل',
     'heatmap.record.plural': 'سجلات',
@@ -3289,12 +3289,12 @@ const TRANSLATIONS = {
     'heatmap.month.7': 'يوليو', 'heatmap.month.8': 'أغسطس', 'heatmap.month.9': 'سبتمبر',
     'heatmap.month.10': 'أكتوبر', 'heatmap.month.11': 'نوفمبر', 'heatmap.month.12': 'ديسمبر',
     'overview.hm.noReportsYet': 'لا توجد تقارير مؤرَّخة محمَّلة بعد لهذه المحفظة.',
-    'overview.hm.mixedTotalOne': 'إجمالي ذلك اليوم من تقرير واحد (يجمع العقود والسجلات معاً).',
-    'overview.hm.mixedTotalMany': 'إجمالي ذلك اليوم من {n} تقارير (يجمع العقود والسجلات معاً).',
+    'overview.hm.mixedTotalOne': 'إجمالي ذلك اليوم من تقرير واحد (يجمع العقود والطلبات والأقساط معاً).',
+    'overview.hm.mixedTotalMany': 'إجمالي ذلك اليوم عبر {n} من التقارير (يجمع العقود والطلبات والأقساط معاً).',
     'overview.hm.exportCsv': 'تصدير CSV',
     'overview.hm.notLoaded': '{name} لم يكتمل تحميله بعد.',
-    'overview.hm.unit.new-lease': 'رسوم مسجَّلة — وليست عقود إيجار جديدة موقَّعة',
-    'overview.hm.unitSingular.new-lease': 'رسم مسجَّل — وليس عقد إيجار جديد موقَّعاً',
+    'overview.hm.unit.new-lease': 'رسوم مسجَّلة — وليس توقيع عقود إيجار جديدة',
+    'overview.hm.unitSingular.new-lease': 'رسم مسجَّل — وليس توقيع عقد إيجار جديد',
     'overview.hm.unit.request-count': 'طلبات',
     'overview.hm.unitSingular.request-count': 'طلب',
     'overview.hm.unit.count-report': 'رسوم/شيكات',
@@ -3307,21 +3307,21 @@ const TRANSLATIONS = {
     'compare.higherBy': 'أعلى بمقدار {amount}',
     'compare.notEnoughTrendData': 'لا توجد بيانات يومية كافية لعرض هذا المؤشر بيانياً بعد.',
     'compare.trendRange': '{first}–{last}، يومياً',
-    'compare.openLive': 'فتح مباشرةً ↗',
+    'compare.openLive': 'فتح النسخة المباشرة ↗',
     'compare.trend': 'الاتجاه',
-    'compare.sameRate': 'المحفظتان لديهما معدل ارتجاع متقارب تقريباً هذه الفترة.',
+    'compare.sameRate': 'معدل الارتجاع في المحفظتين متساوٍ تقريباً هذه الفترة.',
     'compare.rateDiff': 'معدل ارتجاع {higher} أعلى بمقدار {diff} {pointWord} من {lower} هذه الفترة.',
-    'compare.point.singular': 'نقطة',
-    'compare.point.plural': 'نقاط',
+    'compare.point.singular': 'نقطة مئوية',
+    'compare.point.plural': 'نقاط مئوية',
     'compare.colHeaderMetric': 'المؤشر',
     'compare.bouncedAtRisk': 'المرتجع / المعرَّض للخطر',
     'compare.bounceRate': 'معدل الارتجاع',
     'compare.metricsLabel': 'المؤشرات المعروضة',
-    'compare.metricChip.collected': 'إجمالي المحصَّل',
+    'compare.metricChip.collected': 'إجمالي المسجَّل',
     'compare.metricChip.bounced': 'المرتجع / المعرَّض للخطر',
     'compare.metricChip.rate': 'معدل الارتجاع',
-    'compare.metricChip.net': 'صافي المحصَّل',
-    'compare.noMetricsSelected': 'لم يتم اختيار أي مؤشر - اختر واحدًا على الأقل أعلاه.',
+    'compare.metricChip.net': 'صافي المسجَّل',
+    'compare.noMetricsSelected': 'لم يتم اختيار أي مؤشر — اختر مؤشراً واحداً على الأقل أعلاه.',
     'compare.bouncedOf': 'المرتجع ÷ {ratioWord}',
     'compare.cheque.singular': 'شيك',
     'compare.cheque.plural': 'شيكات',
@@ -3330,7 +3330,7 @@ const TRANSLATIONS = {
     'metric.occupancyRate': 'معدل الإشغال',
     'compare.extra.alnaser.sub': '{res} سكني، {com} تجاري',
     'metric.renewalProgress': 'نسبة إنجاز التجديد',
-    'compare.extra.rta.sub': '{ongoing} قيد الإجراء، {notRenewing} غير متجدد',
+    'compare.extra.rta.sub': '{ongoing} قيد الإجراء، {notRenewing} غير مجدَّدة',
     'compare.noEquivalentMetric': '— لا يوجد مؤشر مقابل لـ {other}',
   }
 };
@@ -3338,7 +3338,7 @@ const TRANSLATIONS = {
 const SHELL_LABEL_KEYS = {"Asset Occupancy": "shell.label.0", "Renewals Tracking": "shell.label.1", "Bounced Cheques": "shell.label.2", "Collections": "shell.label.3", "Collections Detail": "shell.label.4", "Cheque Clearance": "shell.label.5", "Occupancy": "shell.label.6", "Total Recorded": "shell.label.7", "Bounced / At Risk": "shell.label.8", "Net Recorded": "shell.label.9", "Occupancy Rate": "shell.label.10", "Collections Detail, this month": "shell.label.11", "Collected minus bounced": "shell.label.12", "Residential + commercial": "shell.label.13", "Rent": "shell.label.14", "Other fees": "shell.label.15", "Residential": "shell.label.16", "Commercial": "shell.label.17", "Vacant units": "shell.label.18", "Cleared": "shell.label.19", "Bounced": "shell.label.20", "Settled": "shell.label.21", "Pending": "shell.label.22", "Total amount": "shell.label.23", "Still open": "shell.label.24", "Resolved": "shell.label.25", "By value": "shell.label.26", "Renewed": "shell.label.27", "In progress": "shell.label.28", "Not renewing": "shell.label.29", "Leased": "shell.label.30", "Vacant": "shell.label.31", "Suspended": "shell.label.32", "Total assets": "shell.label.33", "Collected + Penalty": "shell.label.34", "With Legal Affairs": "shell.label.35", "Pending Collection": "shell.label.36"};
 function shellLabel(value){ return Object.prototype.hasOwnProperty.call(SHELL_LABEL_KEYS,value) ? t(SHELL_LABEL_KEYS[value],value) : value; }
 
-const REMAINING_UI = {"New Check month folder (Chrome or Edge on a computer): pick a month's folder and the page compares the four Excel files with the numbers the dashboard shows now, including rows, totals, splits, blank columns and the report month. Nothing is loaded or changed, and the files stay in your browser.": "جديد: «فحص مجلد الشهر» (في Chrome أو Edge على الحاسوب): اختر مجلد الشهر وستقارن الصفحة ملفات Excel الأربعة بالأرقام المعروضة الآن في لوحة المعلومات، بما في ذلك الصفوف والإجماليات والتقسيمات والأعمدة الفارغة وشهر التقرير. لا يتم تحميل أو تغيير أي شيء، وتبقى الملفات في متصفحك.", "Needs attention now follows the property administrator's rules: a tenant is flagged at more than 3 bounced cheques across the loaded months, and a high-value bounced cheque is a warning only because all bounced cheques have the same priority. Targets & trends notes that there are no fixed monthly targets.": "«يحتاج إلى متابعة» يتبع الآن قواعد مديرة الأملاك: يُشار إلى المستأجر عند أكثر من 3 شيكات مرتجعة عبر الأشهر المحمّلة، ويكون الشيك المرتجع عالي القيمة تنبيهًا فقط لأن جميع الشيكات المرتجعة بنفس الأولوية. وتوضح «الأهداف والاتجاهات» أنه لا توجد أهداف شهرية ثابتة.", "New Load history on Data Quality: every Excel file loaded in this browser is logged with when, which report, the file name, month, rows, how it read and who loaded it. It is kept in this browser and included in Backup.": "جديد: «سجل التحميل» في جودة البيانات: يُسجَّل كل ملف Excel يتم تحميله في هذا المتصفح (الوقت والتقرير واسم الملف والشهر والصفوف ونتيجة القراءة ومن حمّله). يُحفظ في هذا المتصفح ويُضمَّن في النسخة الاحتياطية.", "Fixed: a Backup could fail to restore because of a leftover saved portfolio. Backups now include only the current portfolios.": "تم الإصلاح: كان يتعذّر أحيانًا استعادة النسخة الاحتياطية بسبب محفظة قديمة محفوظة. أصبحت النسخ الاحتياطية تتضمن المحافظ الحالية فقط.", "Fixed: typing a target in Targets & trends no longer jumps the cursor when you move to the next field.": "تم الإصلاح: لم يعد المؤشر يقفز عند الانتقال إلى الحقل التالي أثناء إدخال الأهداف في «الأهداف والاتجاهات».", "New Targets & trends on the Executive Summary: set a target for each key figure and see how the month and the recent trend compare against it.": "جديد: «الأهداف والاتجاهات» في الملخص التنفيذي: حدّد هدفًا لكل رقم رئيسي وشاهد كيف يقارن الشهر والاتجاه الأخير به.", "Panels now open in the centre of the screen, like What's New.": "تُفتح اللوحات الآن في وسط الشاشة، مثل «الجديد».", "Buttons are tidied across every tab: same style, same order, Print / Export PDF moved into the top row, and no more empty gaps.": "تم ترتيب الأزرار في كل التبويبات: شكل واحد وترتيب واحد، ونُقل زر الطباعة / تصدير PDF إلى الصف العلوي، دون فراغات.", "New Needs attention button on each report tab: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk and explained line by line. The rules are defaults and can be changed in the panel.": "زر جديد «يحتاج إلى متابعة» في كل تبويب تقرير: قائمة بالعقود القريبة من الانتهاء دون تجديد والشيكات المرتجعة اللافتة، مرتبة حسب الخطورة مع شرح السبب. القواعد افتراضية ويمكن تغييرها من اللوحة.", "The buttons at the top of each report now sit in the same order on every tab, with Updates always last.": "أصبحت الأزرار أعلى كل تقرير بالترتيب نفسه في كل تبويب، ويأتي زر التحديثات دائمًا في الآخر.", "Export Excel on every report tab: it downloads the month's original Excel file, with all its sheets and columns, or the file you loaded yourself.": "تصدير إلى Excel في كل تقرير: يحمّل ملف Excel الأصلي للشهر بجميع أوراقه وأعمدته، أو الملف الذي حمّلته بنفسك.", "Click any figure on a report tab to see the contracts behind it. Each list checks itself against the figure and shows a green tick when they match. Click a contract number to see everything about that contract across the four reports, and use the Contract number box at the top of each report to jump straight to one.": "انقر على أي رقم في تبويب التقرير لعرض العقود التي يتكوّن منها. تتحقق كل قائمة من نفسها مقابل الرقم وتُظهر علامة خضراء عند التطابق. انقر على رقم العقد لرؤية كل ما يخصه في التقارير الأربعة، واستخدم خانة رقم العقد أعلى كل تقرير للانتقال إليه مباشرة.", "The dashboard now reopens on the portfolio, month and tab you were last viewing.": "تُعيد اللوحة فتح المحفظة والشهر والتبويب الذي كنت تعرضه آخر مرة.", "Every headline figure on the Awqaf report tabs for August and September now opens the list of contracts behind it, checked against the figure itself.": "كل رقم رئيسي في تبويبات تقارير الأوقاف لشهري أغسطس وسبتمبر يفتح الآن قائمة العقود التي يتكوّن منها، بعد التحقق منها مقابل الرقم نفسه.", "Export Excel on the Awqaf reports returns the original August and September workbooks, so the sheets and columns match the files you keep.": "يعيد تصدير Excel في تقارير الأوقاف ملفات أغسطس وسبتمبر الأصلية، فتتطابق الأوراق والأعمدة مع الملفات التي تحتفظون بها.", "New TV button in the header: a full-screen wallboard for an office screen that rotates through Overview, Bounced cheques, Leasing and Requests every 20 seconds, in English or Arabic. Press Esc to exit.": "زر جديد للتلفاز في الأعلى: شاشة عرض كاملة لشاشة المكتب تتنقل كل 20 ثانية بين النظرة العامة والشيكات المرتجعة والتأجير والطلبات، بالإنجليزية أو العربية. اضغط Esc للخروج.", "Charts now animate in: bars grow, donuts sweep and trend lines draw when a tab opens, when you switch a filter or chip, and as you scroll down to them. Fast scrolling skips the animation, and it is turned off for reduced-motion settings and printing.": "أصبحت الرسوم البيانية متحركة: تنمو الأعمدة وتدور الرسوم الدائرية وتُرسم خطوط الاتجاه عند فتح التبويب أو تبديل المرشح أو عند التمرير إليها. يتخطى التمرير السريع الحركة، وتُعطّل عند تفعيل خيار تقليل الحركة وعند الطباعة.", "The dashboard now loads without the page jumping around: the Overview and data-health areas keep their space while the reports load.": "تُحمَّل اللوحة الآن دون قفز في الصفحة: تحتفظ النظرة العامة وحالة البيانات بمساحتها أثناء تحميل التقارير.", "September 2026 is loaded for all four Awqaf reports (Cheque Count, Bounced Cheques, Lease Activity, Request Count) and cross-checked against the source workbooks.": "تم تحميل بيانات سبتمبر 2026 لتقارير الأوقاف الأربعة (عدد الشيكات والشيكات المرتجعة ونشاط التأجير وعدد الطلبات) والتحقق منها مقابل ملفات المصدر.", "September bounced cheques: 31 cheques worth AED 415K, 1.8% of recorded value, under the 2% target.": "الشيكات المرتجعة في سبتمبر: 31 شيكاً بقيمة 415 ألف درهم، أي 1.8% من القيمة المسجلة، وهي دون الهدف البالغ 2%.", "Lease Activity: 515 lease contracts (501 renewals, 14 new), with AED 785K annual rent on the new leases, up from 11 new leases in the previous period.": "نشاط التأجير: 515 عقد إيجار (501 تجديد و14 جديداً)، بإيجار سنوي 785 ألف درهم للعقود الجديدة، مقابل 11 عقداً جديداً في الفترة السابقة.", "This dashboard is now behind a login - each approved viewer is scoped to their own portfolio automatically, instead of everyone seeing the full portfolio switcher.": "أصبحت اللوحة خلف تسجيل دخول؛ يُوجّه كل مستخدم معتمد تلقائياً إلى محفظته بدلاً من عرض جميع المحافظ.", "New Backup button in the header: download everything you've uploaded in this browser as a file, and load it back in later (or on a new device) without losing saved months.": "أُضيف زر النسخ الاحتياطي لحفظ الملخصات الشهرية والإعدادات في ملف واستعادتها لاحقاً أو على جهاز آخر. ملفات العمل الأصلية ليست ضمن النسخة.", "Every upload button now says clearly that uploading a file only previews it in your own browser - it's never shared with other viewers.": "توضح أزرار رفع الملفات أن الملف يُعرض في متصفحك فقط ولا يُشارك مع المستخدمين الآخرين.", "Cleaned up the wording on every report tab so status messages describe what's actually shown, instead of leftover build notes.": "نُقّحت عبارات تبويبات التقارير لتصف رسائل الحالة البيانات المعروضة فعلياً بدلاً من ملاحظات التطوير القديمة.", "New guided tour for first-time viewers - walks through the sidebar, search, Needs Attention, Executive Summary, Compare, and Board Pack. Reopen it anytime from the Tour button in the header.": "أُضيفت جولة للمستخدمين الجدد تشمل الشريط الجانبي والبحث وما يستدعي الانتباه والملخص التنفيذي والمقارنة وحزمة مجلس الإدارة. يمكن إعادة فتحها من زر الجولة.", "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Recorded, or a drop in occupancy (Al Naser) vs the last saved month. Swing size is configurable from the Thresholds button.": "ترصد لوحة ما يستدعي الانتباه التغيرات الشهرية تلقائياً: ارتفاع معدل الارتجاع أو انخفاض إجمالي المسجّل أو إشغال نادي النصر مقارنةً بآخر شهر محفوظ. يمكن ضبط حجم التغير من إعدادات الحدود.", "Executive Summary now shows exactly which bounced cheques are new vs resolved compared to last month, once 2+ real months are on record.": "يعرض الملخص التنفيذي الشيكات المرتجعة الجديدة وتلك التي تمت معالجتها مقارنةً بالشهر السابق، عند توفر شهرين فعليين أو أكثر.", "Compare tab: added a Print/Export PDF button and a CSV download of the comparison table.": "أُضيف إلى المقارنة زر للطباعة أو تصدير PDF وتنزيل جدول المقارنة بصيغة CSV.", "Executive Summary now tracks month-over-month trend automatically once 2+ months are uploaded (a real bar chart, plus quarterly/yearly views).": "يتابع الملخص التنفيذي الاتجاه الشهري تلقائياً عند رفع شهرين أو أكثر، برسم أعمدة وعروض ربع سنوية وسنوية.", "Uploaded reports now persist automatically — reload the page and everything you loaded is still there, no re-uploading.": "تُحفظ التقارير المرفوعة تلقائياً؛ تبقى الملفات المحمّلة متاحة بعد إعادة تحميل الصفحة دون رفعها مجدداً.", "New Compare tab: put any two portfolios side by side, with dropdowns to choose which ones and click-to-expand daily trend charts.": "أُضيف تبويب مقارنة محفظتين جنباً إلى جنب، مع قوائم اختيار ورسوم اتجاه يومية قابلة للتوسيع.", "Overview KPI cards now show a small trend sparkline under each headline number.": "تعرض بطاقات النظرة العامة رسماً مصغّراً للاتجاه أسفل كل قيمة رئيسية.", "Al Naser Club's 4 report types added to the demo dashboard with realistic synthetic data.": "أُضيفت أنواع تقارير نادي النصر الأربعة إلى اللوحة التجريبية باستخدام بيانات اصطناعية واقعية.", "Click any day on the Activity heatmap to see exactly which reports contributed to that day's total.": "اضغط على يوم في خريطة النشاط لمعرفة التقارير التي ساهمت في إجمالي ذلك اليوم.", "Added a light/dark mode toggle and a dedicated Executive Summary tab with headline KPI cards and a plain-English summary.": "أُضيف تبديل الوضع الفاتح والداكن وتبويب مستقل للملخص التنفيذي ببطاقات مؤشرات رئيسية وملخص مبسّط بالإنجليزية.", "Fixed a real layout bug on Bounced Cheques: the Summary card's text box wasn't stretching to match the Status Breakdown chart beside it, leaving a blank gap - it now fills the card properly.": "أُصلح خلل في تقرير الشيكات المرتجعة: لم يكن مربع نص الملخص يتمدد لمجاراة رسم تفصيل الحالات المجاور، مما ترك فراغاً؛ وأصبح يملأ البطاقة.", "Ran a full accuracy audit across all 4 RTA reports (Occupancy, Renewals, Bounced Cheques, Collections) - checked every KPI, chart total, filter, and CSV export against the underlying data. No data errors found.": "أُجري تدقيق دقة للتقارير الأربعة في RTA (الإشغال والتجديدات والشيكات المرتجعة والتحصيل)، شمل المؤشرات وإجماليات الرسوم وعوامل التصفية وتصدير CSV مقابل البيانات الأصلية. لم تُكتشف أخطاء بيانات في ذلك التدقيق.", "Fixed the \"Activity by Day\" heatmap, which was stuck on \"Waiting for reports to finish loading\" - Renewals and Bounced Cheques now report day-by-day activity like the other portfolios.": "أُصلحت خريطة النشاط اليومي التي كانت عالقة عند انتظار تحميل التقارير؛ وأصبحت التجديدات والشيكات المرتجعة تعرض نشاطاً يومياً كالمحافظ الأخرى.", "Fixed uneven card widths and bar-chart sizing on Bounced Cheques and Renewals Tracking.": "أُصلح تفاوت عرض البطاقات وأحجام رسوم الأعمدة في الشيكات المرتجعة ومتابعة التجديدات.", "Rebuilt the charts and filter panel on all 4 RTA reports to be fully interactive - click a chart segment to filter the table, multi-select filters, search, and CSV export, matching Awqaf and Al Naser Club.": "أُعيد تجهيز الرسوم ولوحات التصفية لتقارير RTA الأربعة بالتصفية عبر الرسوم والاختيار المتعدد والبحث وتصدير CSV، على غرار الأوقاف ونادي النصر.", "Added RTA as a full portfolio: Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections, built from the Rent Roll workbook and the July 2026 monthly report.": "أُضيفت محفظة RTA بتقارير إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل، اعتماداً على ملف Rent Roll وتقرير يوليو 2026 الشهري.", "Al Naser Club's 4 reports (Bounced Cheques, Cheque Clearance, Collections Detail, Occupancy) added to the dashboard with realistic data.": "أُضيفت تقارير نادي النصر الأربعة (الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال) إلى اللوحة ببيانات واقعية.", "Original Awqaf build: report tabs, cross-checks, and Data Quality tracking all in place - the first portfolio this dashboard supported.": "الإصدار الأول للأوقاف: تبويبات التقارير والفحوص المتقاطعة ومتابعة جودة البيانات؛ وكانت أول محفظة تدعمها اللوحة.", "What's new": "المستجدات", "Recent additions to this dashboard": "الإضافات الأخيرة إلى هذه اللوحة", "Updates": "التحديثات", "Recent changes to this portfolio's reports": "التغييرات الأخيرة في تقارير هذه المحفظة", "No portfolio-specific updates logged yet.": "لم تُسجّل تحديثات خاصة بهذه المحفظة بعد.", "Metric": "المؤشر", "Period": "الفترة", "Bounce Rate": "معدل الارتجاع", "Bounced / At Risk": "المرتجع / المعرّض للخطر", "Report": "التقرير", "Count": "العدد", "What is counted": "ما الذي يُعدّ", "Total": "الإجمالي", "That doesn't look like a Dashboard backup file.": "لا يبدو هذا ملف نسخة احتياطية للوحة المعلومات الرئيسية.", "Unsupported backup identity or version. Production backups require separate provenance review before migration.": "هوية النسخة الاحتياطية أو إصدارها غير مدعوم. تتطلب نسخ الإنتاج مراجعة مستقلة لمصدرها قبل ترحيلها.", "Unknown portfolio or invalid history.": "محفظة غير معروفة أو سجل غير صالح.", "Invalid or duplicate reporting month.": "شهر تقرير غير صالح أو مكرر.", "History conflict: an existing month differs. Current history is retained; reconcile the revision before import.": "تعارض في السجل: يختلف شهر محفوظ عن النسخة. تم الاحتفاظ بالسجل الحالي؛ طابق المراجعة قبل الاستيراد.", "Data as of": "البيانات حتى", "Data as of this load": "البيانات عند هذا التحميل", "this period": "هذه الفترة", "generated": "تم الإنشاء", " — pulled from Bounced Cheques, Cheque Clearance, Collections Detail, and Occupancy.": " — مستمدة من الشيكات المرتجعة وتحصيل الشيكات وتفاصيل التحصيل والإشغال.", " — pulled from Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections.": " — مستمدة من إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل.", " — pulled from Harbor's monthly achievement report for the Dubai Police portfolio (aggregate figures only — no per-record workbook has been shared yet).": " — مستمدة من تقرير إنجاز Harbor الشهري لمحفظة شرطة دبي (أرقام مجمّعة فقط؛ لم يُشارك ملف عمل على مستوى السجل بعد).", "July 2026": "يوليو 2026", "Cross-checks": "الفحوص المتقاطعة", "Not applicable": "لا ينطبق", "no per-record data to cross-validate yet": "لا توجد بيانات على مستوى السجل للتحقق المتقاطع بعد", "Staff — PM User Workload": "الموظفون — عبء عمل مستخدمي PM", "Staff — Agent Workload": "الموظفون — عبء عمل الوكلاء", "All totals on this tab": "جميع إجماليات هذا التبويب", "Payment detail and installment distribution": "تفاصيل السداد وتوزيع الأقساط", "Recent changes to {portfolio} reports": "التغييرات الأخيرة في تقارير {portfolio}"};
+const REMAINING_UI = {"New Check month folder (Chrome or Edge on a computer): pick a month's folder and the page compares the four Excel files with the numbers the dashboard shows now, including rows, totals, splits, blank columns and the report month. Nothing is loaded or changed, and the files stay in your browser.": "جديد: «فحص مجلد الشهر» (في Chrome أو Edge على الحاسوب): اختر مجلد الشهر وستقارن الصفحة ملفات Excel الأربعة بالأرقام المعروضة الآن في لوحة المعلومات، بما في ذلك الصفوف والإجماليات والتقسيمات والأعمدة الفارغة وشهر التقرير. لا يتم تحميل أو تغيير أي شيء، وتبقى الملفات في متصفحك.", "Needs attention now follows the property administrator's rules: a tenant is flagged at more than 3 bounced cheques across the loaded months, and a high-value bounced cheque is a warning only because all bounced cheques have the same priority. Targets & trends notes that there are no fixed monthly targets.": "«يتطلب الانتباه» يتبع الآن قواعد إدارة الأملاك: يُشار إلى المستأجر عند أكثر من 3 شيكات مرتجعة عبر الأشهر المحمّلة، ويكون الشيك المرتجع عالي القيمة تنبيهًا فقط لأن جميع الشيكات المرتجعة بنفس الأولوية. وتوضح «الأهداف والاتجاهات» أنه لا توجد أهداف شهرية ثابتة.", "New Load history on Data Quality: every Excel file loaded in this browser is logged with when, which report, the file name, month, rows, how it read and who loaded it. It is kept in this browser and included in Backup.": "جديد: «سجل التحميل» في جودة البيانات: يُسجَّل كل ملف Excel يتم تحميله في هذا المتصفح (الوقت والتقرير واسم الملف والشهر والصفوف ونتيجة القراءة ومن حمّله). يُحفظ في هذا المتصفح ويُضمَّن في النسخة الاحتياطية.", "Fixed: a Backup could fail to restore because of a leftover saved portfolio. Backups now include only the current portfolios.": "تم الإصلاح: كان يتعذّر أحيانًا استعادة النسخة الاحتياطية بسبب محفظة قديمة محفوظة. أصبحت النسخ الاحتياطية تتضمن المحافظ الحالية فقط.", "Fixed: typing a target in Targets & trends no longer jumps the cursor when you move to the next field.": "تم الإصلاح: لم يعد المؤشر يقفز عند الانتقال إلى الحقل التالي أثناء إدخال الأهداف في «الأهداف والاتجاهات».", "New Targets & trends on the Executive Summary: set a target for each key figure and see how the month and the recent trend compare against it.": "جديد: «الأهداف والاتجاهات» في الملخص التنفيذي: حدّد هدفًا لكل رقم رئيسي وشاهد كيف يقارن الشهر والاتجاه الأخير به.", "Panels now open in the centre of the screen, like What's New.": "تُفتح اللوحات الآن في وسط الشاشة، مثل «المستجدات».", "Buttons are tidied across every tab: same style, same order, Print / Export PDF moved into the top row, and no more empty gaps.": "تم ترتيب الأزرار في كل التبويبات: شكل واحد وترتيب واحد، ونُقل زر الطباعة / تصدير PDF إلى الصف العلوي، دون فراغات.", "New Needs attention button on each report tab: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk and explained line by line. The rules are defaults and can be changed in the panel.": "زر جديد «يتطلب الانتباه» في كل تبويب تقرير: قائمة بالعقود القريبة من الانتهاء دون تجديد والشيكات المرتجعة اللافتة، مرتبة حسب الخطورة مع شرح السبب. القواعد افتراضية ويمكن تغييرها من اللوحة.", "The buttons at the top of each report now sit in the same order on every tab, with Updates always last.": "أصبحت الأزرار أعلى كل تقرير بالترتيب نفسه في كل تبويب، ويأتي زر التحديثات دائمًا في النهاية.", "Export Excel on every report tab: it downloads the month's original Excel file, with all its sheets and columns, or the file you loaded yourself.": "تصدير إلى Excel في كل تقرير: ينزّل ملف Excel الأصلي للشهر بجميع أوراقه وأعمدته، أو الملف الذي حمّلته بنفسك.", "Click any figure on a report tab to see the contracts behind it. Each list checks itself against the figure and shows a green tick when they match. Click a contract number to see everything about that contract across the four reports, and use the Contract number box at the top of each report to jump straight to one.": "اضغط على أي رقم في تبويب التقرير لعرض العقود التي يتكوّن منها. تتحقق كل قائمة من نفسها مقابل الرقم وتُظهر علامة صح خضراء عند التطابق. اضغط على رقم العقد لرؤية كل ما يخصه في التقارير الأربعة، واستخدم خانة رقم العقد أعلى كل تقرير للانتقال إليه مباشرة.", "The dashboard now reopens on the portfolio, month and tab you were last viewing.": "تُعيد اللوحة فتح المحفظة والشهر والتبويب الذي كنت تعرضه آخر مرة.", "Every headline figure on the Awqaf report tabs for August and September now opens the list of contracts behind it, checked against the figure itself.": "كل رقم رئيسي في تبويبات تقارير الأوقاف لشهري أغسطس وسبتمبر يفتح الآن قائمة العقود التي يتكوّن منها، وقد جرى التحقق منها مقابل الرقم نفسه.", "Export Excel on the Awqaf reports returns the original August and September workbooks, so the sheets and columns match the files you keep.": "يعيد تصدير Excel في تقارير الأوقاف ملفات أغسطس وسبتمبر الأصلية، فتتطابق الأوراق والأعمدة مع الملفات التي تحتفظ بها.", "New TV button in the header: a full-screen wallboard for an office screen that rotates through Overview, Bounced cheques, Leasing and Requests every 20 seconds, in English or Arabic. Press Esc to exit.": "زر التلفاز الجديد في الأعلى: لوحة عرض بملء الشاشة لشاشة المكتب تتنقل كل 20 ثانية بين النظرة العامة والشيكات المرتجعة والتأجير والطلبات، بالإنجليزية أو العربية. اضغط Esc للخروج.", "Charts now animate in: bars grow, donuts sweep and trend lines draw when a tab opens, when you switch a filter or chip, and as you scroll down to them. Fast scrolling skips the animation, and it is turned off for reduced-motion settings and printing.": "أصبحت الرسوم البيانية متحركة: تنمو الأعمدة وتدور الرسوم الدائرية وتُرسم خطوط الاتجاه عند فتح التبويب أو تبديل المرشح أو عند التمرير إليها. يتخطى التمرير السريع الحركة، وتُعطّل عند تفعيل خيار تقليل الحركة وعند الطباعة.", "The dashboard now loads without the page jumping around: the Overview and data-health areas keep their space while the reports load.": "تُحمَّل اللوحة الآن دون قفز في الصفحة: تحتفظ النظرة العامة وحالة البيانات بمساحتها أثناء تحميل التقارير.", "September 2026 is loaded for all four Awqaf reports (Cheque Count, Bounced Cheques, Lease Activity, Request Count) and cross-checked against the source workbooks.": "تم تحميل بيانات سبتمبر 2026 لتقارير الأوقاف الأربعة (عدد الشيكات والشيكات المرتجعة ونشاط التأجير وعدد الطلبات) والتحقق منها مقابل ملفات المصدر.", "September bounced cheques: 31 cheques worth AED 415K, 1.8% of recorded value, under the 2% target.": "الشيكات المرتجعة في سبتمبر: 31 شيكاً بقيمة 415 ألف درهم، أي 1.8% من القيمة المسجلة، وهي دون الهدف البالغ 2%.", "Lease Activity: 515 lease contracts (501 renewals, 14 new), with AED 785K annual rent on the new leases, up from 11 new leases in the previous period.": "نشاط التأجير: 515 عقد إيجار (501 تجديد و14 جديداً)، بإيجار سنوي 785 ألف درهم للعقود الجديدة، ارتفاعاً من 11 عقداً جديداً في الفترة السابقة.", "This dashboard is now behind a login - each approved viewer is scoped to their own portfolio automatically, instead of everyone seeing the full portfolio switcher.": "أصبحت اللوحة تتطلب تسجيل الدخول؛ يُوجَّه كل مستخدم معتمد تلقائياً إلى محفظته بدلاً من أن يرى الجميع مبدّل المحافظ الكامل.", "New Backup button in the header: download everything you've uploaded in this browser as a file, and load it back in later (or on a new device) without losing saved months.": "أُضيف زر النسخ الاحتياطي لحفظ الملخصات الشهرية والإعدادات في ملف واستعادتها لاحقاً أو على جهاز آخر. المصنّفات الأصلية ليست ضمن النسخة.", "Every upload button now says clearly that uploading a file only previews it in your own browser - it's never shared with other viewers.": "توضح أزرار رفع الملفات أن الملف يُعرض في متصفحك فقط ولا يُشارك مع المستخدمين الآخرين.", "Cleaned up the wording on every report tab so status messages describe what's actually shown, instead of leftover build notes.": "نُقّحت عبارات تبويبات التقارير لتصف رسائل الحالة البيانات المعروضة فعلياً بدلاً من ملاحظات التطوير القديمة.", "New guided tour for first-time viewers - walks through the sidebar, search, Needs Attention, Executive Summary, Compare, and Board Pack. Reopen it anytime from the Tour button in the header.": "أُضيفت جولة للمستخدمين الجدد تشمل الشريط الجانبي والبحث و«يتطلب الانتباه» والملخص التنفيذي والمقارنة وحزمة مجلس الإدارة. يمكن إعادة فتحها من زر الجولة.", "Needs Attention now flags month-over-month swings automatically - a jump in bounce rate, a drop in Total Recorded, or a drop in occupancy (Al Naser) vs the last saved month. Swing size is configurable from the Thresholds button.": "ترصد قائمة «يتطلب الانتباه» التغيرات الشهرية تلقائياً: ارتفاع معدل الارتجاع أو انخفاض إجمالي المسجّل أو انخفاض إشغال نادي النصر مقارنةً بآخر شهر محفوظ. يمكن ضبط حجم التغير من زر الحدود.", "Executive Summary now shows exactly which bounced cheques are new vs resolved compared to last month, once 2+ real months are on record.": "يعرض الملخص التنفيذي الشيكات المرتجعة الجديدة وتلك التي تمت معالجتها مقارنةً بالشهر السابق، عند توفر شهرين فعليين أو أكثر.", "Compare tab: added a Print/Export PDF button and a CSV download of the comparison table.": "أُضيف إلى تبويب المقارنة زر للطباعة / تصدير PDF وخيار لتنزيل جدول المقارنة بصيغة CSV.", "Executive Summary now tracks month-over-month trend automatically once 2+ months are uploaded (a real bar chart, plus quarterly/yearly views).": "يتابع الملخص التنفيذي الاتجاه الشهري تلقائياً عند رفع شهرين أو أكثر، برسم أعمدة وعروض ربع سنوية وسنوية.", "Uploaded reports now persist automatically — reload the page and everything you loaded is still there, no re-uploading.": "تُحفظ التقارير المرفوعة تلقائياً؛ تبقى الملفات المحمّلة متاحة بعد إعادة تحميل الصفحة دون رفعها مجدداً.", "New Compare tab: put any two portfolios side by side, with dropdowns to choose which ones and click-to-expand daily trend charts.": "أُضيف تبويب مقارنة محفظتين جنباً إلى جنب، مع قوائم اختيار ورسوم اتجاه يومية قابلة للتوسيع.", "Overview KPI cards now show a small trend sparkline under each headline number.": "تعرض بطاقات النظرة العامة رسماً مصغّراً للاتجاه أسفل كل قيمة رئيسية.", "Al Naser Club's 4 report types added to the demo dashboard with realistic synthetic data.": "أُضيفت أنواع تقارير نادي النصر الأربعة إلى اللوحة التجريبية باستخدام بيانات اصطناعية واقعية.", "Click any day on the Activity heatmap to see exactly which reports contributed to that day's total.": "اضغط على يوم في خريطة النشاط لمعرفة التقارير التي ساهمت في إجمالي ذلك اليوم.", "Added a light/dark mode toggle and a dedicated Executive Summary tab with headline KPI cards and a plain-English summary.": "أُضيف تبديل الوضع الفاتح والداكن وتبويب مستقل للملخص التنفيذي ببطاقات مؤشرات رئيسية وملخص مبسّط بالإنجليزية.", "Fixed a real layout bug on Bounced Cheques: the Summary card's text box wasn't stretching to match the Status Breakdown chart beside it, leaving a blank gap - it now fills the card properly.": "أُصلح خلل في تقرير الشيكات المرتجعة: لم يكن مربع نص الملخص يتمدد لمجاراة رسم تفصيل الحالات المجاور، مما ترك فراغاً؛ وأصبح يملأ البطاقة.", "Ran a full accuracy audit across all 4 RTA reports (Occupancy, Renewals, Bounced Cheques, Collections) - checked every KPI, chart total, filter, and CSV export against the underlying data. No data errors found.": "أُجري تدقيق دقة للتقارير الأربعة في RTA (الإشغال والتجديدات والشيكات المرتجعة والتحصيل)، شمل المؤشرات وإجماليات الرسوم وعوامل التصفية وتصدير CSV مقابل البيانات الأصلية. لم تُكتشف أخطاء بيانات في ذلك التدقيق.", "Fixed the \"Activity by Day\" heatmap, which was stuck on \"Waiting for reports to finish loading\" - Renewals and Bounced Cheques now report day-by-day activity like the other portfolios.": "أُصلحت خريطة النشاط اليومي التي كانت عالقة عند انتظار تحميل التقارير؛ وأصبحت التجديدات والشيكات المرتجعة تعرض نشاطاً يومياً كالمحافظ الأخرى.", "Fixed uneven card widths and bar-chart sizing on Bounced Cheques and Renewals Tracking.": "أُصلح تفاوت عرض البطاقات وأحجام رسوم الأعمدة في الشيكات المرتجعة ومتابعة التجديدات.", "Rebuilt the charts and filter panel on all 4 RTA reports to be fully interactive - click a chart segment to filter the table, multi-select filters, search, and CSV export, matching Awqaf and Al Naser Club.": "أُعيد بناء الرسوم البيانية ولوحة التصفية في تقارير RTA الأربعة لتصبح تفاعلية بالكامل: اضغط على جزء من الرسم لتصفية الجدول، مع الاختيار المتعدد والبحث وتصدير CSV، على غرار الأوقاف ونادي النصر.", "Added RTA as a full portfolio: Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections, built from the Rent Roll workbook and the July 2026 monthly report.": "أُضيفت محفظة RTA بتقارير إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل، اعتماداً على ملف Rent Roll وتقرير يوليو 2026 الشهري.", "Al Naser Club's 4 reports (Bounced Cheques, Cheque Clearance, Collections Detail, Occupancy) added to the dashboard with realistic data.": "أُضيفت تقارير نادي النصر الأربعة (الشيكات المرتجعة ومقاصة الشيكات وتفاصيل التحصيل والإشغال) إلى اللوحة ببيانات واقعية.", "Original Awqaf build: report tabs, cross-checks, and Data Quality tracking all in place - the first portfolio this dashboard supported.": "الإصدار الأول للأوقاف: تبويبات التقارير والفحوص المتقاطعة ومتابعة جودة البيانات؛ وكانت أول محفظة تدعمها اللوحة.", "What's new": "المستجدات", "Recent additions to this dashboard": "الإضافات الأخيرة إلى هذه اللوحة", "Updates": "التحديثات", "Recent changes to this portfolio's reports": "التغييرات الأخيرة في تقارير هذه المحفظة", "No portfolio-specific updates logged yet.": "لم تُسجّل تحديثات خاصة بهذه المحفظة بعد.", "Metric": "المؤشر", "Period": "الفترة", "Bounce Rate": "معدل الارتجاع", "Bounced / At Risk": "المرتجع / المعرّض للخطر", "Report": "التقرير", "Count": "العدد", "What is counted": "ما الذي يُحتسب", "Total": "الإجمالي", "That doesn't look like a Dashboard backup file.": "لا يبدو هذا ملف نسخة احتياطية للوحة.", "Unsupported backup identity or version. Production backups require separate provenance review before migration.": "هوية النسخة الاحتياطية أو إصدارها غير مدعوم. تتطلب نسخ الإنتاج مراجعة مستقلة لمصدرها قبل ترحيلها.", "Unknown portfolio or invalid history.": "محفظة غير معروفة أو سجل غير صالح.", "Invalid or duplicate reporting month.": "شهر تقرير غير صالح أو مكرر.", "History conflict: an existing month differs. Current history is retained; reconcile the revision before import.": "تعارض في السجل: يختلف أحد الأشهر المحفوظة عن النسخة. تم الاحتفاظ بالسجل الحالي؛ سوِّ الاختلاف في المراجعة قبل الاستيراد.", "Data as of": "البيانات حتى", "Data as of this load": "البيانات عند هذا التحميل", "this period": "هذه الفترة", "generated": "تم الإنشاء", " — pulled from Bounced Cheques, Cheque Clearance, Collections Detail, and Occupancy.": " — مستمدة من الشيكات المرتجعة ومقاصة الشيكات وتفاصيل التحصيل والإشغال.", " — pulled from Asset Occupancy, Renewals Tracking, Bounced Cheques, and Collections.": " — مستمدة من إشغال الأصول ومتابعة التجديدات والشيكات المرتجعة والتحصيل.", " — pulled from Harbor's monthly achievement report for the Dubai Police portfolio (aggregate figures only — no per-record workbook has been shared yet).": " — مستمدة من تقرير إنجاز Harbor الشهري لمحفظة شرطة دبي (أرقام مجمّعة فقط؛ لم يُشارك ملف عمل على مستوى السجل بعد).", "July 2026": "يوليو 2026", "Cross-checks": "الفحوص المتقاطعة", "Not applicable": "لا ينطبق", "no per-record data to cross-validate yet": "لا توجد بيانات على مستوى السجل للتحقق المتقاطع بعد", "Staff — PM User Workload": "الموظفون — عبء عمل مستخدمي إدارة الممتلكات", "Staff — Agent Workload": "الموظفون — عبء عمل الوكلاء", "All totals on this tab": "جميع إجماليات هذا التبويب", "Payment detail and installment distribution": "تفاصيل السداد وتوزيع الأقساط", "Recent changes to {portfolio} reports": "التغييرات الأخيرة في تقارير {portfolio}"};
 function remainingText(value){ return currentLang === 'ar' && Object.prototype.hasOwnProperty.call(REMAINING_UI,value) ? REMAINING_UI[value] : value; }
 
 function t(key, fallback){
@@ -4495,11 +4495,11 @@ window.__V9_COPY = {
   ],
   "rc.explore.truncNote": [
    "Showing the first {shown} of {total} requests. The CSV export has all of them.",
-   "عرض أول {shown} من {total} طلباً. ملف CSV يحتوي كل الطلبات."
+   "عرض أول {shown} من إجمالي {total} من الطلبات. ملف CSV المُصدَّر يحتوي على جميعها."
   ],
   "rc.explore.countNote": [
    "{count} matching request(s). The CSV export has the same requests.",
-   "{count} طلب مطابق. ملف CSV يحتوي نفس الطلبات."
+   "عدد الطلبات المطابقة: {count}. ملف CSV يحتوي على الطلبات نفسها."
   ],
   "rc.peakValueDayNote": [
    "AED {amt}, highest-value day",
@@ -4507,7 +4507,7 @@ window.__V9_COPY = {
   ],
   "rc.allVerifiedNote": [
    "✓ {n}/{n} requests checked — all have a valid Type and PM User",
-   "✓ تم فحص {n}/{n} طلب — جميعها بنوع ومستخدم صحيحين"
+   "✓ تم فحص {n}/{n} من الطلبات — جميعها بنوع ومستخدم صالحين"
   ],
   "rc.excludedRowsNote": [
    "⚠ {rows} left out of the counts (invalid Type or PM User) — click to see which",
@@ -4569,7 +4569,7 @@ window.__V9_COPY = {
   ],
   "nl.otherFees.other.note": [
    "VAT on the rent",
-   "ضريبة على الإيجار"
+   "ضريبة القيمة المضافة على الإيجار"
   ],
   "nl.otherFees.misc.note": [
    "AED, fee types not categorised above",
@@ -4625,7 +4625,7 @@ window.__V9_COPY = {
   ],
   "nl.allVerifiedNote": [
    "✓ {n}/{n} payments checked — all have a valid Fee Type and Staff",
-   "✓ تم فحص {n}/{n} دفعة — جميعها بنوع رسوم وموظف صحيحين"
+   "✓ تم فحص {n}/{n} من الدفعات — جميعها بنوع رسوم وموظف صالحين"
   ],
   "nl.summaryLinkedNote": [
    "✓ {n} {unit} this period, matched to Summary. Total Fees also counts payments tied to contracts from other periods.",
@@ -4675,7 +4675,7 @@ window.__V9_COPY = {
   ],
   "bc.tenantTitle": [
    "Tenant Exposure",
-   "تعرّض المستأجرين"
+   "التعرّض حسب المستأجر"
   ],
   "bc.tenantDesc": [
    "Tenants with the highest bounced value, all their cheques combined.",
@@ -4741,27 +4741,27 @@ window.__V9_COPY = {
   ],
   "cc.pipelineDesc": [
    "Cheques by the date written on them: earlier, this month, or later (post-dated). Later-dated cheques are already in hand, not forecast.",
-   "الشيكات حسب التاريخ المكتوب عليها: سابق أو هذا الشهر أو لاحق (مؤجل). الشيكات المؤجلة موجودة بالفعل وليست توقعاً."
+   "الشيكات حسب التاريخ المكتوب عليها: سابقة أو في هذا الشهر أو لاحقة (مؤجلة). الشيكات المؤجلة في حوزتنا بالفعل وليست توقعاً."
   ],
   "cc.maturitiesDesc": [
    "Post-dated cheques already in hand, by month. Not a forecast. Bars add up to the Future-Dated value above.",
-   "الشيكات المؤجلة الموجودة بالفعل حسب الشهر. ليست توقعاً. مجموع الأعمدة يساوي القيمة المؤجلة أعلاه."
+   "الشيكات المؤجلة التي في حوزتنا بالفعل، حسب الشهر. ليست توقعاً. مجموع الأعمدة يساوي القيمة المؤجلة أعلاه."
   ],
   "cc.bucketsDesc": [
    "Next month, 2–3 months, 4–6 months and over 6 months. Adds up to the Future-Dated value.",
-   "الشهر القادم، و2–3 أشهر، و4–6 أشهر، وأكثر من 6 أشهر. المجموع يساوي القيمة المؤجلة."
+   "الشهر القادم، ومن 2 إلى 3 أشهر، ومن 4 إلى 6 أشهر، وأكثر من 6 أشهر. المجموع يساوي القيمة المؤجلة."
   ],
   "cc.reconciledNote": [
    "✓ The 4 buckets add up to the Future-Dated value (AED {amt}, {n} {unit}).",
-   "✓ الفئات الأربع تساوي القيمة المؤجلة ({amt} د.إ، {n} {unit})."
+   "✓ مجموع الفئات الأربع يساوي القيمة المؤجلة ({amt} د.إ، {n} {unit})."
   ],
   "cc.reconciledFailedNote": [
    "⚠ The buckets do not add up to the Future-Dated value. Treat them as unchecked.",
-   "⚠ مجموع الفئات لا يساوي القيمة المؤجلة. اعتبرها غير مؤكدة."
+   "⚠ مجموع الفئات لا يساوي القيمة المؤجلة. اعتبرها غير متحقق منها."
   ],
   "cc.activityDesc": [
    "Installments per day, by count and AED value. The busiest day is not always the highest-value day.",
-   "الأقساط يومياً بالعدد وبقيمة الدرهم. أكثر الأيام نشاطاً ليس دائماً الأعلى قيمة."
+   "الأقساط يومياً حسب العدد والقيمة بالدرهم. اليوم الأكثر نشاطاً ليس دائماً اليوم الأعلى قيمة."
   ],
   "cc.kpiActiveDaysNote": [
    "Days with at least one installment",
@@ -4821,7 +4821,7 @@ window.__V9_COPY = {
   ],
   "cc.concentrationDesc": [
    "Properties, lease type and portfolio mix.",
-   "العقارات ونوع العقد وتوزيع المحفظة."
+   "العقارات ونوع الإيجار وتوزيع المحفظة."
   ],
   "cc.propsDesc": [
    "Properties ranked by payment value, with their contracts and installments.",
@@ -4853,15 +4853,15 @@ window.__V9_COPY = {
   ],
   "cc.exploreDesc": [
    "Every payment, newest first. Search and filters apply.",
-   "كل الدفعات، الأحدث أولاً. البحث والتصفية يعملان."
+   "كل الدفعات، الأحدث أولاً. البحث والتصفية مطبّقان."
   ],
   "cc.referenceCardTitle": [
    "Installment Count — Workbook Reference",
-   "عدد الأقساط — مرجع ملف العمل"
+   "عدد الأقساط — مرجع المصنف"
   ],
   "cc.referenceCardDesc": [
    "The workbook's Installment count sheet, as entered. For reference; it is counted separately from the Details totals.",
-   "ورقة عدد الأقساط في ملف العمل كما أُدخلت. للمرجعية فقط؛ وتُحتسب بشكل مستقل عن إجماليات التفاصيل."
+   "ورقة «عدد الأقساط» في المصنف كما أُدخلت. للاطلاع فقط؛ فهي تُحتسب بشكل منفصل عن إجماليات التفاصيل."
   ],
   "cc.runtime.paymentBankTransfer": [
    "AED, bank transfers",
@@ -4873,7 +4873,7 @@ window.__V9_COPY = {
   ],
   "cc.exploreNoteMore": [
    "Showing {shown} of {total} {unit}. Search to narrow down.",
-   "عرض {shown} من {total} {unit}. استخدم البحث للتضييق."
+   "عرض {shown} من {total} {unit}. استخدم البحث لتضييق النتائج."
   ],
   "cc.allRecordsVerified": [
    "✓ All {n} payments checked",
@@ -4897,7 +4897,7 @@ window.__V9_COPY = {
   ],
   "cc.renewalNewSnapNote": [
    "Renewal / New, of {n} classified contracts ({p1}% / {p2}%)",
-   "تجديد / جديد، من {n} عقداً مصنفاً ({p1}% / {p2}%)"
+   "تجديد / جديد، من أصل {n} من العقود المصنفة ({p1}% / {p2}%)"
   ],
   "cc.renewalNewSnapNoteEmpty": [
    "Renewal / New contracts",
@@ -4905,7 +4905,7 @@ window.__V9_COPY = {
   ],
   "cc.excludedRowsNote": [
    "⚠ {n} payment(s) with no Contract Number or Date are left out of the counts — click to see which",
-   "⚠ {n} دفعة بلا رقم عقد أو تاريخ مستبعدة من الأعداد — انقر لعرضها"
+   "⚠ {n} دفعة بلا رقم عقد أو تاريخ مستبعدة من الأعداد — اضغط لعرضها"
   ],
   "cc.kpiAvgLinesPerDay": [
    "Avg Installments / Active Day",
@@ -4917,7 +4917,7 @@ window.__V9_COPY = {
   ],
   "cc.peakDayRecords": [
    "{n} installments",
-   "{n} قسط"
+   "{n} من الأقساط"
   ],
   "cc.recordUnit": [
    "payments",
@@ -4933,7 +4933,7 @@ window.__V9_COPY = {
   ],
   "cc.kpiPeakDayCount": [
    "Peak Day (Installments)",
-   "ذروة اليوم (الأقساط)"
+   "يوم الذروة (الأقساط)"
   ]
  }
 };
@@ -5034,7 +5034,7 @@ window.__v8PatchReport = function(html, reportId){
       });
     }
     // extra Arabic labels for chart/list names the pages left in English (the page's own entries win)
-    html = html.replace('var REPORT_CHART_UI = {', 'var REPORT_CHART_UI = {"Contract Transfer": "نقل العقد", "Tenant Name Change": "تغيير اسم المستأجر", "NOC": "شهادة عدم ممانعة", "Non-Renewal": "عدم التجديد", "Early Termination": "إنهاء مبكر", "VAT Rent": "ضريبة الإيجار", "Rent Installment": "قسط الإيجار", "Security Deposit": "التأمين", "Agency Fee": "رسوم الوكالة", "Tariff": "التعرفة", "Innovation Fee": "رسوم الابتكار", "Harbor Fees": "رسوم Harbor", "Endowment": "وقف", "Minor": "قاصر", "Minors": "قاصرون", "Under Legal Action": "تحت إجراء قانوني", "Under Process": "قيد المعالجة", "Credit Card": "بطاقة ائتمان", "Bank Transfer": "تحويل بنكي", "Show all": "عرض الكل", ');
+    html = html.replace('var REPORT_CHART_UI = {', 'var REPORT_CHART_UI = {"Contract Transfer": "نقل العقد", "Tenant Name Change": "تغيير اسم المستأجر", "NOC": "شهادة عدم ممانعة", "Non-Renewal": "عدم التجديد", "Early Termination": "إنهاء مبكر", "VAT Rent": "ضريبة القيمة المضافة على الإيجار", "Rent Installment": "قسط الإيجار", "Security Deposit": "مبلغ التأمين", "Agency Fee": "رسوم الوكالة", "Tariff": "التعرفة", "Innovation Fee": "رسوم الابتكار", "Harbor Fees": "رسوم Harbor", "Endowment": "وقف", "Minor": "قاصر", "Minors": "قاصرون", "Under Legal Action": "قيد الإجراءات القانونية", "Under Process": "قيد المعالجة", "Credit Card": "بطاقة ائتمان", "Bank Transfer": "تحويل بنكي", "Show all": "عرض الكل", ');
     // 1. clearer donut: keep the original as donutChartLegacy and add the enhancing wrapper in front of it
     var sig = /function donutChart\(([^)]*)\)\{/;
     if(sig.test(html)){
@@ -5399,21 +5399,21 @@ window.__v8HealthBadge = function(){
   var EXACT = {
     'Dashboard': 'لوحة المعلومات', 'Dark': 'داكن', 'Light': 'فاتح', 'Updates': 'المستجدات', 'Open ›': 'فتح ›', 'Open': 'فتح',
     'Awqaf': 'الأوقاف', 'Dubai Court': 'محكمة دبي', 'Dubai Court (no data yet)': 'محكمة دبي (لا توجد بيانات بعد)', 'RTA': 'هيئة الطرق والمواصلات', 'VIP (no data yet)': 'VIP (لا توجد بيانات بعد)',
-    'Police': 'الشرطة', 'Al Naser Club': 'نادي الناصر', 'National Bonds (no data yet)': 'السندات الوطنية (لا توجد بيانات بعد)', 'National Bonds': 'السندات الوطنية',
+    'Police': 'الشرطة', 'Al Naser Club': 'نادي النصر', 'National Bonds (no data yet)': 'السندات الوطنية (لا توجد بيانات بعد)', 'National Bonds': 'السندات الوطنية',
     'Installments': 'الأقساط', 'Contracts': 'العقود', 'Bounced cheques': 'الشيكات المرتجعة', 'Requests': 'الطلبات', 'Summary': 'الملخص', 'Trend & Outlook': 'الاتجاه والتوقعات', 'Changes': 'التغييرات',
     'Within target': 'ضمن الهدف', 'Over target': 'فوق الهدف', 'Daily activity': 'النشاط اليومي', 'Leasing & operations': 'التأجير والعمليات', 'LEASING': 'التأجير', 'OPERATIONS': 'العمليات',
-    'Lease mix by contract': 'توزيع العقود حسب النوع', 'Bounced cheques by status': 'الشيكات المرتجعة حسب الحالة', 'Monthly Trend': 'الاتجاه الشهري',
+    'Lease mix by contract': 'توزيع الإيجارات على مستوى العقد', 'Bounced cheques by status': 'الشيكات المرتجعة حسب الحالة', 'Monthly Trend': 'الاتجاه الشهري',
     'Total recorded value': 'إجمالي القيمة المسجلة', 'Bounced / at risk': 'المرتجع / المعرّض للخطر', 'Net recorded value': 'صافي القيمة المسجلة', 'Bounce rate': 'معدل الارتجاع',
-    'Renewal contracts': 'عقود التجديد', 'New-lease contracts': 'عقود الإيجار الجديدة', 'Forward View': 'نظرة للأمام', 'Items to review next period': 'بنود للمراجعة في الفترة القادمة',
-    'Largest other:': 'أكبر نوع آخر:', 'Sources agree:': 'المصادر متفقة:', 'new-lease contracts in both Cheque Count and New Lease': 'العقود الجديدة نفسها في عدد الشيكات والإيجار الجديد',
-    'Renewal vs new lease': 'التجديد مقابل الجديد', 'Two grains side by side — never added together': 'مستويان جنباً إلى جنب — لا يُجمعان أبداً', 'By contract': 'حسب العقد', 'By request': 'حسب الطلب',
+    'Renewal contracts': 'عقود التجديد', 'New-lease contracts': 'عقود الإيجار الجديدة', 'Forward View': 'نظرة مستقبلية', 'Items to review next period': 'بنود للمراجعة في الفترة القادمة',
+    'Largest other:': 'أكبر نوع آخر:', 'Sources agree:': 'المصادر متفقة:', 'new-lease contracts in both Cheque Count and New Lease': 'عقود إيجار جديدة في كل من «عدد الشيكات» و«الإيجار الجديد»',
+    'Renewal vs new lease': 'التجديد مقابل الإيجار الجديد', 'Two grains side by side — never added together': 'مستويان جنباً إلى جنب — لا يُجمعان أبداً', 'By contract': 'حسب العقد', 'By request': 'حسب الطلب',
     'Source comparison': 'مقارنة المصادر', 'Renewal contracts ': 'عقود التجديد', 'Cheque Count': 'عدد الشيكات', 'Request Count': 'عدد الطلبات', 'New Lease': 'الإيجار الجديد',
-    'Same figures as above, side by side. For fee and payment detail see the New Lease Detail tab.': 'نفس الأرقام أعلاه جنباً إلى جنب. لتفاصيل الرسوم والدفعات راجع تفاصيل الإيجار الجديد.',
+    'Same figures as above, side by side. For fee and payment detail see the New Lease Detail tab.': 'الأرقام نفسها الواردة أعلاه، جنباً إلى جنب. لتفاصيل الرسوم والدفعات راجع تبويب «تفاصيل الإيجار الجديد».',
     'Three sources, three grains: contracts and requests are never added together.': 'ثلاثة مصادر وثلاثة مستويات: لا تُجمع العقود والطلبات معاً.',
-    'contracts (leaseType)': 'عقود (نوع الإيجار)', 'distinct new-lease contracts': 'عقود جديدة مميزة', 'requests (renewal + new only)': 'طلبات (تجديد وجديد فقط)',
+    'contracts (leaseType)': 'عقود (نوع الإيجار)', 'distinct new-lease contracts': 'عقود جديدة غير مكررة', 'requests (renewal + new only)': 'طلبات (تجديد وجديد فقط)',
     'Cheque Count · contract-level': 'عدد الشيكات · على مستوى العقد', 'Cheque Count · leaseType': 'عدد الشيكات · نوع الإيجار', 'Request Count · request-level': 'عدد الطلبات · على مستوى الطلب',
     'Needs a look': 'يحتاج مراجعة', 'required data missing': 'بيانات مطلوبة مفقودة', 'skipped or normalised': 'تم تجاوزها أو توحيدها', 'worth knowing': 'للعلم', 'clean': 'سليم',
-    'Nothing flagged in the currently loaded file.': 'لا شيء مُعلَّم في الملف المحمّل حالياً.',
+    'Nothing flagged in the currently loaded file.': 'لم يتم وضع علامة على أي عنصر في الملف المحمّل حالياً.',
     'Bounced Cheque Count': 'عدد الشيكات المرتجعة', 'Portfolio Highlight': 'أبرز ما في المحفظة', 'Load comparison': 'تحميل المقارنة',
     'Only one portfolio has been loaded this session. Choose a second portfolio to complete the comparison.': 'تم تحميل محفظة واحدة فقط في هذه الجلسة. اختر محفظة ثانية لإكمال المقارنة.',
     'Compare': 'مقارنة', 'Summary ': 'الملخص',
@@ -5422,13 +5422,13 @@ window.__v8HealthBadge = function(){
     'New bounced cheques': 'شيكات مرتجعة جديدة', 'No longer present': 'لم تعد موجودة', 'Net change in bounced value': 'صافي التغيّر في القيمة المرتجعة',
     'Date': 'التاريخ', 'Contract': 'العقد', 'Tenant': 'المستأجر', 'Bank': 'البنك', 'Cheque #': 'رقم الشيك', 'Amount': 'المبلغ', 'Status': 'الحالة',
     'Lease contracts': 'عقود الإيجار', 'New leases': 'عقود جديدة', 'New-lease rent value': 'قيمة إيجار العقود الجديدة', 'Data status': 'حالة البيانات', 'Critical': 'حرج', 'Warnings': 'تحذيرات', 'Information': 'معلومات',
-    "Uploading a file into this report only previews it here, in your own browser. It isn't shared with other viewers, sent anywhere, or saved outside this device.": 'رفع ملف في هذا التقرير يعرضه هنا فقط داخل متصفحك. لا يُشارك مع الآخرين ولا يُرسل ولا يُحفظ خارج هذا الجهاز.',
+    "Uploading a file into this report only previews it here, in your own browser. It isn't shared with other viewers, sent anywhere, or saved outside this device.": 'رفع ملف في هذا التقرير يعرضه هنا فقط داخل متصفحك. لا يُشارك مع مستخدمين آخرين، ولا يُرسل إلى أي جهة، ولا يُحفظ خارج هذا الجهاز.',
     'PAID': 'مدفوع', 'Paid ': 'مدفوع', 'WATCH': 'مراقبة', 'Watch': 'مراقبة',
     'Under Legal Action': 'تحت إجراء قانوني', 'Under Process': 'قيد المعالجة', 'Paid': 'مدفوع', 'Process': 'قيد المعالجة', 'Legal': 'قانوني',
-    '2 to review': 'مراجعتان', '1 to review': 'مراجعة واحدة',
+    '2 to review': 'عنصران للمراجعة', '1 to review': 'عنصر واحد للمراجعة',
     'Privacy & data': 'الخصوصية والبيانات',
     'Overview': 'نظرة عامة', 'LEASE ACTIVITY': 'نشاط التأجير', 'BOUNCED CHEQUES': 'الشيكات المرتجعة', 'Lease Activity': 'نشاط التأجير', 'Contract Transfer': 'نقل العقد', 'Renewal Lease': 'تجديد عقد الإيجار', 'Tenant Name Change': 'تغيير اسم المستأجر', 'NOC': 'شهادة عدم ممانعة', 'Non-Renewal': 'عدم التجديد', 'Early Termination': 'إنهاء مبكر',
-    'Sources agree: new-lease contracts in both Cheque Count and New Lease': 'المصادر متفقة: العقود الجديدة نفسها في عدد الشيكات والإيجار الجديد', 'Sources agree:': 'المصادر متفقة:', 'Source': 'المصدر', 'Total': 'الإجمالي', 'Renewal': 'تجديد', 'New': 'جديد', 'Renewal share': 'نسبة التجديد', 'Change': 'التغيّر',
+    'Sources agree: new-lease contracts in both Cheque Count and New Lease': 'المصادر متفقة: عقود إيجار جديدة في كل من «عدد الشيكات» و«الإيجار الجديد»', 'Sources agree:': 'المصادر متفقة:', 'Source': 'المصدر', 'Total': 'الإجمالي', 'Renewal': 'تجديد', 'New': 'جديد', 'Renewal share': 'نسبة التجديد', 'Change': 'التغيّر',
     'Installments given': 'الأقساط المقدمة', 'By Bank': 'حسب البنك', 'Staff — PM User Workload': 'الموظفون — عبء مستخدمي PM', 'Staff — Agent Workload': 'الموظفون — عبء الوكلاء',
     'installments': 'قسط', 'contracts': 'عقد', 'cheques': 'شيك', 'by first date': 'حسب أول تاريخ', 'recorded value': 'القيمة المسجلة', 'new leases': 'عقود جديدة', 'requests': 'الطلبات', 'all statuses, incl. Paid': 'كل الحالات بما فيها المدفوع', 'new-lease value only': 'قيمة الإيجار الجديد فقط',
     'rent installments per day': 'أقساط الإيجار يومياً',
@@ -5438,17 +5438,17 @@ window.__v8HealthBadge = function(){
   var RULES = [
     [/^Since (\d{2}\/\d{2} – \d{2}\/\d{2})$/, 'منذ $1'],
     [/^(recorded value|new leases|requests) ([▲▼]) (.+) vs last period$/, function(m){ return EXACT[m[1]] + ' ' + m[2] + ' ' + aed(m[3]) + ' مقارنة بالفترة السابقة'; }],
-    [/^(.*?) · Recorded AED ([\d.,MK]+), of which AED ([\d.,MK]+) \(([\d.]+)%\) bounced — (under|over) the ([\d.]+)% target\. ([\d,]+) lease contracts \((\d+)% renewals\), (\d+) new leases worth AED ([\d.,MK]+)\.(?: (\d+) cross-checks? need a second look)?$/, function(m){ return m[1] + ' · القيمة المسجلة ' + m[2] + ' د.إ، منها ' + m[3] + ' د.إ (' + m[4] + '%) مرتجعة — ' + (m[5] === 'under' ? 'أقل من' : 'أعلى من') + ' هدف ' + m[6] + '%. ' + m[7] + ' عقد إيجار (' + m[8] + '% تجديد)، و' + m[9] + ' عقود جديدة بقيمة ' + m[10] + ' د.إ.' + (m[11] ? ' ' + m[11] + ' فحوصات متقاطعة تحتاج مراجعة.' : ''); }],
+    [/^(.*?) · Recorded AED ([\d.,MK]+), of which AED ([\d.,MK]+) \(([\d.]+)%\) bounced — (under|over) the ([\d.]+)% target\. ([\d,]+) lease contracts \((\d+)% renewals\), (\d+) new leases worth AED ([\d.,MK]+)\.(?: (\d+) cross-checks? need a second look)?$/, function(m){ return m[1] + ' · القيمة المسجلة ' + m[2] + ' د.إ، منها ' + m[3] + ' د.إ (' + m[4] + '%) مرتجعة — ' + (m[5] === 'under' ? 'أقل من' : 'أعلى من') + ' الهدف ' + m[6] + '%. ' + m[7] + ' عقد إيجار (' + m[8] + '% تجديد)، و' + m[9] + ' عقود جديدة بقيمة ' + m[10] + ' د.إ.' + (m[11] ? ' ' + m[11] + ' فحوصات متقاطعة تحتاج مراجعة.' : ''); }],
     [/^(\d+) new leases signed(.*)$/, '$1 عقد جديد موقّع$2'],
     [/^(.*?) · (\d+) of (\d+) reports loaded\. (\d+) critical · (\d+) warnings · (\d+) notes across the reports, plus (\d+) cross-checks to review \(see Overview\)\.$/, '$1 · $2 من $3 تقارير محمّلة. $4 حرج · $5 تحذيرات · $6 ملاحظات عبر التقارير، إضافة إلى $7 فحوصات متقاطعة للمراجعة (راجع النظرة العامة).'],
     [/^المقياس المتأثر: (.+)$/, function(m){ return 'المقياس المتأثر: ' + (EXACT[m[1]] || m[1]); }],
-    [/^(\d{2}\/\d{2} – \d{2}\/\d{2}) · ([\d,]+) installments on ([\d,]+) contracts, AED ([\d.,MK]+) recorded; ([\d,]+) bounced \(([\d.]+)% of value, (under|over) the ([\d.]+)% target\)\. ([\d,]+) lease contracts \((\d+)% renewals\) and ([\d,]+) requests processed\.$/, function(m){ return m[1] + ' · ' + m[2] + ' قسط على ' + m[3] + ' عقد، قيمة مسجلة ' + m[4] + ' د.إ؛ ' + m[5] + ' شيك مرتجع (' + m[6] + '% من القيمة، ' + (m[7] === 'under' ? 'أقل من' : 'أعلى من') + ' هدف ' + m[8] + '%). ' + m[9] + ' عقد إيجار (' + m[10] + '% تجديد) و' + m[11] + ' طلب تمت معالجته.'; }],
+    [/^(\d{2}\/\d{2} – \d{2}\/\d{2}) · ([\d,]+) installments on ([\d,]+) contracts, AED ([\d.,MK]+) recorded; ([\d,]+) bounced \(([\d.]+)% of value, (under|over) the ([\d.]+)% target\)\. ([\d,]+) lease contracts \((\d+)% renewals\) and ([\d,]+) requests processed\.$/, function(m){ return m[1] + ' · ' + m[2] + ' قسط على ' + m[3] + ' عقد، قيمة مسجلة ' + m[4] + ' د.إ؛ ' + m[5] + ' شيك مرتجع (' + m[6] + '% من القيمة، ' + (m[7] === 'under' ? 'أقل من' : 'أعلى من') + ' الهدف ' + m[8] + '%). ' + m[9] + ' عقد إيجار (' + m[10] + '% تجديد) و' + m[11] + ' طلب تمت معالجته.'; }],
     [/^([\d,]+) installments$/, '$1 قسط'], [/^([\d,]+) contracts$/, '$1 عقد'], [/^([\d,]+) requests$/, '$1 طلب'], [/^([\d,]+) cheques$/, '$1 شيك'],
     [/^([\d,]+) installments given on ([\d,]+) contracts \(sheet and Details differ by (\d+)\)\.$/, '$1 قسط مقدّم على $2 عقد (الورقة والتفاصيل تختلفان بمقدار $3).'],
     [/^([\d,]+) installments given on ([\d,]+) contracts\.$/, '$1 قسط مقدّم على $2 عقد.'],
     [/^bounce rate ([\d.]+)% against a ([\d.]+)% target · (\d+) cross-checks? to review\.$/, 'معدل الارتجاع $1% مقابل هدف $2% · $3 فحوصات تحتاج مراجعة.'],
     [/^AED ([\d.,MK]+) rent$/, '$1 د.إ إيجار'], [/^AED ([\d.,MK]+) · ([\d.]+)% of recorded value$/, '$1 د.إ · $2% من القيمة المسجلة'],
-    [/^([\d.]+)% of recorded value$/, '$1% من القيمة المسجلة'], [/^target < ([\d.]+)%$/, 'الهدف < $1%'], [/^Target < ([\d.]+)%$/, 'الهدف < $1%'],
+    [/^([\d.]+)% of recorded value$/, '$1% من القيمة المسجلة'], [/^target < ([\d.]+)%$/, 'الهدف: أقل من $1%'], [/^Target < ([\d.]+)%$/, 'الهدف: أقل من $1%'],
     [/^Legal (\d+)$/, 'قانوني $1'], [/^Process (\d+)$/, 'معالجة $1'], [/^Paid (\d+)$/, 'مدفوع $1'],
     [/^(\d+)% renewals · (\d+) new$/, '$1% تجديد · $2 جديد'], [/^Renewal (\d+)$/, 'تجديد $1'], [/^New (\d+)$/, 'جديد $1'], [/^Other (\d+)$/, 'أخرى $1'],
     [/^Renewal (\d+) \((\d+)%\)$/, 'تجديد $1 ($2%)'], [/^New (\d+) \((\d+)%\)$/, 'جديد $1 ($2%)'],
@@ -5481,7 +5481,7 @@ window.__v8HealthBadge = function(){
     [/^([^·]+) vs last period$/, function(m){ return aed(m[1]) + ' مقارنة بالفترة السابقة'; }],
     [/^(\d+) new leases signed — no equivalent metric for (.+)$/, function(m){ return m[1] + ' عقود جديدة — لا يوجد مقياس مماثل لـ ' + (EXACT[m[2]] || m[2]); }],
     [/^— no equivalent metric for (.+)$/, function(m){ return '— لا يوجد مقياس مماثل لـ ' + (EXACT[m[1]] || m[1]); }],
-    [/^Cheque Count, this month — recorded ledger sum, not confirmed bank clearance$/, 'عدد الشيكات لهذا الشهر — قيمة مسجلة وليست مقاصة بنكية'],
+    [/^Cheque Count, this month — recorded ledger sum, not confirmed bank clearance$/, 'عدد الشيكات لهذا الشهر — مجموع مسجّل في الدفتر وليس مقاصة بنكية مؤكدة'],
     [/^bounced ÷ recorded value$/, 'المرتجع ÷ القيمة المسجلة'],
     [/^(NEEDS ATTENTION|Needs attention) · (\d+) of (\d+) reports loaded\. (\d+) critical · (\d+) warnings · (\d+) notes across the reports, plus (\d+) cross-checks to review \(see Overview\)\.$/, '$2 من $3 تقارير محمّلة. $4 حرج · $5 تحذيرات · $6 ملاحظات عبر التقارير، إضافة إلى $7 فحوصات متقاطعة للمراجعة (راجع النظرة العامة).'],
     [/^(\d+) of (\d+) reports loaded\. (\d+) critical · (\d+) warnings · (\d+) notes across the reports, plus (\d+) cross-checks to review \(see Overview\)\.$/, '$1 من $2 تقارير محمّلة. $3 حرج · $4 تحذيرات · $5 ملاحظات عبر التقارير، إضافة إلى $6 فحوصات متقاطعة للمراجعة (راجع النظرة العامة).']
@@ -5500,8 +5500,8 @@ window.__v8HealthBadge = function(){
   function mixedFix(t){
     var o = t;
     if(/AED [0-9]/.test(o)) o = aed(o);
-    o = o.replace(/Al Naser Club/g, 'نادي الناصر').replace(/\bAwqaf\b/g, 'الأوقاف').replace(/\s+Report$/, ' في تقرير الإيجار الجديد');
-    o = o.replace(/Request Count/g, 'عدد الطلبات').replace(/Cheque Count/g, 'عدد الشيكات').replace(/New Lease Detail/g, 'تفاصيل الإيجار الجديد').replace(/New Lease/g, 'الإيجار الجديد').replace(/Bounced Cheques/g, 'الشيكات المرتجعة');
+    o = o.replace(/Al Naser Club/g, 'نادي النصر').replace(/\bAwqaf\b/g, 'الأوقاف').replace(/\s+Report$/, ' في تقرير الإيجار الجديد');
+    o = o.replace(/Request Count/g, 'عدد الطلبات').replace(/Cheque Count/g, 'عدد الشيكات').replace(/New Lease Detail/g, 'تفاصيل عقود الإيجار الجديدة').replace(/New Lease/g, 'عقود الإيجار الجديدة').replace(/Bounced Cheques/g, 'الشيكات المرتجعة');
     return o === t ? null : o;
   }
   function trText(t, strict){
@@ -5562,7 +5562,7 @@ window.__v8HealthBadge = function(){
       var t = norm(cur), out = trText(t);
       if(out === null || out === t){ var mx = mixedFix(out === null ? t : out); if(mx !== null) out = mx; }
       if(out !== null && /AED [0-9]/.test(out)) out = aed(out);
-      if(out !== null) out = out.replace(/Al Naser Club/g, 'نادي الناصر');
+      if(out !== null) out = out.replace(/Al Naser Club/g, 'نادي النصر');
       if(out === null || out === t) return;
       var i = cur.indexOf(cur.trim()), res = cur.slice(0, i) + out + cur.slice(i + cur.trim().length);
       store.set(n, { node: true, en: cur, ar: res }); tracked.push(n); n.nodeValue = res;
@@ -12901,10 +12901,10 @@ const PORTFOLIO_ACCESS = {
       'tv.contracts':'عقود الإيجار','tv.requests':'الطلبات المعالجة','tv.status':'حالة البيانات',
       'tv.bounced':'قيمة الشيكات المرتجعة','tv.cheques':'عدد الشيكات:','tv.legal':'إجراء قانوني','tv.process':'قيد المعالجة','tv.paid':'مدفوع',
       'tv.residential':'سكني','tv.sh.net':'صافي القيمة','tv.sh.ren':'التجديدات','tv.sh.rent':'قيمة الإيجار الجديد','tv.sh.req':'الطلبات','tv.sh.bnc':'المرتجعة','tv.unitType':'نوع الوحدة','tv.commercial':'تجاري','tv.dailyBounced':'الشيكات المرتجعة حسب تاريخ الشيك',
-      'tv.renewal':'تجديد','tv.new':'عقد جديد','tv.newLeaseValue':'الإيجار السنوي للعقود الجديدة','tv.fees':'المدفوعات المسجلة','tv.dailyLease':'عقود الإيجار يومياً',
-      'tv.reqValue':'الرسوم المسجلة على الطلبات','tv.reqTypes':'أنواع الطلبات','tv.dailyReq':'الطلبات يومياً',
-      'tv.vsPrev':'مقابل','tv.avg':'المتوسط','tv.period':'الفترة','tv.snapshot':'البيانات كما في','tv.waiting':'في انتظار انتهاء تحميل التقارير','tv.unsupported':'وضع التلفاز متاح حالياً لمحفظة الأوقاف فقط. انتقل إلى الأوقاف لاستخدامه.',
-      'tv.dailyVal':'المدفوعات المسجلة يوميًا','tv.newPerDay':'العقود الجديدة يوميًا','tv.avgWd':'متوسط أيام العمل','tv.vOk':'معدل الارتجاع ضمن الهدف','tv.vBad':'معدل الارتجاع فوق الهدف','tv.vUp':'ارتفاع صافي القيمة','tv.vDown':'انخفاض صافي القيمة','tv.asOf':'البيانات كما في','tv.daysOld':'يومًا مضت','tv.unitM':' مليون','tv.unitK':' ألف','tv.cur':'د.إ','tv.critical':'حرج','tv.review':'مراجعة','tv.warning':'تحذير','tv.info':'معلومة','tv.nothing':'لا يوجد ما يستدعي الانتباه','tv.hint':'Esc للخروج · الأسهم لتغيير الشريحة · مسافة للإيقاف المؤقت'
+      'tv.renewal':'تجديد','tv.new':'عقد جديد','tv.newLeaseValue':'الإيجار السنوي للعقود الجديدة','tv.fees':'المدفوعات المسجلة','tv.dailyLease':'عقود الإيجار يوميًا',
+      'tv.reqValue':'الرسوم المسجلة على الطلبات','tv.reqTypes':'أنواع الطلبات','tv.dailyReq':'الطلبات يوميًا',
+      'tv.vsPrev':'مقابل','tv.avg':'المتوسط','tv.period':'الفترة','tv.snapshot':'البيانات كما في','tv.waiting':'في انتظار انتهاء تحميل التقارير','tv.unsupported':'وضع التلفاز متاح حاليًا لمحفظة الأوقاف فقط. انتقل إلى الأوقاف لاستخدامه.',
+      'tv.dailyVal':'المدفوعات المسجلة يوميًا','tv.newPerDay':'العقود الجديدة يوميًا','tv.avgWd':'متوسط أيام العمل','tv.vOk':'معدل الارتجاع ضمن الهدف','tv.vBad':'معدل الارتجاع فوق الهدف','tv.vUp':'ارتفاع صافي القيمة','tv.vDown':'انخفاض صافي القيمة','tv.asOf':'البيانات كما في','tv.daysOld':'يومًا','tv.unitM':' مليون','tv.unitK':' ألف','tv.cur':'د.إ','tv.critical':'حرج','tv.review':'مراجعة','tv.warning':'تحذير','tv.info':'معلومة','tv.nothing':'لا يوجد ما يتطلب الانتباه','tv.hint':'Esc للخروج · الأسهم لتغيير الشريحة · مفتاح المسافة للإيقاف المؤقت'
     }
   };
   try{ Object.assign(TRANSLATIONS.en, TVT.en); Object.assign(TRANSLATIONS.ar, TVT.ar); }catch(e){}
@@ -13637,10 +13637,10 @@ function cols(d, color){
   var NAMES = {'bounced-cheques':'Bounced Cheques','new-lease':'New Lease','count-report':'Cheque Count','request-count':'Request Count'};
   var AR = {
     'View contracts':'عرض العقود','Find contract':'ابحث عن عقد','Contract number…':'رقم العقد…','Search…':'بحث…','Close':'إغلاق','Back to list':'العودة إلى القائمة',
-    'Matches the tile':'يطابق الرقم في البطاقة','Tile shows':'البطاقة تعرض','this list shows':'وهذه القائمة تعرض','Showing the first':'عرض أول','of':'من','entries — export for all':'عنصرًا — صدّر للحصول على الكل',
+    'Matches the tile':'يطابق الرقم في البطاقة','Tile shows':'البطاقة تعرض','this list shows':'وهذه القائمة تعرض','Showing the first':'عرض أول','of':'من','entries — export for all':'عنصر — صدّر الملف للحصول على الكل',
     'No matching contracts':'لا توجد عقود مطابقة','Contract':'العقد','Tenant':'المستأجر','Property':'العقار','Date':'التاريخ','Amount (AED)':'المبلغ (درهم)','Bank':'البنك','Status':'الحالة',
-    'Cheque no.':'رقم الشيك','Unit type':'نوع الوحدة','Fee type':'نوع الرسوم','PM user':'مدير العقار','Agent':'الوكيل','Description':'الوصف','Pay method':'طريقة الدفع','Cheque date':'تاريخ الشيك',
-    'Lease type':'نوع العقد','Request type':'نوع الطلب','Payments':'عدد الدفعات','First date':'أول تاريخ','Rent value (AED)':'قيمة الإيجار (درهم)','Filters applied':'الفلاتر مفعّلة',
+    'Cheque no.':'رقم الشيك','Unit type':'نوع الوحدة','Fee type':'نوع الرسوم','PM user':'مدير العقار','Agent':'الوسيط','Description':'الوصف','Pay method':'طريقة الدفع','Cheque date':'تاريخ الشيك',
+    'Lease type':'نوع العقد','Request type':'نوع الطلب','Payments':'عدد الدفعات','First date':'التاريخ الأول','Rent value (AED)':'قيمة الإيجار (درهم)','Filters applied':'الفلاتر المطبّقة',
     'Contract not found':'لم يتم العثور على العقد','Lease period':'مدة العقد','Cheque Count':'عدد الشيكات','Request Count':'عدد الطلبات','New Lease':'عقد جديد','Bounced Cheques':'الشيكات المرتجعة',
     'Cheque payments':'دفعات الشيكات','Requests':'الطلبات','New lease fees':'رسوم العقد الجديد','Rent value':'قيمة الإيجار','Bounced cheques':'الشيكات المرتجعة','Nothing recorded for this contract in this report':'لا توجد بيانات لهذا العقد في هذا التقرير',
     'Total':'الإجمالي','contracts':'عقود','payments':'دفعات','Open this contract':'افتح هذا العقد','Not loaded yet':'لم يتم التحميل بعد'
@@ -14037,13 +14037,13 @@ function cols(d, color){
   if(window.TAB_UPDATES) return;
   var EXPORT = {en: "Export Excel returns the month's original workbook, with all its sheets and columns.", ar: 'يعيد تصدير Excel ملف Excel الأصلي للشهر بجميع أوراقه وأعمدته.'};
   var DRILL = {en: 'Click any figure to see the contracts behind it. Each list checks itself against the figure and shows a green tick when they match. Click a contract number for everything about that contract across the four reports, or type one into the Contract number box.', ar: 'انقر على أي رقم لعرض العقود التي يتكوّن منها. تتحقق كل قائمة من نفسها مقابل الرقم وتُظهر علامة خضراء عند التطابق. انقر على رقم العقد لرؤية كل ما يخصه في التقارير الأربعة، أو اكتب رقماً في خانة رقم العقد.'};
-  var RISK = {en: 'New Needs attention button: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk. The rules are defaults and can be changed in the panel.', ar: 'زر جديد «يحتاج إلى متابعة»: قائمة بالعقود القريبة من الانتهاء دون تجديد والشيكات المرتجعة اللافتة، مرتبة حسب الخطورة. القواعد افتراضية ويمكن تغييرها من اللوحة.'};
+  var RISK = {en: 'New Needs attention button: a list of leases ending soon with no renewal and bounced cheques that stand out, ranked by risk. The rules are defaults and can be changed in the panel.', ar: 'زر جديد «يتطلب الانتباه»: قائمة بالعقود القريبة من الانتهاء دون تجديد والشيكات المرتجعة اللافتة، مرتبة حسب الخطورة. القواعد افتراضية ويمكن تغييرها من اللوحة.'};
   window.TAB_UPDATES = {
     'overview': [
       {date: '2026-10-22', items: [{en: 'The dashboard reopens on the portfolio, month and tab you were last viewing.', ar: 'تُعيد اللوحة فتح المحفظة والشهر والتبويب الذي كنت تعرضه آخر مرة.'}]},
       {date: '2026-10-16', items: [
         {en: 'Charts animate in when the tab opens, and the page no longer jumps around while the reports load.', ar: 'تظهر الرسوم البيانية بحركة عند فتح التبويب، ولم تعد الصفحة تقفز أثناء تحميل التقارير.'},
-        {en: 'September 2026 is included for Awqaf: 1,609 installments on 405 contracts, AED 22.81M recorded, 31 bounced cheques (1.8%).', ar: 'تم إدراج سبتمبر 2026 للأوقاف: 1,609 دفعات على 405 عقداً، و22.81 مليون درهم مسجلة، و31 شيكاً مرتجعاً (1.8%).'}]}
+        {en: 'September 2026 is included for Awqaf: 1,609 installments on 405 contracts, AED 22.81M recorded, 31 bounced cheques (1.8%).', ar: 'تم إدراج سبتمبر 2026 للأوقاف: 1,609 قسطاً على 405 عقداً، و22.81 مليون درهم مسجلة، و31 شيكاً مرتجعاً (1.8%).'}]}
     ],
     'execsummary': [
       {date: '2026-10-22', items: [{"en": "New Targets & trends on the Executive Summary: set a target for each key figure and see how the month and the recent trend compare against it.", "ar": "جديد: «الأهداف والاتجاهات» في الملخص التنفيذي: حدّد هدفًا لكل رقم رئيسي وشاهد كيف يقارن الشهر والاتجاه الأخير به."}, {"en": "Buttons are tidied: Copy summary, Print / Export PDF, Targets & trends and Updates sit on one row.", "ar": "تم ترتيب الأزرار: نسخ الملخص وطباعة / تصدير PDF والأهداف والاتجاهات والتحديثات في صف واحد."}]},
@@ -14073,7 +14073,7 @@ function cols(d, color){
     ],
     'count-report': [
       {date: '2026-10-22', items: [EXPORT, DRILL, RISK]},
-      {date: '2026-10-16', items: [{en: 'September 2026: 1,609 installments on 405 contracts, AED 22.81M recorded.', ar: 'سبتمبر 2026: 1,609 دفعات على 405 عقداً، و22.81 مليون درهم مسجلة.'}]}
+      {date: '2026-10-16', items: [{en: 'September 2026: 1,609 installments on 405 contracts, AED 22.81M recorded.', ar: 'سبتمبر 2026: 1,609 قسطاً على 405 عقداً، و22.81 مليون درهم مسجلة.'}]}
     ]
   };
   var TITLES = {
@@ -14156,16 +14156,16 @@ function cols(d, color){
   /* Defaults follow the property administrator's reply of 22 Oct 2026: reminder 90 days before expiry; flag a tenant with MORE THAN 3 bounced cheques (so 4 or more); no value-based priority, so the top-% rule is a warning only. */
   var DEF = {days: 90, bounces: 4, topPct: 10}, RULES_VER = 2;
   var AR = {
-    'Needs attention':'يحتاج إلى متابعة','Ranked by risk. These are default rules — change any number and the list updates.':'مرتبة حسب الخطورة. هذه قواعد افتراضية — غيّر أي رقم وستتحدث القائمة.',
-    'Rules':'القواعد','Lease ends within':'ينتهي العقد خلال','days with no renewal':'يومًا دون تجديد','Tenant has':'لدى المستأجر','or more bounced cheques':'شيكات مرتجعة أو أكثر',
+    'Needs attention':'يتطلب الانتباه','Ranked by risk. These are default rules — change any number and the list updates.':'مرتبة حسب الخطورة. هذه قواعد افتراضية — غيّر أي رقم وستتحدث القائمة.',
+    'Rules':'القواعد','Lease ends within':'ينتهي العقد خلال','days with no renewal':'يومًا دون تجديد','Tenant has':'لدى المستأجر ما لا يقل عن','or more bounced cheques':'من الشيكات المرتجعة',
     'Bounced cheque in the top':'شيك مرتجع ضمن أعلى','% by amount this month':'% من حيث المبلغ هذا الشهر','Reset to defaults':'استعادة الافتراضي','Export Excel':'تصدير إلى Excel',
-    'or more bounced cheques (all loaded months)':'شيكات مرتجعة أو أكثر (في كل الأشهر المحمّلة)','Warn on a bounced cheque in the top':'تنبيه عند شيك مرتجع ضمن أعلى','% by amount this month (warning only)':'% من حيث المبلغ هذا الشهر (تنبيه فقط)',
-    '{n} bounced cheques across loaded months ({m} this month)':'{n} شيكات مرتجعة عبر الأشهر المحمّلة ({m} هذا الشهر)','Warning: bounced cheque of AED {a} — top {p}% this month (all bounced cheques have the same priority)':'تنبيه: شيك مرتجع بمبلغ {a} درهم — ضمن أعلى {p}% هذا الشهر (جميع الشيكات المرتجعة بنفس الأولوية)','Low':'منخفضة',
-    'Risk':'الخطورة','High':'مرتفعة','Medium':'متوسطة','Tenant':'المستأجر','Contract':'العقد','Why flagged':'سبب الإشارة','Nothing needs attention under these rules':'لا شيء يحتاج إلى متابعة وفق هذه القواعد',
+    'or more bounced cheques (all loaded months)':'من الشيكات المرتجعة (في كل الأشهر المحمّلة)','Warn on a bounced cheque in the top':'التنبيه عند وجود شيك مرتجع ضمن أعلى','% by amount this month (warning only)':'% من حيث المبلغ هذا الشهر (تنبيه فقط)',
+    '{n} bounced cheques across loaded months ({m} this month)':'الشيكات المرتجعة عبر الأشهر المحمّلة: {n} ({m} هذا الشهر)','Warning: bounced cheque of AED {a} — top {p}% this month (all bounced cheques have the same priority)':'تنبيه: شيك مرتجع بمبلغ {a} درهم — ضمن أعلى {p}% هذا الشهر (جميع الشيكات المرتجعة بنفس الأولوية)','Low':'منخفضة',
+    'Risk':'الخطورة','High':'مرتفعة','Medium':'متوسطة','Tenant':'المستأجر','Contract':'العقد','Why flagged':'سبب الإدراج','Nothing needs attention under these rules':'لا شيء يتطلب الانتباه وفق هذه القواعد',
     'Lease ends {d} (in {n} days) — no later contract found for this tenant and unit':'ينتهي العقد في {d} (بعد {n} يومًا) — لا يوجد عقد لاحق لهذا المستأجر والوحدة',
     'Lease ended {d} ({n} days ago) — no later contract found for this tenant and unit':'انتهى العقد في {d} (قبل {n} يومًا) — لا يوجد عقد لاحق لهذا المستأجر والوحدة',
-    '{n} bounced cheques this month':'{n} شيكات مرتجعة هذا الشهر','Bounced cheque of AED {a} — top {p}% this month':'شيك مرتجع بمبلغ {a} درهم — ضمن أعلى {p}% هذا الشهر',
-    'Status: {s}':'الحالة: {s}','flagged':'مُشار إليه','Cheque Count and Bounced Cheques must be loaded':'يجب تحميل تقريري عدد الشيكات والشيكات المرتجعة',
+    '{n} bounced cheques this month':'الشيكات المرتجعة هذا الشهر: {n}','Bounced cheque of AED {a} — top {p}% this month':'شيك مرتجع بمبلغ {a} درهم — ضمن أعلى {p}% هذا الشهر',
+    'Status: {s}':'الحالة: {s}','flagged':'مُعلَّم','Cheque Count and Bounced Cheques must be loaded':'يجب تحميل تقريري عدد الشيكات والشيكات المرتجعة',
     'Open this contract':'افتح هذا العقد','Close':'إغلاق','Search…':'بحث…','Needs attention list':'قائمة المتابعة','Rule for lease ends and renewals is based on contracts loaded for this month':'قاعدة انتهاء العقد والتجديد مبنية على العقود المحمّلة لهذا الشهر'
   };
   try{ if(typeof REMAINING_UI === 'object') Object.keys(AR).forEach(function(k){ if(!(k in REMAINING_UI)) REMAINING_UI[k] = AR[k]; }); }catch(e){}
@@ -14331,13 +14331,13 @@ function cols(d, color){
   var AR = {
     'Targets & trends':'الأهداف والاتجاهات','Print / Export PDF':'طباعة / تصدير PDF','This month':'هذا الشهر','Last month':'الشهر السابق','Change':'التغيّر','Average of months loaded':'متوسط الأشهر المحمّلة','Target':'الهدف','Gap':'الفرق','Status':'الحالة','Trend':'الاتجاه','Measure':'المؤشر',
     'On track':'على المسار','Watch':'يحتاج متابعة','Off track':'خارج المسار','Year to date':'منذ بداية السنة','Same month last year':'الشهر نفسه من العام السابق',
-    'Total collected (AED)':'إجمالي المحصّل (درهم)','Net collected (AED)':'صافي المحصّل (درهم)','Bounce rate (%)':'نسبة الارتجاع (%)','Bounced cheques':'الشيكات المرتجعة','New lease contracts':'عقود الإيجار الجديدة','Renewal lease contracts':'عقود التجديد','New lease rent value (AED)':'قيمة إيجار العقود الجديدة (درهم)','Requests':'الطلبات',
+    'Total collected (AED)':'إجمالي المحصّل (درهم)','Net collected (AED)':'صافي المحصّل (درهم)','Bounce rate (%)':'معدل الارتجاع (%)','Bounced cheques':'الشيكات المرتجعة','New lease contracts':'عقود الإيجار الجديدة','Renewal lease contracts':'عقود التجديد','New lease rent value (AED)':'قيمة إيجار العقود الجديدة (درهم)','Requests':'الطلبات',
     'Watch band':'هامش المتابعة','% of the target':'% من الهدف',
-    'Higher is better; a measure is on track at or above its target, on watch within the band below it, and off track beyond that. For bounce measures lower is better.':'الأعلى أفضل؛ يكون المؤشر على المسار عند الهدف أو أعلى، وتحت المتابعة ضمن الهامش دونه، وخارج المسار بعد ذلك. أما مؤشرات الارتجاع فالأقل أفضل.',
+    'Higher is better; a measure is on track at or above its target, on watch within the band below it, and off track beyond that. For bounce measures lower is better.':'الأعلى أفضل؛ يكون المؤشر على المسار عند الهدف أو أعلى منه، وقيد المتابعة ضمن الهامش الذي يليه من الأسفل، وخارج المسار بعد ذلك. أما مؤشرات الارتجاع فالأقل أفضل.',
     'Set in Thresholds':'يُحدَّد من الحدود','Type a target':'اكتب هدفًا',
     'Only {n} month is recorded in this browser, so comparisons need a second month. Open the Executive Summary for another month to record it.':'تم تسجيل شهر واحد فقط ({n}) في هذا المتصفح، وتحتاج المقارنة إلى شهر ثانٍ. افتح الملخص التنفيذي لشهر آخر لتسجيله.',
     'This month is not recorded yet. Open the Executive Summary tab once, then reopen this panel.':'لم يُسجَّل هذا الشهر بعد. افتح تبويب الملخص التنفيذي مرة واحدة ثم أعد فتح هذه اللوحة.',
-    'There are no fixed monthly targets for leases, new-lease rent, cheque value or requests (property administrator, 22 Oct 2026), so these stay blank unless you type one. The bounce target is set in Thresholds.':'لا توجد أهداف شهرية ثابتة لعقود الإيجار أو إيجار العقود الجديدة أو قيمة الشيكات أو الطلبات (مديرة الأملاك، 22 أكتوبر 2026)، لذا تبقى فارغة ما لم تكتب هدفًا. يُحدَّد هدف الارتداد في «الحدود».',
+    'There are no fixed monthly targets for leases, new-lease rent, cheque value or requests (property administrator, 22 Oct 2026), so these stay blank unless you type one. The bounce target is set in Thresholds.':'لا توجد أهداف شهرية ثابتة لعقود الإيجار أو إيجار العقود الجديدة أو قيمة الشيكات أو الطلبات (إدارة الأملاك، 22 أكتوبر 2026)، لذا تبقى فارغة ما لم تكتب هدفًا. يُحدَّد هدف الارتجاع في «الحدود».',
     'Targets are typed by you and kept in this browser only. Trends and the year-to-date column get richer as more months are loaded.':'الأهداف تكتبها أنت وتُحفظ في هذا المتصفح فقط. تزداد الاتجاهات وعمود منذ بداية السنة ثراءً كلما حُمّلت أشهر أكثر.',
     'months':'أشهر','Close':'إغلاق','Export Excel':'تصدير إلى Excel','Based on':'بناءً على'
   };
@@ -14667,7 +14667,7 @@ function cols(d, color){
   }
   wrapKeys(); setTimeout(wrapKeys, 800);
   /* 2) Wording: singular month, and say the load history is part of the backup */
-  var AR2 = {'The load history is also included.': 'يتضمن السجل أيضًا سجل التحميل.'};
+  var AR2 = {'The load history is also included.': 'يتضمن ذلك سجل التحميل أيضًا.'};
   function patchBackupDialog(){
     var els = document.querySelectorAll('dialog[open] *, #bkModalOverlay *');
     for(var i = 0; i < els.length; i++){
@@ -14704,18 +14704,18 @@ function cols(d, color){
     'Check month folder': 'فحص مجلد الشهر', 'Reading the folder…': 'جارٍ قراءة المجلد…', 'Report': 'التقرير', 'File': 'الملف', 'Check': 'الفحص', 'Workbook': 'ملف Excel', 'Dashboard': 'لوحة المعلومات', 'Result': 'النتيجة',
     'Waiting': 'في الانتظار', 'Checking…': 'جارٍ الفحص…', 'Match': 'مطابق', 'Differs': 'مختلف', 'Close': 'إغلاق', 'Open Data Quality': 'فتح جودة البيانات',
     'Rows': 'الصفوف', 'Total amount (AED)': 'إجمالي المبلغ (درهم)', 'Residential': 'سكني', 'Commercial': 'تجاري', 'New lease contracts': 'عقود الإيجار الجديدة', 'New lease rent value (AED)': 'قيمة إيجار العقود الجديدة (درهم)',
-    'Could not read this file: {m}': 'تعذّرت قراءة هذا الملف: {m}', 'No file found for this report': 'لم يتم العثور على ملف لهذا التقرير', 'Used the newest of {n} matching files': 'تم استخدام أحدث ملف من بين {n} ملفات مطابقة',
-    'Not found in the workbook: {f}': 'غير موجود في ملف Excel: {f}', 'Filled in the workbook but blank in the dashboard: {f}': 'معبّأ في ملف Excel لكنه فارغ في لوحة المعلومات: {f}', 'Blank in both: {f}': 'فارغ في الاثنين: {f}',
+    'Could not read this file: {m}': 'تعذّرت قراءة هذا الملف: {m}', 'No file found for this report': 'لم يتم العثور على ملف لهذا التقرير', 'Used the newest of {n} matching files': 'تم استخدام أحدث ملف من بين الملفات المطابقة (العدد: {n})',
+    'Not found in the workbook: {f}': 'غير موجود في ملف Excel: {f}', 'Filled in the workbook but blank in the dashboard: {f}': 'معبّأ في ملف Excel لكنه فارغ في لوحة المعلومات: {f}', 'Blank in both: {f}': 'فارغ في كليهما: {f}',
     'The workbook dates are in {a}, but the month shown is {b}': 'تواريخ ملف Excel في {a}، لكن الشهر المعروض هو {b}', 'Some workbook dates are outside {b}: {a}': 'بعض تواريخ ملف Excel خارج {b}: {a}',
     'The workbook summary sheet shares no contracts with its details sheet (stale summary)': 'ورقة الملخص في ملف Excel لا تشترك في أي عقد مع ورقة التفاصيل (ملخص قديم)',
     'The dashboard summary shares no contracts with the dashboard rows (stale summary)': 'ملخص لوحة المعلومات لا يشترك في أي عقد مع صفوفها (ملخص قديم)',
     'File name says {a}, but the month shown is {b}': 'اسم الملف يشير إلى {a}، لكن الشهر المعروض هو {b}',
-    'All four workbooks match the dashboard.': 'تتطابق ملفات Excel الأربعة مع لوحة المعلومات.', 'Checked, with {n} to look at.': 'تم الفحص، مع {n} تحتاج إلى مراجعة.', '{n} difference(s) found. Do not rely on this month until they are explained.': 'تم العثور على {n} اختلاف. لا تعتمد على هذا الشهر قبل تفسيرها.',
+    'All four workbooks match the dashboard.': 'تتطابق ملفات Excel الأربعة مع لوحة المعلومات.', 'Checked, with {n} to look at.': 'تم الفحص. عدد البنود التي تحتاج إلى مراجعة: {n}', '{n} difference(s) found. Do not rely on this month until they are explained.': 'عدد الاختلافات التي تم العثور عليها: {n}. لا تعتمد على هذا الشهر قبل تفسيرها.',
     'Ignored files: {f}': 'ملفات تم تجاهلها: {f}', 'No Excel files were found in that folder. Pick the folder that holds the four workbooks directly, not a folder above it.': 'لم يتم العثور على ملفات Excel في هذا المجلد. اختر المجلد الذي يحتوي مباشرة على الملفات الأربعة وليس مجلدًا أعلى منه.',
     'Folder checking works in Chrome or Edge on a computer.': 'فحص المجلد يعمل في Chrome أو Edge على الحاسوب.',
     'Compares the workbooks with the numbers the dashboard shows right now. Nothing is loaded or changed.': 'يقارن ملفات Excel بالأرقام التي تعرضها لوحة المعلومات الآن. لا يتم تحميل أو تغيير أي شيء.',
     'Files are read in this browser only and are not uploaded anywhere.': 'تُقرأ الملفات في هذا المتصفح فقط ولا تُرفع إلى أي مكان.',
-    'The dashboard is not showing the built-in data for this month ({b} rows built in, {s} shown). A file loaded earlier in this browser is probably being restored.': 'لا تعرض لوحة المعلومات البيانات المدمجة لهذا الشهر ({b} صفًا مدمجًا، {s} معروضًا). من المرجّح أنه تتم استعادة ملف تم تحميله سابقًا في هذا المتصفح.',
+    'The dashboard is not showing the built-in data for this month ({b} rows built in, {s} shown). A file loaded earlier in this browser is probably being restored.': 'لا تعرض لوحة المعلومات البيانات المدمجة لهذا الشهر (عدد الصفوف المدمجة: {b}، والمعروضة: {s}). يُرجَّح أن ملفًا تم تحميله سابقًا في هذا المتصفح قد استُعيد.',
     'Use built-in data': 'استخدام البيانات المدمجة',
     'Forget the Excel files loaded by hand in this browser and go back to the built-in data? Targets, thresholds and backups are not touched.': 'هل تريد نسيان ملفات Excel التي تم تحميلها يدويًا في هذا المتصفح والعودة إلى البيانات المدمجة؟ لن تتأثر الأهداف والحدود والنسخ الاحتياطية.',
     'Folder': 'المجلد', 'Not checked': 'لم يُفحص'
