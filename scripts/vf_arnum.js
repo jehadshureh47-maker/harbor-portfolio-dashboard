@@ -33,6 +33,7 @@
   function agree(s){
     return s.replace(RX, function(m, num, sp, w, asp, aw, off, str){
       if(/^[.٫]\d/.test(str.slice(off + num.length))) return m;
+      if(/\d\s+من\s$/.test(str.slice(Math.max(0, off - 14), off))) return m;
       var after = str.slice(off + num.length + sp.length + w.length);
       var n = parseInt(num.replace(/,/g, ''), 10), k = form[w];
       if(isNaN(n) || !k) return m;
@@ -75,6 +76,7 @@
     'automatic checks between overlapping reports.':'فحوصات تلقائية بين التقارير المتداخلة.', 'activity by day across the four reports.':'النشاط اليومي عبر التقارير الأربعة.',
     'report tabs':'تبويبات التقارير', 'how to read this dashboard':'كيفية قراءة هذه اللوحة', 'switch to light mode':'التبديل إلى الوضع الفاتح', 'switch to dark mode':'التبديل إلى الوضع الداكن', 'toggle light/dark mode':'تبديل الوضع الفاتح/الداكن', "what's changed in this portfolio's reports":'ما الذي تغيّر في تقارير هذه المحفظة', 'updates for this portfolio':'مستجدات هذه المحفظة',
     'executive summary views':'عروض الملخص التنفيذي', 'narrative report only':'من التقرير السردي فقط',
+    'summary':'الملخص', 'trend & outlook':'الاتجاه والتوقعات', 'changes':'التغييرات', 'daily activity':'النشاط اليومي', 'lease mix by contract':'توزيع العقود حسب النوع',
     'installments per day':'أقساط يومياً', 'rent installments per day':'أقساط الإيجار يومياً',
     'no filters applied — showing all values.':'لا توجد مرشحات مطبّقة — تُعرض كل القيم.'
   };
@@ -112,19 +114,31 @@
     [/(?:installments?|قسط\S*) on (?=\d)/g, 'قسط على '], [/(?:installments?|قسط\S*) given on (?=\d)/g, 'قسط على '], [/\(sheet and Details differ by (\d+)\)/g, '(الفرق بين الورقة والتفاصيل $1)'],
     [/lease (?:contracts?|عقد\S*) \((\d+)% renewals\)/g, 'عقد إيجار ($1% تجديدات)'],
     [/ and (\d[\d,]*) (?:requests?|طلب\S*) processed\./g, ' و$1 طلب تمت معالجتها.'], [/(\d+) new leases worth/g, '$1 عقد إيجار جديد بقيمة'],
-    [/(\d+) cross-checks? need(?:s)? a second look/g, 'فحوصات متقاطعة تحتاج مراجعة: $1'],
+    [/(\d+) cross.checks? need(?:s)? a second look/g, 'فحوصات متقاطعة تحتاج مراجعة: $1'],
     [/(\d+) critical\b/g, '$1 حرجة'], [/(\d+) notes?\b/g, '$1 ملاحظة'],
-    [/across the reports, plus (\d+) cross-checks? to review \(see Overview\)\.?/g, 'في التقارير، إضافة إلى فحوصات متقاطعة للمراجعة: $1 (راجع النظرة العامة).'],
+    [/across the reports, plus (\d+) cross.checks? to review \(see Overview\)\.?/g, 'في التقارير، إضافة إلى فحوصات متقاطعة للمراجعة: $1 (راجع النظرة العامة).'],
     [/Critical: a required column was not found, so totals may be wrong/g, 'حرج: لم يُعثر على عمود مطلوب، لذا قد تكون الإجماليات غير صحيحة'],
     [/Warning — some entries were skipped or normalized; remaining totals are still usable/g, 'تحذير — تم تخطي بعض الإدخالات أو توحيدها؛ تبقى الإجماليات المتبقية صالحة للاستخدام'],
     [/\bCheque Count\b/g, 'عدد الشيكات'], [/rent installments per day/g, 'أقساط الإيجار يومياً'],
-    [/(\d+) row\(s\) had a building name with inconsistent spacing or casing[^.]*\./g, '$1 صف بها اسم مبنى بمسافات أو أحرف غير متسقة، وقد جرى توحيدها تلقائياً للتجميع والعرض.'],
+    [/(\d+) row\(s\) had a building name with inconsistent spacing or casing/g, '$1 صف بها اسم مبنى بمسافات أو أحرف غير متسقة'], [/— automatically normalized for grouping and display\.?/g, '— جرى توحيدها تلقائياً للتجميع والعرض.'], [/\(e\.g\. /g, '(مثال: '],
     [/(\d+) row\(s\) have an amount 5×\+ the typical row on this sheet \(median ([\d.,]+) د\.إ\) — worth a quick look/g, '$1 صف مبلغه 5 أضعاف الصف المعتاد أو أكثر في هذه الورقة (الوسيط $2 د.إ) — يستحق نظرة سريعة'],
     [/target: under ([\d.]+)%/g, 'الهدف: أقل من $1%'], [/target: ([\d.]+)%\+/g, 'الهدف: $1%+'],
     [/(\d[\d,]*) of (\d[\d,]*) units/g, '$1 من $2 وحدة'], [/(\d+) vacant of (\d[\d,]*) units/g, '$1 شاغرة من $2 وحدة'], [/ · (\d+) vacant\b/g, ' · $1 شاغرة'],
     [/From Harbor[’']s narrative monthly report — not backed by a per-record workbook/g, 'من التقرير الشهري السردي لهاربر — غير مدعوم بمصنّف تفصيلي'],
     [/([ء-ْ)]), (?=[ء-ي])/g, '$1، '], [/\), (?=\d)/g, '), '.replace('),', ')،')],
     [/(\d[\d,]*\.\d{2}), د\.إ (\d)/g, '$1 د.إ، $2'], [/عقود عقود/g, 'عقود'],
+    [/\binstallments on\b/g, 'قسط على'], [/\bcontracts, (?=$|\s)/g, 'عقد، '], [/\brecorded;/g, 'قيمة مسجلة؛'],
+    [/\bof value, (under|above|over) the ([\d.]+)% target\)\.?/g, function(m,a,b){ return 'من القيمة، ' + DIR(a) + ' الهدف ' + b + '%).'; }],
+    [/\)\s*bounced — (under|above|over) the ([\d.]+)% target\./g, function(m,a,b){ return ') مرتجعة — ' + DIR(a) + ' الهدف ' + b + '%.'; }],
+    [/\bbounced\s*\(/g, 'شيك مرتجع ('], [/\blease contracts \((\d+)% renewals\)/g, 'عقد إيجار ($1% تجديدات)'], [/\(?(\d+)% renewals\)/g, '($1% تجديدات)'],
+    [/\brequests processed\./g, 'طلب تمت معالجتها.'], [/· Recorded\b/g, '· القيمة المسجلة'], [/, of which\b/g, '، منها'], [/\bnew leases worth\b/g, 'عقد إيجار جديد بقيمة'],
+    [/^(\s*)cross.checks need a second look/, '$1من الفحوصات المتقاطعة تحتاج مراجعة'], [/^(\s*)cross.check needs a second look/, '$1فحص متقاطع يحتاج مراجعة'],
+    [/جديداً موقّع(?![ء-ي])/g, 'جديداً موقّعاً'],
+    [/\bof value, (?=[ء-ي])/g, 'من القيمة، '], [/(تجديدات\)) and\b/g, '$1 و'],
+    [/(\d+) من (\d+) فحوصات محمّلة/g, '$1 من $2 تقارير محمّلة'],
+    [/^(\s*)(\d+) to review(\s*)$/, '$1$2 للمراجعة$3'],
+    [/\b(\d{1,2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4})\b/g, function(m,d,mo,y){ return d + ' ' + MON3[mo] + ' ' + y; }],
+    [/\b(20\d{2})-(\d{2})-(\d{2})\b/g, function(m,y,mo,d){ var n = parseInt(mo, 10); var N = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']; return n >= 1 && n <= 12 ? parseInt(d, 10) + ' ' + N[n - 1] + ' ' + y : m; }],
     [/(\d[\d,]*) contracts?\b/g, '$1 عقد'],
     [/(\d[\d,]*) payments?\b/g, '$1 دفعة'], [/(\d[\d,]*) requests?\b/g, '$1 طلب'], [/(\d[\d,]*) installments?\b/g, '$1 قسط'],
     [/\bOther \/ Unclassified\b/g, 'أخرى / غير مصنّفة'], [/\bSettlement\b/g, 'تسوية'], [/\bLegal Fees\b/g, 'رسوم قانونية'], [/\bGovernment Fees\b/g, 'رسوم حكومية'],
