@@ -15079,6 +15079,26 @@ function cols(d, color){
   var DIR = function(w){ return /^under$/i.test(w) ? 'أقل من' : 'أعلى من'; };
   var SRC = [[/Bounced Cheque List/g,'قائمة الشيكات المرتجعة'],[/Cheque Clearance/g,'مقاصة الشيكات'],[/Harbor Collections in Detail/g,'تفاصيل التحصيل'],[/\bOccupancy\b/g,'الإشغال']];
   var PARTS = [
+    // --- v29 early rules (case-insensitive; run before generic rules) ---
+    [/Passed: 12 itemized commercial leases total (\S+ ?\S*?) in contract value and (\S+ ?\S*?) in admin\+agency fees — matches the narrative report's totals of (\S+ ?\S*?) and (\S+ ?\S*?) exactly\./g, 'اجتاز: مجموع عقود الإيجار التجارية التفصيلية (12 عقداً) هو $1 كقيمة عقود و$2 كرسوم إدارية ورسوم وساطة، ويطابق إجماليات التقرير السردي ($3 و$4) تماماً.'],
+    [/Review: itemized leases total (\S+ ?\S*?) value \/ (\S+ ?\S*?) fees, vs the narrative report's (\S+ ?\S*?) \/ (\S+ ?\S*?) — these no longer agree and are worth a second look\./g, 'مراجعة: إجمالي العقود التفصيلية $1 قيمة / $2 رسوماً، مقابل $3 / $4 في التقرير السردي — لم تعد متطابقة وتستحق نظرة ثانية.'],
+    [/Passed: the 12 itemized commercial lease contracts \(July 2026\) sum to (AED [\d,]+|[\d,]+ د\.إ) in total contract value and (AED [\d,]+|[\d,]+ د\.إ) in combined admin \+ agency fees - both figures match the totals already stated in Harbor.s July 2026 monthly achievement report \(POLICE_DATA_JUL2026\), which were typed in separately from the narrative deck before this per-record data was available\. Independent agreement between the two sources\./g, 'اجتاز: مجموع عقود الإيجار التجارية التفصيلية الـ12 (يوليو 2026) هو $1 كقيمة عقود و$2 كرسوم إدارية ورسوم وساطة مجتمعة، وكلا الرقمين يطابق إجماليات تقرير الإنجاز الشهري لهاربر لشهر يوليو 2026 التي أُدخلت منفصلة عن العرض السردي قبل توفر بيانات السجلات. اتفاق مستقل بين المصدرين.'],
+    [/, plus (\d+) cross.checks? to review \(see Overview\)\./gi, function(m,n){ return '، إضافة إلى ' + n + (+n===1 ? ' فحص متقاطع' : +n===2 ? ' فحصين متقاطعين' : ' فحوصات متقاطعة') + ' للمراجعة (راجع النظرة العامة).'; }],
+    [/(\d+) cross.checks? need(?:s)? a second look/gi, function(m,n){ return n + (+n===1 ? ' فحص متقاطع يحتاج إلى مراجعة' : +n===2 ? ' فحصان متقاطعان يحتاجان إلى مراجعة' : ' فحوصات متقاطعة تحتاج إلى مراجعة'); }],
+    [/Residential Housing — Occupancy/gi, 'الإسكان السكني — الإشغال'],
+    [/Residential Housing — Handovers & Compliance \(narrative report\)/gi, 'الإسكان السكني — التسليم والامتثال (تقرير سردي)'],
+    [/Commercial & Investment — Activity \(narrative report\)/gi, 'التجاري والاستثماري — النشاط (تقرير سردي)'],
+    [/Commercial Lease Contracts/gi, 'عقود الإيجار التجارية'], [/Admin \+ Agency Fees/gi, 'الرسوم الإدارية + رسوم الوساطة'],
+    [/Parking violations/gi, 'مخالفات المواقف'], [/^(\s*)Data source(\s*)$/gi, '$1مصدر البيانات$2'],
+    [/Narrative report only — Oud Al Muteena & Bur Dubai/g, 'تقرير سردي فقط — العود المطينة وبر دبي'],
+    [/Commercial Lease Fees vs Narrative Report/g, 'رسوم عقود الإيجار التجارية مقابل التقرير السردي'],
+    [/Passed: (?:the )?(\d+) itemized commercial lease(?:s| contracts)(?: \(July 2026\))? (?:sum to|total) ([^,]*?) (?:in total contract value|in contract value) and ([^,]*?) in (?:combined )?(?:admin|administrative)[^.]*\./gi, 'اجتاز: مجموع عقود الإيجار التجارية التفصيلية ($1) يساوي $2 كقيمة عقود و$3 كرسوم إدارية ووساطة، ويطابق التقرير السردي.'],
+    [/\b(Oud Al Muteena)\b/g, 'العود المطينة'], [/\bBur Dubai\b/g, 'بر دبي'],
+    [/(^|[\s(])recorded (?=[\d.,]+[MK]? ?\()/g, '$1سجّلت '],
+    [/^(\s*)Rent(\s+)(?=[\d.,]+[KM]?\s)/, '$1الإيجار$2'],
+    [/SR\.NO repeated in the source sheet/gi, 'الرقم التسلسلي (SR.NO) مكرر في الملف المصدر'],
+    [/(\d+) of (\d+) entries in the Bounced Cheque List \(([^)]*)\) don't appear anywhere in the Cheque Clearance tracker\./g, function(m,a,b,c){ return a + ' من ' + b + ' إدخالات في قائمة الشيكات المرتجعة (' + c + ') لا تظهر في متتبع مقاصة الشيكات.'; }],
+    [/^(\s*)Total Amount(\s*)$/, '$1إجمالي المبلغ$2'], [/^(\s*)Payment Method(\s*)$/, '$1طريقة الدفع$2'],
     [/the Rent Roll pivot\/renewals sheets and the monthly report[’']s Bounced Cheques and Collections tables/g, 'ورقتي جدول الإيجارات المحوري والتجديدات، وجدولي الشيكات المرتجعة والتحصيل في التقرير الشهري'],
     [/the merged 2026 Renewal (?:&|&amp;) New Lease \/ Admin Fees workbook \(Commercial Leases\) and the property occupancy summary \(Residential Occupancy\)/g, 'مصنّف التجديدات والعقود الجديدة / الرسوم الإدارية المدمج لعام 2026 (العقود التجارية) وملخص الإشغال العقاري (الإشغال السكني)'],
     [/Meetings, site visits, violations, and handover counts are still from Harbor[’']s narrative monthly achievement report, not a per-record workbook\./g, 'ما تزال الاجتماعات والزيارات الميدانية والمخالفات وأعداد التسليم من تقرير الإنجاز الشهري السردي لهاربر، وليست من مصنّف تفصيلي.'],

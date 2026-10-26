@@ -1,0 +1,1 @@
+v29 = v28 with vfArNumJs body replaced by scripts/vf_arnum.js (early case-insensitive rules: Police cards/sentences, cross-check phrases, Rent, recorded, DQ text).
