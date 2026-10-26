@@ -1,0 +1,1 @@
+v28 = v27 with vfArNumJs body replaced by scripts/vf_arnum.js (Police cards, leftover English fragments, minor agreement).
