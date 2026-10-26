@@ -76,6 +76,9 @@
     'automatic checks between overlapping reports.':'فحوصات تلقائية بين التقارير المتداخلة.', 'activity by day across the four reports.':'النشاط اليومي عبر التقارير الأربعة.',
     'report tabs':'تبويبات التقارير', 'how to read this dashboard':'كيفية قراءة هذه اللوحة', 'switch to light mode':'التبديل إلى الوضع الفاتح', 'switch to dark mode':'التبديل إلى الوضع الداكن', 'toggle light/dark mode':'تبديل الوضع الفاتح/الداكن', "what's changed in this portfolio's reports":'ما الذي تغيّر في تقارير هذه المحفظة', 'updates for this portfolio':'مستجدات هذه المحفظة',
     'executive summary views':'عروض الملخص التنفيذي', 'narrative report only':'من التقرير السردي فقط',
+    'watch':'مراقبة', 'dashboard':'لوحة المعلومات', 'leasing & operations':'التأجير والعمليات', 'under process':'قيد المعالجة', 'new lease':'عقد إيجار جديد',
+    'bounced cheques':'الشيكات المرتجعة', 'contracts':'العقود', 'installments':'الأقساط', 'rent':'الإيجار', 'future':'مستقبلية', 'past':'سابقة', 'this month':'هذا الشهر', 'dated later':'مؤرخة لاحقاً',
+    'search tenant, contract, bank, cheque #...':'ابحث عن مستأجر أو عقد أو بنك أو رقم شيك...', 'new-lease value only':'قيمة الإيجار الجديد فقط', 'all statuses, incl. paid':'كل الحالات بما فيها المدفوع',
     'summary':'الملخص', 'trend & outlook':'الاتجاه والتوقعات', 'changes':'التغييرات', 'daily activity':'النشاط اليومي', 'lease mix by contract':'توزيع العقود حسب النوع',
     'installments per day':'أقساط يومياً', 'rent installments per day':'أقساط الإيجار يومياً',
     'no filters applied — showing all values.':'لا توجد مرشحات مطبّقة — تُعرض كل القيم.'
@@ -87,6 +90,16 @@
   var SRC = [[/Bounced Cheque List/g,'قائمة الشيكات المرتجعة'],[/Cheque Clearance/g,'مقاصة الشيكات'],[/Harbor Collections in Detail/g,'تفاصيل التحصيل'],[/\bOccupancy\b/g,'الإشغال']];
   var PARTS = [
     // --- v29 early rules (case-insensitive; run before generic rules) ---
+    [/Share of (?:total value|القيمة الإجمالية) \(AED\)/gi, 'حصة القيمة الإجمالية (د.إ)'],
+    [/Share of requests \(by count\)/gi, 'حصة الطلبات (بالعدد)'],
+    [/\bnet change in\b/gi, 'صافي التغيّر في'],
+    [/\bbounce rate ([\d.]+%) against a ([\d.]+%) target/g, 'معدل الارتجاع $1 مقابل هدف $2'],
+    [/· (\d+) cross.checks? to review/g, function(m,n){ return '· ' + n + (+n===1 ? ' فحص متقاطع للمراجعة' : +n===2 ? ' فحصان متقاطعان للمراجعة' : ' فحوصات متقاطعة للمراجعة'); }],
+    [/^(\s*)([\d.]+%) > target/, '$1الهدف $2'], [/\bof ([\d.]+%)\s*$/, 'من $1'],
+    [/ورقة Summary/g, 'ورقة الملخص'],
+    [/(^|[\s(])<1%/g, '$1أقل من 1%'],
+    [/([ء-ي]+) '(\d\d)(?!\d)/g, '$1 20$2'],
+    [/(\d{4}) vs ([ء-ي])/g, '$1 مقابل $2'],
     [/Passed: 12 itemized commercial leases total (\S+ ?\S*?) in contract value and (\S+ ?\S*?) in admin\+agency fees — matches the narrative report's totals of (\S+ ?\S*?) and (\S+ ?\S*?) exactly\./g, 'اجتاز: مجموع عقود الإيجار التجارية التفصيلية (12 عقداً) هو $1 كقيمة عقود و$2 كرسوم إدارية ورسوم وساطة، ويطابق إجماليات التقرير السردي ($3 و$4) تماماً.'],
     [/Review: itemized leases total (\S+ ?\S*?) value \/ (\S+ ?\S*?) fees, vs the narrative report's (\S+ ?\S*?) \/ (\S+ ?\S*?) — these no longer agree and are worth a second look\./g, 'مراجعة: إجمالي العقود التفصيلية $1 قيمة / $2 رسوماً، مقابل $3 / $4 في التقرير السردي — لم تعد متطابقة وتستحق نظرة ثانية.'],
     [/Passed: the 12 itemized commercial lease contracts \(July 2026\) sum to (AED [\d,]+|[\d,]+ د\.إ) in total contract value and (AED [\d,]+|[\d,]+ د\.إ) in combined admin \+ agency fees - both figures match the totals already stated in Harbor.s July 2026 monthly achievement report \(POLICE_DATA_JUL2026\), which were typed in separately from the narrative deck before this per-record data was available\. Independent agreement between the two sources\./g, 'اجتاز: مجموع عقود الإيجار التجارية التفصيلية الـ12 (يوليو 2026) هو $1 كقيمة عقود و$2 كرسوم إدارية ورسوم وساطة مجتمعة، وكلا الرقمين يطابق إجماليات تقرير الإنجاز الشهري لهاربر لشهر يوليو 2026 التي أُدخلت منفصلة عن العرض السردي قبل توفر بيانات السجلات. اتفاق مستقل بين المصدرين.'],
@@ -177,6 +190,7 @@
     [/(\d+) قسط(?![ء-ي])/g, function(m,n){ var v=+n; return (v>=3&&v<=10)?n+' أقساط':m; }],
     [/جديدة(?= *[،.)]|$)(?<=عقد إيجار جديدة)/g, 'جديد'],
     [/(^|[\s(])لـ ?ال(?=[ء-ي])/g, '$1لل'],
+    [/([ء-ي]+) '(\d\d)(?!\d)/g, '$1 20$2'], [/(\d{4}) vs ([ء-ي])/g, '$1 مقابل $2'],
     [/\bof value, (?=[ء-ي])/g, 'من القيمة، '], [/(تجديدات\)) and\b/g, '$1 و'],
     [/(\d+) من (\d+) فحوصات محمّلة/g, '$1 من $2 تقارير محمّلة'],
     [/^(\s*)(\d+) to review(\s*)$/, '$1$2 للمراجعة$3'],
@@ -286,6 +300,13 @@
       if(!timer) timer = setTimeout(flush, 60);
     }).observe(doc.body, {childList:true, subtree:true, characterData:true, attributes:true, attributeFilter:ATTRS});
     if(active(doc)) walk(doc.body);
+    try{
+      if(doc.head && !doc.getElementById('vfArCss')){
+        var st = doc.createElement('style'); st.id = 'vfArCss';
+        st.textContent = 'html[dir="rtl"] .v9-hb-row .v small,html[dir="rtl"] .v9-rank-row .v small{margin-inline-start:.45em}html[dir="rtl"] .v6d,html[dir="rtl"] .v6t-rv{unicode-bidi:isolate;direction:ltr;white-space:nowrap}';
+        doc.head.appendChild(st);
+      }
+    }catch(e){}
     new MutationObserver(function(){ if(active(doc)) walk(doc.body); })
       .observe(doc.documentElement, {attributes:true, attributeFilter:['lang', 'dir']});
   }
@@ -320,4 +341,35 @@
     });
   }
   setInterval(tick, 1500); tick();
+})();
+
+/* Language-switch safety: leaving Arabic reloads the page so no translated option/label text lingers in English mode;
+   and nothing stays invisible after a re-render (motion layer 'dm-pre' elements that are on screen are revealed). */
+(function(){
+  if(window.__vfSwitch) return; window.__vfSwitch = true;
+  var root = document.documentElement, last = root.getAttribute('lang');
+  new MutationObserver(function(){
+    var cur = root.getAttribute('lang');
+    if(last === 'ar' && cur === 'en'){
+      var ls = ''; try{ ls = localStorage.getItem('mdLanguage'); }catch(e){}
+      var t0 = 0; try{ t0 = +sessionStorage.getItem('vfSwReload') || 0; }catch(e){}
+      if(ls === 'en' && Date.now() - t0 > 4000){
+        try{ sessionStorage.setItem('vfSwReload', String(Date.now())); }catch(e){}
+        setTimeout(function(){ location.reload(); }, 150);
+      }
+    }
+    last = cur;
+  }).observe(root, {attributes:true, attributeFilter:['lang']});
+  setInterval(function(){
+    try{
+      document.querySelectorAll('.dm-pre').forEach(function(el){
+        if(!el.getClientRects().length) return;
+        var r = el.getBoundingClientRect();
+        if(r.width && r.height && r.bottom > 0 && r.top < innerHeight){
+          var n = (+el.getAttribute('data-vf-seen') || 0) + 1; el.setAttribute('data-vf-seen', String(n));
+          if(n >= 5) el.classList.remove('dm-pre');
+        }
+      });
+    }catch(e){}
+  }, 1000);
 })();
