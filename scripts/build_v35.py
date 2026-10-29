@@ -6,6 +6,7 @@ here = os.path.dirname(os.path.abspath(__file__))
 h = open(src, encoding='utf-8').read()
 blocks = re.findall(r'const EMBEDDED_DASHBOARDS(?:_AUG|_SEPT)? = \{.*?\n\};', h, re.S)
 assert len(blocks) == 3, len(blocks)
+
 js = open(os.path.join(here, 'vf_arnum.js'), encoding='utf-8').read() + '\n' + open(os.path.join(here, 'vf_v35.js'), encoding='utf-8').read()
 m = '<script id="vfArNumJs">\n'
 a = h.index(m) + len(m); b = h.index('\n</script>\n</body>', a)

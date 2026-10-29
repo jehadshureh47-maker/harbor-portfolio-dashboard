@@ -10753,9 +10753,9 @@ function renderExecSummaryAwqaf(){
     </div>`;
     window.__v9CcForNote = cc;
     laBuildChart(heroWrap.querySelector('#ebChartHost'), [
-      {label: 'Installments', unit: 'installments', source: 'Cheque Count · rent installments per day', daily: cc.installments_daily || cc.daily, color: 'var(--accent)'},
-      {label: 'Contracts', unit: 'contracts', source: 'Cheque Count · contracts per day (on their first installment)', daily: cc.contracts_daily || cc.daily, color: 'var(--accent2)'},
-      {label: t('execsum.v5.serBounced', 'Bounced cheques'), unit: t('execsum.v5.bouncedUnit', 'bounced cheques'), source: 'Bounced Cheques · per day', daily: bc.daily, color: 'var(--bad)'},
+      {label: (currentLang === 'ar' ? 'الأقساط' : 'Installments'), unit: (currentLang === 'ar' ? 'قسطاً' : 'installments'), source: (currentLang === 'ar' ? 'عدد الشيكات · أقساط الإيجار يومياً' : 'Cheque Count · rent installments per day'), daily: cc.installments_daily || cc.daily, color: 'var(--accent)'},
+      {label: (currentLang === 'ar' ? 'العقود' : 'Contracts'), unit: (currentLang === 'ar' ? 'عقداً' : 'contracts'), source: (currentLang === 'ar' ? 'عدد الشيكات · العقود يومياً (عند أول قسط)' : 'Cheque Count · contracts per day (on their first installment)'), daily: cc.contracts_daily || cc.daily, color: 'var(--accent2)'},
+      {label: t('execsum.v5.serBounced', 'Bounced cheques'), unit: t('execsum.v5.bouncedUnit', 'bounced cheques'), source: (currentLang === 'ar' ? 'الشيكات المرتجعة · يومياً' : 'Bounced Cheques · per day'), daily: bc.daily, color: 'var(--bad)'},
     ]);
   })();
 }
@@ -15805,6 +15805,7 @@ function cols(d, color){
     '.v9-rank-row.v9-two .v{white-space:nowrap}' +
     '.v9-hb-row{min-height:44px}' +
     '.vf35-click{cursor:pointer}.vf35-click:hover{opacity:.85}.vf35-click:focus-visible{outline:2px solid #5b8cff;outline-offset:1px}' +
+    '.eb-chart.dm-pre,.eb-chart .dm-pre{opacity:1 !important}' +
     '.x4-stat-delta,.ov6-foot{white-space:nowrap !important}' +
     '.la4-mix-total .la4-sub{margin-inline-start:.4em}' +
     'html[dir="rtl"] .vf35-range{direction:rtl;unicode-bidi:isolate;white-space:nowrap}';
@@ -15901,7 +15902,7 @@ function cols(d, color){
   }
 
   /* ---- 4. the daily-activity chart should not stay blank while the reveal class waits ---- */
-  function reveal(doc){ [].slice.call(doc.querySelectorAll('#ebChartHost .dm-pre')).forEach(function(e){ e.classList.remove('dm-pre'); }); }
+  function reveal(doc){ [].slice.call(doc.querySelectorAll('.eb-chart.dm-pre,.eb-chart .dm-pre')).forEach(function(e){ e.classList.remove('dm-pre'); }); }
 
   function run(doc){
     if(!doc || !doc.body) return;

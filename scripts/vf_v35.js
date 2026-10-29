@@ -8,6 +8,7 @@
     '.v9-rank-row.v9-two .v{white-space:nowrap}' +
     '.v9-hb-row{min-height:44px}' +
     '.vf35-click{cursor:pointer}.vf35-click:hover{opacity:.85}.vf35-click:focus-visible{outline:2px solid #5b8cff;outline-offset:1px}' +
+    '.eb-chart.dm-pre,.eb-chart .dm-pre{opacity:1 !important}' +
     '.x4-stat-delta,.ov6-foot{white-space:nowrap !important}' +
     '.la4-mix-total .la4-sub{margin-inline-start:.4em}' +
     'html[dir="rtl"] .vf35-range{direction:rtl;unicode-bidi:isolate;white-space:nowrap}';
@@ -104,7 +105,7 @@
   }
 
   /* ---- 4. the daily-activity chart should not stay blank while the reveal class waits ---- */
-  function reveal(doc){ [].slice.call(doc.querySelectorAll('#ebChartHost .dm-pre')).forEach(function(e){ e.classList.remove('dm-pre'); }); }
+  function reveal(doc){ [].slice.call(doc.querySelectorAll('.eb-chart.dm-pre,.eb-chart .dm-pre')).forEach(function(e){ e.classList.remove('dm-pre'); }); }
 
   function run(doc){
     if(!doc || !doc.body) return;
