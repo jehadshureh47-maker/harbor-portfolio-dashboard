@@ -1,0 +1,12 @@
+v32 (from v31, md5 0e0f09cb387b -> 85623bb57834)
+FIXED
+- Collapsed sidebar stubs in Arabic: shortCode() drops leading "ال", so stubs are distinct (نع مت مق جب عط نت عش شم). Layer also sets title tooltips on every .tab-btn.
+- Header search: placeholder now says "Jump to a report, bank or property" (EN/AR). Search only matches tab names and filter values (type, bank, property, status...), never tenants/contracts/amounts. AR text added for "No matches..." / "Jump to tab" / "In X - label".
+- Arabic display alias: "الامارا ت دبي الوطني" -> "الإمارات دبي الوطني", "ابوظبي التجاري" -> "أبوظبي التجاري" (display only, data untouched).
+NO CHANGE NEEDED
+- Literal "<1%": live v31 Arabic DOM shows "أقل من 1%" in all four iframes (probed); English keeps "<1%" by design.
+NOT FIXED (data decisions)
+- Al Naser source date 01 Aug 2027 (Collections Detail): bad source date, fix in the workbook.
+- Lease Activity +61 vs +64, 5.63M vs 3.84M label, DQ count inconsistencies, Request Count hero value: not touched, need owner decision.
+- __mdValidateRevision hard-coded '2026-07': name not found in index.html; not changed.
+UNTESTED: browser test of v32 (live site still serves v31 until pushed).

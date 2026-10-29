@@ -1431,8 +1431,8 @@ function __warn(e){ try{ console.warn('[dash]', e); }catch(_){window.__warn&&win
   .ov6-tip{pointer-events:none; z-index:4;}
 
   /* ---- ES Trend & Outlook ---- */
-  .v6t-grid{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(380px,1fr); gap:14px; margin-top:8px;}
-  @media (max-width:980px){ .v6t-grid{grid-template-columns:1fr;} }
+  .v6t-grid{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(440px,1fr); gap:14px; margin-top:8px;}
+  @media (max-width:1180px){ .v6t-grid{grid-template-columns:1fr;} }
   .v6t-chartcard{display:flex; flex-direction:column;}
   .v6t-box{position:relative;}
   .v6t-svg svg{display:block; max-width:100%;}
@@ -1440,13 +1440,14 @@ function __warn(e){ try{ console.warn('[dash]', e); }catch(_){window.__warn&&win
   .v6d{font-size:12px; font-weight:600; color:var(--sub); white-space:nowrap;}
   .v6d.good{color:var(--ok);} .v6d.bad{color:var(--bad);}
   .v6t-rows{display:flex; flex-direction:column; gap:5px; margin-top:10px;}
-  .v6t-row{display:grid; grid-template-columns:minmax(120px,1fr) auto auto; align-items:center; gap:10px; background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:7px 12px; color:var(--text); font:inherit; font-size:12.5px; cursor:pointer; text-align:start;}
+  .v6t-row{display:grid; grid-template-columns:minmax(90px,1fr) max-content max-content; align-items:center; gap:10px; background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:7px 12px; color:var(--text); font:inherit; font-size:12.5px; cursor:pointer; text-align:start;}
   .v6t-row:hover{border-color:var(--accent);}
   .v6t-row.on{border-color:var(--accent); background:var(--card);}
   .v6t-row:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
   .v6t-rl{display:flex; align-items:center; gap:8px; min-width:0; color:var(--sub); overflow-wrap:anywhere;}
   .v6t-rl i{display:inline-block; width:8px; height:8px; border-radius:50%; flex:none;}
   .v6t-rv{font-weight:700; color:var(--text); white-space:nowrap;}
+  .v6t-rd{white-space:nowrap;}
   @media screen and (min-width:1100px) and (min-height:700px){
     .exec-fit .v6t .section-note{display:none;}
     .exec-fit .v6t-momnote{display:none;}
@@ -2088,7 +2089,7 @@ header .header-actions>.theme-switch,header .header-actions>button{padding:.36re
     <div class="sidebar-search-wrap">
       <div class="sidebar-search">
         <span class="ss-icon">&#128269;</span>
-        <input type="text" id="mdSearchInput" placeholder="Jump to a report or value&hellip;" autocomplete="off">
+        <input type="text" id="mdSearchInput" placeholder="Jump to a report, bank or property&hellip;" autocomplete="off">
       </div>
       <div class="md-search-results" id="mdSearchResults"></div>
     </div>
@@ -5601,7 +5602,7 @@ window.__v8HealthBadge = function(){
 (function(){
   function ar(){ return document.documentElement.lang === 'ar'; }
   // search placeholder follows the language
-  function ph(){ try{ var i = document.getElementById('mdSearchInput'); if(i){ var p = ar() ? 'اذهب إلى تقرير أو قيمة…' : 'Jump to a report or value…'; if(i.placeholder !== p) i.placeholder = p; } }catch(e){ console.warn('v9 placeholder', e); } }
+  function ph(){ try{ var i = document.getElementById('mdSearchInput'); if(i){ var p = ar() ? 'اذهب إلى تقرير أو بنك أو عقار…' : 'Jump to a report, bank or property…'; if(i.placeholder !== p) i.placeholder = p; } }catch(e){ console.warn('v9 placeholder', e); } }
   // dates and number ranges keep their own direction inside Arabic sentences
   var DATE_RE = /(\d{1,2}\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s\d{4}|\d{1,2}\s(?:يناير|فبراير|مارس|أبريل|مايو|يونيو|يوليو|أغسطس|سبتمبر|أكتوبر|نوفمبر|ديسمبر)\s\d{4})/g;
   var PAREN_RE = /\(\s*\d[\d,.%]*\s*\)/g;
@@ -7193,7 +7194,12 @@ function addSidebarSectionLabels(){
   tabBar.insertBefore(label, tabBar.children[2]);
 }
 function shortCode(name){
-  const words = name.trim().split(/\s+/);
+  let words = name.trim().split(/\s+/);
+  if(/[\u0600-\u06FF]/.test(name)){
+    words = words.map(w => w.replace(/^ال(?=.)/, '')).filter(Boolean);
+    if(words.length >= 2) return words[0][0] + words[1][0];
+    return (words[0] || name).slice(0, 2);
+  }
   if(words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
   return name.slice(0,2).toUpperCase();
 }
@@ -15052,6 +15058,7 @@ function cols(d, color){
 
   /* ---------- 2. leftover English and terminology ---------- */
   var EXACT = {
+    'no matches in the currently loaded reports':'لا توجد نتائج مطابقة في التقارير المحمّلة حالياً', 'jump to tab':'انتقل إلى التبويب',
     'is the data safe to report from?':'هل البيانات آمنة للاعتماد عليها في التقارير؟',
     'do the reports agree with each other?':'هل التقارير متسقة مع بعضها؟',
     'when did the work happen?':'متى تم العمل؟',
@@ -15085,6 +15092,30 @@ function cols(d, color){
   var DIR = function(w){ return /^under$/i.test(w) ? 'أقل من' : 'أعلى من'; };
   var SRC = [[/Bounced Cheque List/g,'قائمة الشيكات المرتجعة'],[/Cheque Clearance/g,'مقاصة الشيكات'],[/Harbor Collections in Detail/g,'تفاصيل التحصيل'],[/\bOccupancy\b/g,'الإشغال']];
   var PARTS = [
+    // --- v32 early rules ---
+    [/^(\s*)In ([^—\n]{3,90}) — ([^—\n]{2,40})\s*$/, '$1في $2 — $3'],
+    [/الامارا ت دبي الوطني/g, 'الإمارات دبي الوطني'], [/(^|[\s(])ابوظبي التجاري/g, '$1أبوظبي التجاري'],
+    // --- v31 node-level rules (fragments as they exist in the live DOM) ---
+    [/^(\s*)of (?=[ء-ي])/, '$1من '],
+    [/([ء-ي]),\s*plus\s*$/, '$1، بالإضافة إلى '],
+    [/^(\s*)(\d+) cross.checks?\s*$/, function(m,s,n){ return s + (+n===1 ? 'فحص متقاطع واحد' : +n===2 ? 'فحصين متقاطعين' : n + ' فحوص متقاطعة'); }],
+    [/^(\s*)to review \(see Overview\)\.\s*$/, '$1للمراجعة (راجع نظرة عامة).'],
+    [/new-lease contracts in both (?:عدد الشيكات|Cheque Count) and (?:عقود الإيجار الجديدة|New Lease)/g, 'عقود إيجار جديدة في كل من «عدد الشيكات» و«عقود الإيجار الجديدة»'],
+    [/· contract-level/g, '· على مستوى العقد'], [/· leaseType\b/g, '· نوع العقد'],
+    [/^(\s*)(إيجار العقود الجديدة) value\s*$/, '$1قيمة $2'], [/\) of contracts/g, ') من العقود'],
+    [/Data reflects (\d+) (bounced cheque|tracked cheque|transaction)\(s\), period /g, function(m,n,k){ return 'تعكس البيانات ' + n + ' ' + (k==='transaction' ? 'معاملة' : k==='bounced cheque' ? 'شيكاً مرتجعاً' : 'شيكاً متتبَّعاً') + '، الفترة '; }],
+    [/(\d+) cheque\(s\)/g, function(m,n){ n=+n; return n===1 ? 'شيك واحد' : n===2 ? 'شيكان' : n+(n<=10 ? ' شيكات' : ' شيكاً'); }],
+    [/^(\s*)Show all (\d+)\s*$/, '$1عرض الكل ($2)'],
+    [/(\d+%) of total collected/g, '$1 من إجمالي المحصَّل'],
+    [/Harbor Collections in Detail/g, 'تفاصيل تحصيلات هاربر'],
+    [/(ورقة|ورقتي|من ورقة) Bounced Cheque List/g, '$1 قائمة الشيكات المرتجعة'], [/(ورقة|ورقتي|من ورقة|و) ?Clearance\b/g, function(m,k){ return k==='و' ? 'و المقاصة'.replace('و ','و') : k+' المقاصة'; }], [/(ورقة|ورقتي|من ورقة|و) ?Sheet2\b/g, function(m,k){ return k==='و' ? 'والورقة 2' : k+' الورقة 2'; }],
+    [/^(\s*)Commercial Leases(?= —)/, '$1عقود الإيجار التجارية'], [/^(\s*)% occupied\s*$/, '$1% إشغال'],
+    [/(\d+) عقداً total/g, '$1 عقداً إجمالاً'], [/across (\d+) عقداً/g, 'عبر $1 عقداً'], [/([\d.]+%) of contract value/g, '$1 من قيمة العقد'],
+    [/admin fee \(renewals\) \+ agency fee \(new leases\)/g, 'رسوم إدارية (التجديدات) + رسوم وساطة (العقود الجديدة)'],
+    [/^(\s*)recorded(\s*)$/, '$1سجّلت$2'], [/^(\s*)Collections Detail(\s*)$/, '$1تفاصيل التحصيل$2'],
+    [/for: (\S+) \((\d+) rows?\) — the rows themselves are different tenants\/amounts, so nothing was dropped, but it suggests a numbering gap in the original file\./g, function(m,v,n){ return 'للقيمة: '+v+' ('+(+n===2?'صفان':n+' صفوف')+') — الصفوف نفسها تخص مستأجرين ومبالغ مختلفة، لذا لم يُحذف شيء، لكنه يشير إلى فجوة في الترقيم في الملف الأصلي.'; }],
+    [/(\d+) of (\d+) entries in the Bounced Cheque List \(([^)]*)\) don't appear anywhere in the Cheque Clearance tracker, under any status\. These look like two separately-maintained logs rather than one system feeding both - worth confirming with the source which one is current\./g, function(m,a,b,c){ return a + ' من ' + b + ' إدخالات في قائمة الشيكات المرتجعة (' + c + ') لا تظهر في متتبع مقاصة الشيكات بأي حالة. يبدو أنهما سجلان يُدار كلٌّ منهما على حدة وليسا نظاماً واحداً يغذي الاثنين - يُستحسن التأكد من المصدر أيهما الحالي.'; }],
+    [/(\d+) فحصان تحتاج مراجعة/g, 'فحصان يحتاجان إلى مراجعة'], [/(^|[\s(])مبلغ النقدي/g, "$1المبلغ النقدي"],
     // --- v29 early rules (case-insensitive; run before generic rules) ---
     [/Share of (?:total value|القيمة الإجمالية) \(AED\)/gi, 'حصة القيمة الإجمالية (د.إ)'],
     [/Share of requests \(by count\)/gi, 'حصة الطلبات (بالعدد)'],
@@ -15299,7 +15330,7 @@ function cols(d, color){
     try{
       if(doc.head && !doc.getElementById('vfArCss')){
         var st = doc.createElement('style'); st.id = 'vfArCss';
-        st.textContent = 'html[dir="rtl"] .v9-hb-row .v small,html[dir="rtl"] .v9-rank-row .v small{margin-inline-start:.45em}html[dir="rtl"] .v6d,html[dir="rtl"] .v6t-rv{unicode-bidi:isolate;direction:ltr;white-space:nowrap}';
+        st.textContent = 'html[dir="rtl"] .v9-hb-row .v small,html[dir="rtl"] .v9-rank-row .v small{margin-inline-start:.45em}html[dir="rtl"] .v6d,html[dir="rtl"] .v6t-rv{unicode-bidi:isolate;direction:ltr;white-space:nowrap}html[dir="rtl"] .period{direction:rtl}html[dir="rtl"] .changed-records-table .cell-clip{direction:ltr;text-align:right;unicode-bidi:plaintext}';
         doc.head.appendChild(st);
       }
     }catch(e){}
@@ -15343,6 +15374,31 @@ function cols(d, color){
    and nothing stays invisible after a re-render (motion layer 'dm-pre' elements that are on screen are revealed). */
 (function(){
   if(window.__vfSwitch) return; window.__vfSwitch = true;
+  // v31: changing the month keeps the tab (and Exec sub-tab) you were on instead of jumping to Overview
+  try{
+    var origSwitch = window.doSwitchPortfolio;
+    if(typeof origSwitch === 'function' && !origSwitch.__vf){
+      var wrapped = function(key){
+        var same = false, idx = -1, sub = -1;
+        try{
+          same = (typeof currentPortfolio !== 'undefined' && key === currentPortfolio);
+          if(same){
+            idx = [].slice.call(document.querySelectorAll('.tab-btn')).findIndex(function(b){ return b.classList.contains('active'); });
+            sub = [].slice.call(document.querySelectorAll('.exec-seg-btn')).findIndex(function(b){ return b.classList.contains('active'); });
+          }
+        }catch(e){}
+        var r = origSwitch.apply(this, arguments);
+        if(same && idx > 0){
+          try{
+            var nt = document.querySelectorAll('.tab-btn')[idx]; if(nt) nt.click();
+            if(sub > 0){ var sb = document.querySelectorAll('.exec-seg-btn')[sub]; if(sb) sb.click(); }
+          }catch(e){}
+        }
+        return r;
+      };
+      wrapped.__vf = true; window.doSwitchPortfolio = wrapped;
+    }
+  }catch(e){}
   var root = document.documentElement, last = root.getAttribute('lang');
   new MutationObserver(function(){
     var cur = root.getAttribute('lang');
@@ -15366,6 +15422,18 @@ function cols(d, color){
           if(n >= 5) el.classList.remove('dm-pre');
         }
       });
+    }catch(e){}
+    try{
+      document.querySelectorAll('.tab-btn').forEach(function(b){ var l = b.querySelector('.tab-label'); if(l){ var t = (l.textContent || '').trim(); if(t && b.getAttribute('title') !== t) b.setAttribute('title', t); } });
+    }catch(e){}
+    try{
+      var docs = [document];
+      document.querySelectorAll('iframe').forEach(function(f){ try{ if(f.contentDocument) docs.push(f.contentDocument); }catch(e){} });
+      docs.forEach(function(d){ d.querySelectorAll('.in-report-nav').forEach(function(n){
+        var seen = {}, kids = [].slice.call(n.children);
+        for(var i = kids.length - 1; i >= 0; i--){ var h = kids[i].getAttribute('href'); if(!h) continue;
+          if(seen[h]) n.removeChild(kids[i]); else seen[h] = 1; }
+      }); });
     }catch(e){}
   }, 1000);
 })();

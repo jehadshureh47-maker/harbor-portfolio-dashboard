@@ -56,6 +56,7 @@
 
   /* ---------- 2. leftover English and terminology ---------- */
   var EXACT = {
+    'no matches in the currently loaded reports':'لا توجد نتائج مطابقة في التقارير المحمّلة حالياً', 'jump to tab':'انتقل إلى التبويب',
     'is the data safe to report from?':'هل البيانات آمنة للاعتماد عليها في التقارير؟',
     'do the reports agree with each other?':'هل التقارير متسقة مع بعضها؟',
     'when did the work happen?':'متى تم العمل؟',
@@ -89,6 +90,30 @@
   var DIR = function(w){ return /^under$/i.test(w) ? 'أقل من' : 'أعلى من'; };
   var SRC = [[/Bounced Cheque List/g,'قائمة الشيكات المرتجعة'],[/Cheque Clearance/g,'مقاصة الشيكات'],[/Harbor Collections in Detail/g,'تفاصيل التحصيل'],[/\bOccupancy\b/g,'الإشغال']];
   var PARTS = [
+    // --- v32 early rules ---
+    [/^(\s*)In ([^—\n]{3,90}) — ([^—\n]{2,40})\s*$/, '$1في $2 — $3'],
+    [/الامارا ت دبي الوطني/g, 'الإمارات دبي الوطني'], [/(^|[\s(])ابوظبي التجاري/g, '$1أبوظبي التجاري'],
+    // --- v31 node-level rules (fragments as they exist in the live DOM) ---
+    [/^(\s*)of (?=[ء-ي])/, '$1من '],
+    [/([ء-ي]),\s*plus\s*$/, '$1، بالإضافة إلى '],
+    [/^(\s*)(\d+) cross.checks?\s*$/, function(m,s,n){ return s + (+n===1 ? 'فحص متقاطع واحد' : +n===2 ? 'فحصين متقاطعين' : n + ' فحوص متقاطعة'); }],
+    [/^(\s*)to review \(see Overview\)\.\s*$/, '$1للمراجعة (راجع نظرة عامة).'],
+    [/new-lease contracts in both (?:عدد الشيكات|Cheque Count) and (?:عقود الإيجار الجديدة|New Lease)/g, 'عقود إيجار جديدة في كل من «عدد الشيكات» و«عقود الإيجار الجديدة»'],
+    [/· contract-level/g, '· على مستوى العقد'], [/· leaseType\b/g, '· نوع العقد'],
+    [/^(\s*)(إيجار العقود الجديدة) value\s*$/, '$1قيمة $2'], [/\) of contracts/g, ') من العقود'],
+    [/Data reflects (\d+) (bounced cheque|tracked cheque|transaction)\(s\), period /g, function(m,n,k){ return 'تعكس البيانات ' + n + ' ' + (k==='transaction' ? 'معاملة' : k==='bounced cheque' ? 'شيكاً مرتجعاً' : 'شيكاً متتبَّعاً') + '، الفترة '; }],
+    [/(\d+) cheque\(s\)/g, function(m,n){ n=+n; return n===1 ? 'شيك واحد' : n===2 ? 'شيكان' : n+(n<=10 ? ' شيكات' : ' شيكاً'); }],
+    [/^(\s*)Show all (\d+)\s*$/, '$1عرض الكل ($2)'],
+    [/(\d+%) of total collected/g, '$1 من إجمالي المحصَّل'],
+    [/Harbor Collections in Detail/g, 'تفاصيل تحصيلات هاربر'],
+    [/(ورقة|ورقتي|من ورقة) Bounced Cheque List/g, '$1 قائمة الشيكات المرتجعة'], [/(ورقة|ورقتي|من ورقة|و) ?Clearance\b/g, function(m,k){ return k==='و' ? 'و المقاصة'.replace('و ','و') : k+' المقاصة'; }], [/(ورقة|ورقتي|من ورقة|و) ?Sheet2\b/g, function(m,k){ return k==='و' ? 'والورقة 2' : k+' الورقة 2'; }],
+    [/^(\s*)Commercial Leases(?= —)/, '$1عقود الإيجار التجارية'], [/^(\s*)% occupied\s*$/, '$1% إشغال'],
+    [/(\d+) عقداً total/g, '$1 عقداً إجمالاً'], [/across (\d+) عقداً/g, 'عبر $1 عقداً'], [/([\d.]+%) of contract value/g, '$1 من قيمة العقد'],
+    [/admin fee \(renewals\) \+ agency fee \(new leases\)/g, 'رسوم إدارية (التجديدات) + رسوم وساطة (العقود الجديدة)'],
+    [/^(\s*)recorded(\s*)$/, '$1سجّلت$2'], [/^(\s*)Collections Detail(\s*)$/, '$1تفاصيل التحصيل$2'],
+    [/for: (\S+) \((\d+) rows?\) — the rows themselves are different tenants\/amounts, so nothing was dropped, but it suggests a numbering gap in the original file\./g, function(m,v,n){ return 'للقيمة: '+v+' ('+(+n===2?'صفان':n+' صفوف')+') — الصفوف نفسها تخص مستأجرين ومبالغ مختلفة، لذا لم يُحذف شيء، لكنه يشير إلى فجوة في الترقيم في الملف الأصلي.'; }],
+    [/(\d+) of (\d+) entries in the Bounced Cheque List \(([^)]*)\) don't appear anywhere in the Cheque Clearance tracker, under any status\. These look like two separately-maintained logs rather than one system feeding both - worth confirming with the source which one is current\./g, function(m,a,b,c){ return a + ' من ' + b + ' إدخالات في قائمة الشيكات المرتجعة (' + c + ') لا تظهر في متتبع مقاصة الشيكات بأي حالة. يبدو أنهما سجلان يُدار كلٌّ منهما على حدة وليسا نظاماً واحداً يغذي الاثنين - يُستحسن التأكد من المصدر أيهما الحالي.'; }],
+    [/(\d+) فحصان تحتاج مراجعة/g, 'فحصان يحتاجان إلى مراجعة'], [/(^|[\s(])مبلغ النقدي/g, "$1المبلغ النقدي"],
     // --- v29 early rules (case-insensitive; run before generic rules) ---
     [/Share of (?:total value|القيمة الإجمالية) \(AED\)/gi, 'حصة القيمة الإجمالية (د.إ)'],
     [/Share of requests \(by count\)/gi, 'حصة الطلبات (بالعدد)'],
@@ -303,7 +328,7 @@
     try{
       if(doc.head && !doc.getElementById('vfArCss')){
         var st = doc.createElement('style'); st.id = 'vfArCss';
-        st.textContent = 'html[dir="rtl"] .v9-hb-row .v small,html[dir="rtl"] .v9-rank-row .v small{margin-inline-start:.45em}html[dir="rtl"] .v6d,html[dir="rtl"] .v6t-rv{unicode-bidi:isolate;direction:ltr;white-space:nowrap}';
+        st.textContent = 'html[dir="rtl"] .v9-hb-row .v small,html[dir="rtl"] .v9-rank-row .v small{margin-inline-start:.45em}html[dir="rtl"] .v6d,html[dir="rtl"] .v6t-rv{unicode-bidi:isolate;direction:ltr;white-space:nowrap}html[dir="rtl"] .period{direction:rtl}html[dir="rtl"] .changed-records-table .cell-clip{direction:ltr;text-align:right;unicode-bidi:plaintext}';
         doc.head.appendChild(st);
       }
     }catch(e){}
@@ -347,6 +372,31 @@
    and nothing stays invisible after a re-render (motion layer 'dm-pre' elements that are on screen are revealed). */
 (function(){
   if(window.__vfSwitch) return; window.__vfSwitch = true;
+  // v31: changing the month keeps the tab (and Exec sub-tab) you were on instead of jumping to Overview
+  try{
+    var origSwitch = window.doSwitchPortfolio;
+    if(typeof origSwitch === 'function' && !origSwitch.__vf){
+      var wrapped = function(key){
+        var same = false, idx = -1, sub = -1;
+        try{
+          same = (typeof currentPortfolio !== 'undefined' && key === currentPortfolio);
+          if(same){
+            idx = [].slice.call(document.querySelectorAll('.tab-btn')).findIndex(function(b){ return b.classList.contains('active'); });
+            sub = [].slice.call(document.querySelectorAll('.exec-seg-btn')).findIndex(function(b){ return b.classList.contains('active'); });
+          }
+        }catch(e){}
+        var r = origSwitch.apply(this, arguments);
+        if(same && idx > 0){
+          try{
+            var nt = document.querySelectorAll('.tab-btn')[idx]; if(nt) nt.click();
+            if(sub > 0){ var sb = document.querySelectorAll('.exec-seg-btn')[sub]; if(sb) sb.click(); }
+          }catch(e){}
+        }
+        return r;
+      };
+      wrapped.__vf = true; window.doSwitchPortfolio = wrapped;
+    }
+  }catch(e){}
   var root = document.documentElement, last = root.getAttribute('lang');
   new MutationObserver(function(){
     var cur = root.getAttribute('lang');
@@ -370,6 +420,18 @@
           if(n >= 5) el.classList.remove('dm-pre');
         }
       });
+    }catch(e){}
+    try{
+      document.querySelectorAll('.tab-btn').forEach(function(b){ var l = b.querySelector('.tab-label'); if(l){ var t = (l.textContent || '').trim(); if(t && b.getAttribute('title') !== t) b.setAttribute('title', t); } });
+    }catch(e){}
+    try{
+      var docs = [document];
+      document.querySelectorAll('iframe').forEach(function(f){ try{ if(f.contentDocument) docs.push(f.contentDocument); }catch(e){} });
+      docs.forEach(function(d){ d.querySelectorAll('.in-report-nav').forEach(function(n){
+        var seen = {}, kids = [].slice.call(n.children);
+        for(var i = kids.length - 1; i >= 0; i--){ var h = kids[i].getAttribute('href'); if(!h) continue;
+          if(seen[h]) n.removeChild(kids[i]); else seen[h] = 1; }
+      }); });
     }catch(e){}
   }, 1000);
 })();

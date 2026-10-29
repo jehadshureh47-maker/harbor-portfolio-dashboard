@@ -1,0 +1,1 @@
+v31: node-level Arabic rules (DQ banner fragments, Lease Activity, Al Naser/Police/Compare strings, "of", grammar); Trend list no longer overlaps (wider right column, max-content columns); month change keeps current tab + Exec sub-tab; duplicate in-report nav items removed; period chip RTL; AR changes-table tenant names ellipsis at the end.
