@@ -1,0 +1,11 @@
+v33 (from v32, md5 85623bb57834) - Dubai Court is now a real portfolio inside the main dashboard
+ADDED
+- Portfolio "Dubai Court" with 3 report tabs rendered with the same report CSS/components as the Awqaf pages: Occupancy & Renewals, Collections, Distributions & Expenses (Preethi's spec: portfolio table with property drill-down; on hold and bounced shown separately, never merged).
+- Overview (3 cards), Executive Summary (4 hero cards, narrative EN/AR, health pills), Compare (Dubai Court vs any portfolio; cheque-style rows that do not apply show a dash), Data Quality (28 findings from the workbook), 3 cross-checks (unit counts; collections vs independent recount; distributions/expenses vs independent recount).
+- Months offered: Jul, Aug, Sep 2026 (data to 23 Sep 2026; Sep marked month-to-date).
+- Arabic: tab labels, cross-check names, all page strings (scripts/court_i18n_base.json + EXTRA in build_v33.py), selector note rule in vf_arnum.js, What's New + Updates entries (REMAINING_UI).
+- PIN gate added for dubai-court (same as the other portfolios).
+UNTOUCHED: EMBEDDED_DASHBOARDS / _AUG / _SEPT blocks (asserted byte-identical in the build).
+FILES: build_v33.py, court_report.js/.css, court_base.css, court_shell.js, court_data.json, court_control.json, court_i18n_base.json, court_independent.py, verify_court_data.py
+VERIFIED: node --check all scripts; verify_awqaf_month Aug+Sep pass; Awqaf iframe figures identical v32 vs v33 (Aug, Sep); Dubai Court iframe figures equal the independent workbook recount for Jul/Aug/Sep; 3/3 cross-checks pass each month; no console errors (headless Chromium, EN/AR, dark/light).
+KNOWN / OPEN (Preethi): mixed-description cheques such as "SD + Parking + 1" are counted as Other income (affects Other income YTD by up to ~23.5K); 15 properties have payments but no unit list; distributions are per owner only; renewal windows (30/90 days) are assumptions; Arabic property/owner names not available (shown in English); Compare shows Dubai Court rent collected beside Awqaf recorded cheques (different definitions, bounce rate left blank).

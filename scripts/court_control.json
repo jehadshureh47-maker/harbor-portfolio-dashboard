@@ -1,0 +1,62 @@
+{
+ "asof": "2026-09-23",
+ "units": {
+  "total": 430,
+  "rented": 396,
+  "vacant": 31,
+  "not_recorded": 3
+ },
+ "months": {
+  "2026-07": {
+   "rent_m": 3334602.75,
+   "rent_y": 25285200.86,
+   "nrent_m": 198,
+   "other_m": 36990.0,
+   "hold_m": 52470.0,
+   "bounced_m": 74113.0,
+   "pending_m": 70462.0,
+   "dist_m": 574434.37,
+   "dist_y": 3770754.38,
+   "exp_m": 228086.56,
+   "exp_y": 2071348.29,
+   "courtrent_m": 1033157.09,
+   "in_progress": 44,
+   "upcoming": 40,
+   "expired": 38
+  },
+  "2026-08": {
+   "rent_m": 3463448.46,
+   "rent_y": 28748649.32,
+   "nrent_m": 166,
+   "other_m": 11687.12,
+   "hold_m": 15480.0,
+   "bounced_m": 30925.0,
+   "pending_m": 44566.5,
+   "dist_m": 431144.47,
+   "dist_y": 4201898.85,
+   "exp_m": 343215.8,
+   "exp_y": 2414564.09,
+   "courtrent_m": 2285632.77,
+   "in_progress": 69,
+   "upcoming": 39,
+   "expired": 44
+  },
+  "2026-09": {
+   "rent_m": 1730753.39,
+   "rent_y": 30479402.71,
+   "nrent_m": 84,
+   "other_m": 8347.0,
+   "hold_m": 0.0,
+   "bounced_m": 0.0,
+   "pending_m": 213766.0,
+   "dist_m": 399889.31,
+   "dist_y": 4601788.16,
+   "exp_m": 548673.41,
+   "exp_y": 2963237.5,
+   "courtrent_m": 49285.3,
+   "in_progress": 84,
+   "upcoming": 40,
+   "expired": 58
+  }
+ }
+}

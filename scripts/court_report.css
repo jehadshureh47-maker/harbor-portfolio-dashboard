@@ -1,0 +1,43 @@
+/* Extra rules for the Dubai Court report pages (added on top of the shared report base CSS, same tokens). */
+:root{--pend:#93a0bd;}
+[data-theme="light"]{--pend:#5a6478;}
+.toolbar .tools{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px;}
+.toolbar .tools label{color:var(--sub); font-size:12px;}
+.toolbar .tools select, .toolbar .tools input[type=search]{background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:7px 10px; font:inherit; font-size:12.5px;}
+.toolbar .tools input[type=search]{min-width:200px;}
+.toolbar .tools .btn{padding:7px 14px;}
+.toolbar .status.empty-state-note{margin-top:4px;}
+.c-half{grid-column:span 6;}
+.c-wide{grid-column:span 12;}
+@media (max-width:900px){ .c-half{grid-column:span 12;} }
+.court-donut-row{display:flex; gap:18px; align-items:center; flex-wrap:wrap;}
+.court-donut{width:180px; height:180px; flex:0 0 auto;}
+.court-donut text{fill:var(--text);}
+.legend{display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--sub); margin:6px 0;}
+.legend i{display:inline-block; width:10px; height:10px; border-radius:2px; margin-inline-end:5px;}
+svg text{fill:var(--sub); font-size:11px; font-family:inherit;}
+table.court{table-layout:auto;}
+table.court th, table.court td{text-align:end; white-space:nowrap; font-variant-numeric:tabular-nums;}
+table.court th:first-child, table.court td:first-child{text-align:start; white-space:normal;}
+html[dir="rtl"] table.court th, html[dir="rtl"] table.court td{text-align:end;}
+html[dir="rtl"] table.court th:first-child, html[dir="rtl"] table.court td:first-child{text-align:start;}
+table.court th{position:sticky; top:0; background:var(--card2);}
+table.court tr.ll td{font-weight:700; background:color-mix(in srgb,var(--accent) 7%,transparent);}
+table.court tr.pr td:first-child{padding-inline-start:30px;}
+table.court tr.pr.pl td{color:var(--sub); font-style:italic;}
+table.court tr.tot td{font-weight:700; border-top:2px solid var(--border); background:var(--card2);}
+.court-scroll{overflow-x:auto;}
+.tg{background:none; border:none; color:var(--accent); cursor:pointer; font-size:13px; padding:0 6px; font-family:inherit;}
+.num{direction:ltr; unicode-bidi:isolate; display:inline-block;}
+.amber{color:var(--amber);} .bad{color:var(--bad);} .ok{color:var(--ok);}
+.pill{display:inline-block; padding:1px 8px; border-radius:99px; font-size:11px; border:1px solid var(--border); color:var(--sub);}
+:focus-visible{outline:2px solid var(--accent2); outline-offset:2px;}
+@media print{ .tools, .tg{display:none !important;} }
+details#defsBox summary{cursor:pointer; font-size:13px; list-style-position:inside;}
+.defs{margin-top:8px; display:grid; gap:8px;}
+.def .dt{font-weight:600; font-size:12px;}
+.def .dd{color:var(--sub); font-size:11.5px; line-height:1.5;}
+@media print{ details#defsBox{display:block;} details#defsBox:not([open]) .defs{display:none;} }
+table.court th:first-child, table.court td:first-child{min-width:170px;}
+table.court th{white-space:normal; font-size:10px; line-height:1.25;}
+table.court th, table.court td{padding:4px 5px;}

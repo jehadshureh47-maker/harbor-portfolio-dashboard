@@ -1,0 +1,6 @@
+v34 (from v33, md5 de3e157c2520). Build: python3 scripts/build_v34.py Dashboard_RELEASE_v33.html out.html
+Fixed: ES Changes blank at July (pane stayed display:none) -> shows message; ES Trend now follows selected month;
+Dubai Court ES Trend + Changes built from COURT_CONTROL (EN/AR); Arabic percent order via LRI/PDI isolates + CSS isolate on ranked rows;
+.v9-two column grid so CC unit-type/ownership bars have width; Arabic placeholder; "at or above N% target" and "Real totals from N months" Arabic rules.
+Verified: node --check (layer + main); verify_awqaf_month 2026-08/09 pass; 3 EMBEDDED_DASHBOARDS blocks byte-identical to v33.
+Not verified: full broad alignment audit of every tab at 1100px and light theme; Request Count user-type stacked chart appeared blank in a full-page screenshot (possibly lazy render); live site after push.

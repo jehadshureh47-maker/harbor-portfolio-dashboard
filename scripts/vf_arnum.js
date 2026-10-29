@@ -79,17 +79,23 @@
     'executive summary views':'عروض الملخص التنفيذي', 'narrative report only':'من التقرير السردي فقط',
     'watch':'مراقبة', 'dashboard':'لوحة المعلومات', 'leasing & operations':'التأجير والعمليات', 'under process':'قيد المعالجة', 'new lease':'عقد إيجار جديد',
     'bounced cheques':'الشيكات المرتجعة', 'contracts':'العقود', 'installments':'الأقساط', 'rent':'الإيجار', 'future':'مستقبلية', 'past':'سابقة', 'this month':'هذا الشهر', 'dated later':'مؤرخة لاحقاً',
-    'search tenant, contract, bank, cheque #...':'ابحث عن مستأجر أو عقد أو بنك أو رقم شيك...', 'new-lease value only':'قيمة الإيجار الجديد فقط', 'all statuses, incl. paid':'كل الحالات بما فيها المدفوع',
+    'search tenant, contract, bank, cheque #...':'ابحث عن مستأجر أو عقد أو بنك أو رقم شيك...', 'search tenant, contract, bank, cheque #…':'ابحث عن مستأجر أو عقد أو بنك أو رقم شيك…', 'new-lease value only':'قيمة الإيجار الجديد فقط', 'all statuses, incl. paid':'كل الحالات بما فيها المدفوع',
     'summary':'الملخص', 'trend & outlook':'الاتجاه والتوقعات', 'changes':'التغييرات', 'daily activity':'النشاط اليومي', 'lease mix by contract':'توزيع العقود حسب النوع',
     'installments per day':'أقساط يومياً', 'rent installments per day':'أقساط الإيجار يومياً',
-    'no filters applied — showing all values.':'لا توجد مرشحات مطبّقة — تُعرض كل القيم.'
+    'no filters applied — showing all values.':'لا توجد مرشحات مطبّقة — تُعرض كل القيم.',
+    'dubai court — occupancy, collections, distributions and expenses from the dubai courts workbook, data to 23 sep 2026.':'محكمة دبي — الإشغال والتحصيلات والتوزيعات والمصروفات من مصنّف محاكم دبي، البيانات حتى 23 سبتمبر 2026.'
   };
   var MONF = {January:'يناير',February:'فبراير',March:'مارس',April:'أبريل',May:'مايو',June:'يونيو',July:'يوليو',August:'أغسطس',September:'سبتمبر',October:'أكتوبر',November:'نوفمبر',December:'ديسمبر'};
   var MON3 = {Jan:'يناير',Feb:'فبراير',Mar:'مارس',Apr:'أبريل',May:'مايو',Jun:'يونيو',Jul:'يوليو',Aug:'أغسطس',Sep:'سبتمبر',Oct:'أكتوبر',Nov:'نوفمبر',Dec:'ديسمبر'};
   var FEES = [[/Bounced Cheque Fee/gi,'رسوم الشيك المرتجع'],[/Renewal Fees?/gi,'رسوم التجديد'],[/Agency Fee/gi,'رسوم الوكالة'],[/Ejari/gi,'إيجاري'],[/\bVAT\b/g,'ضريبة القيمة المضافة']];
   var DIR = function(w){ return /^under$/i.test(w) ? 'أقل من' : 'أعلى من'; };
   var SRC = [[/Bounced Cheque List/g,'قائمة الشيكات المرتجعة'],[/Cheque Clearance/g,'مقاصة الشيكات'],[/Harbor Collections in Detail/g,'تفاصيل التحصيل'],[/\bOccupancy\b/g,'الإشغال']];
+  function MON(n){ n = +n; return n === 1 ? 'شهر واحد' : n === 2 ? 'شهرين' : (n >= 3 && n <= 10) ? n + ' أشهر' : n + ' شهراً'; }
   var PARTS = [
+    // --- v34 early rules ---
+    [/at or above the ([\d.]+)% target/g, 'عند الهدف $1% أو أعلى منه'],
+    [/Real totals from the (\d+) months? loaded so far — nothing projected or estimated\.?/g, function(m, n){ return 'إجماليات فعلية من ' + MON(n) + ' محمّلة حتى الآن — دون إسقاط أو تقدير.'; }],
+    [/Real totals from every month you[’']ve loaded so far \(last (\d+) shown\) — nothing projected or estimated\.?/g, function(m, n){ return 'إجماليات فعلية من كل شهر حمّلته حتى الآن (آخر ' + n + ' معروضة) — دون إسقاط أو تقدير.'; }],
     // --- v32 early rules ---
     [/^(\s*)In ([^—\n]{3,90}) — ([^—\n]{2,40})\s*$/, '$1في $2 — $3'],
     [/الامارا ت دبي الوطني/g, 'الإمارات دبي الوطني'], [/(^|[\s(])ابوظبي التجاري/g, '$1أبوظبي التجاري'],
@@ -278,6 +284,14 @@
   function active(doc){
     var r = doc.documentElement; return !!r && (r.getAttribute('lang') === 'ar' || r.getAttribute('dir') === 'rtl');
   }
+  // v34: after Arabic letters the bidi algorithm turns "89%" into "%89" and glues "109" to "26%". Isolating each
+  // percentage as its own left-to-right run keeps one consistent reading order (display only, text unchanged otherwise).
+  var ARL = /[\u0600-\u06FF]/;
+  function bidiPct(s){
+    if(s.indexOf('%') < 0 || !ARL.test(s)) return s;
+    return s.replace(/(^|[^\u2066\d.,])([+\-\u2212]?\d[\d.,]*%)/g, '$1\u2066$2\u2069');
+  }
+  window.__vfBidiPct = bidiPct;
   function fixText(n){
     var s = n.nodeValue;
     if(!s || s.length < 2) return;
@@ -292,6 +306,7 @@
     } else {
       r = fix(s);
     }
+    r = bidiPct(r);
     if(r !== s) n.nodeValue = r;
   }
   function fixAttrs(el){
@@ -328,7 +343,7 @@
     try{
       if(doc.head && !doc.getElementById('vfArCss')){
         var st = doc.createElement('style'); st.id = 'vfArCss';
-        st.textContent = 'html[dir="rtl"] .v9-hb-row .v small,html[dir="rtl"] .v9-rank-row .v small{margin-inline-start:.45em}html[dir="rtl"] .v6d,html[dir="rtl"] .v6t-rv{unicode-bidi:isolate;direction:ltr;white-space:nowrap}html[dir="rtl"] .period{direction:rtl}html[dir="rtl"] .changed-records-table .cell-clip{direction:ltr;text-align:right;unicode-bidi:plaintext}';
+        st.textContent = 'html[dir="rtl"] .v9-hb-row .v small,html[dir="rtl"] .v9-rank-row .v small{margin-inline-start:.45em}html[dir="rtl"] .v6d,html[dir="rtl"] .v6t-rv{unicode-bidi:isolate;direction:ltr;white-space:nowrap}html[dir="rtl"] .period{direction:rtl}html[dir="rtl"] .changed-records-table .cell-clip{direction:ltr;text-align:right;unicode-bidi:plaintext}html[dir="rtl"] .v9-rank-row .v small,html[dir="rtl"] .v9-hb-row .v small,html[dir="rtl"] .v9-bank-row .v small{unicode-bidi:isolate;direction:rtl;margin-inline-start:.6em}.v9-rank-row.v9-two{grid-template-columns:minmax(90px,1.1fr) minmax(60px,1.3fr) minmax(150px,max-content) !important}html[dir="rtl"] .v9-rank-row.v9-two .v small{unicode-bidi:isolate}';
         doc.head.appendChild(st);
       }
     }catch(e){}
@@ -358,13 +373,20 @@
     Object.keys(MSG).forEach(function(id){
       var el = document.getElementById(id); if(!el) return;
       var mine = el.getAttribute('data-vf-empty') === '1';
+      if(mine && el.children.length){ el.removeAttribute('data-vf-empty'); return; }
       if(!mine && (el.children.length || el.textContent.trim())) return;
       var txt = MSG[id][ar() ? 1 : 0];
       if(mine && el.textContent === txt) return;
       el.setAttribute('data-vf-empty', '1'); el.textContent = txt;
       el.style.padding = '18px 20px'; el.style.opacity = '.8'; el.style.fontSize = '14px';
     });
+    // the pane keeps an inline display:none from the renderer when there is nothing to compare; show the message instead
+    Object.keys(MSG).forEach(function(id){
+      var el = document.getElementById(id);
+      if(el && el.getAttribute('data-vf-empty') === '1' && el.style.display === 'none') el.style.display = 'block';
+    });
   }
+  window.__vfEmptyTick = tick;
   setInterval(tick, 1500); tick();
 })();
 
