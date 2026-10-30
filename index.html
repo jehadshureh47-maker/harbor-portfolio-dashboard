@@ -15397,6 +15397,7 @@ function cols(d, color){
     'credit card':'بطاقة ائتمان', 'other / unclassified':'أخرى / غير مصنّفة', 'settlement':'تسوية',
     'legal fees':'رسوم قانونية', 'government fees':'رسوم حكومية', 'security deposit':'التأمين',
     'rent installment':'قسط إيجار', 'innovation fee':'رسوم الابتكار', 'tariff':'التعرفة', 'vat rent':'ضريبة الإيجار',
+    'vending machine':'آلة بيع', 'vending machines':'آلات بيع', 'retail shop':'محل تجاري', 'kiosk':'كشك', 'atm':'صراف آلي', 'locker space':'مساحة خزائن', 'space - marine station':'مساحة – المحطة البحرية', 'jetty':'رصيف بحري', 'parking space - jetty':'موقف – الرصيف البحري', 'pta — public transport agency':'PTA — هيئة المواصلات العامة', 'ra — roads agency':'RA — هيئة الطرق', 'tra — traffic & roads agency':'TRA — هيئة المرور والطرق', 'café / restaurant':'مقهى / مطعم', 'car wash service':'خدمة غسيل السيارات', 'car wash income':'إيراد غسيل السيارات', 'additional parking':'مواقف إضافية', 'typing and photocopying services':'خدمات الطباعة والتصوير', 'typing and':'الطباعة و', 'photocopying services':'خدمات التصوير', 'included':'مشمول', 'renew':'تجديد', 'pivot dashboard':'لوحة الجدول المحوري', 'insufficient funds':'رصيد غير كافٍ', 'insufficenty funds':'رصيد غير كافٍ', 'insufficent funds':'رصيد غير كافٍ', 'signature irregular':'توقيع غير مطابق', 'closed account':'حساب مغلق', 'amount alteration':'تعديل في المبلغ', 'frozed/closed account':'حساب مجمّد / مغلق', 'amount diff words and figures':'اختلاف المبلغ بين الحروف والأرقام', 'see data-quality flag below re: al barsha':'انظر تنبيه جودة البيانات أدناه بخصوص البرشاء',
     'endowment':'وقف', 'amaf & minors':'المؤسسة – القُصّر', 'amaf & endowments':'المؤسسة – الأوقاف', 'amaf and minors-eib':'المؤسسة – القُصّر (EIB)', 'minor':'قاصر', 'share of total value (aed)':'الحصة من إجمالي القيمة (درهم)', 'share of requests (by count)':'الحصة من الطلبات (حسب العدد)', 'share of cheques (by count)':'الحصة من الشيكات (حسب العدد)', 'minors':'قُصّر',
     'renewal lease':'تجديد عقد الإيجار', 'contract transfer':'نقل العقد', 'noc':'شهادة عدم ممانعة',
     'tenant name change':'تغيير اسم المستأجر', 'non-renewal':'عدم التجديد', 'early termination':'إنهاء مبكر',
@@ -15596,6 +15597,9 @@ function cols(d, color){
     [/(\d+) جديداً و(\d+) تجديداً/g, '$1 جديدة و$2 تجديدات'],
     [/(\d[\d,]*\.\d{2})\. د\.إ/g, '$1 د.إ.'],
     // --- v35 wording ---
+    [/No reports loaded yet for (.+?)\. Once its files come in, they['’]ll show up here with their own tabs\.?/g, 'لم يتم تحميل أي تقارير لـ $1 بعد. عند وصول ملفاتها ستظهر هنا بتبويباتها الخاصة.'],
+    [/تمامًا كما جرى مع الأوقاف والناصر كلوب/g, 'تمامًا كما جرى مع الأوقاف والناصر'],
+    [/across (\d+) propert(?:y|ies)/g, 'عبر $1 عقارات'], [/(\d+) roster rows \(unit-type blocks\)/g, '$1 صفوف قائمة (كتل أنواع الوحدات)'], [/\b(\d+) bedrooms?\b/gi, '$1 غرف نوم'],
     [/مستخدم إدارة العقارات/g, 'موظف إدارة العقارات'], [/\bcheques (\d[\d,]*)/g, '$1 شيكاً'],
     [/أماف والقاصرين\s*[-\u2013]\s*EIB/g, 'المؤسسة – القُصّر (EIB)'], [/أماف والقاصرين/g, 'المؤسسة – القُصّر'], [/أماف والقُصّر/g, 'المؤسسة – القُصّر'], [/أماف والأوقاف/g, 'المؤسسة – الأوقاف'],
     [/مستخدم إدارة الممتلكات/g, 'موظف إدارة العقارات'], [/مستخدمو إدارة الممتلكات/g, 'موظفو إدارة العقارات'],
@@ -15808,6 +15812,7 @@ function cols(d, color){
     '.v9-hb-row{min-height:44px}' +
     '.vf35-click{cursor:pointer}.vf35-click:hover{opacity:.85}.vf35-click:focus-visible{outline:2px solid #5b8cff;outline-offset:1px}' +
     '.eb-chart.dm-pre,.eb-chart .dm-pre{opacity:1 !important}' +
+    '.vf35-empty{padding:26px 28px !important;border:1px solid rgba(120,140,200,.28);border-radius:16px;background:rgba(255,255,255,.03);margin-top:12px}' +
     '.x4-stat-delta,.ov6-foot{white-space:nowrap !important}' +
     '.la4-mix-total .la4-sub{margin-inline-start:.4em}' +
     'html[dir="rtl"] .vf35-range{direction:rtl;unicode-bidi:isolate;white-space:nowrap}';
@@ -15906,6 +15911,24 @@ function cols(d, color){
   /* ---- 4. the daily-activity chart should not stay blank while the reveal class waits ---- */
   function reveal(doc){ [].slice.call(doc.querySelectorAll('.eb-chart.dm-pre,.eb-chart .dm-pre')).forEach(function(e){ e.classList.remove('dm-pre'); }); }
 
+  /* ---- 5. rail initials in Arabic, and the empty-portfolio card ---- */
+  function rail(doc){
+    if(!isAr(doc)) return;
+    [].slice.call(doc.querySelectorAll('.tab-btn')).forEach(function(b){
+      var sh = b.querySelector('.tab-short'), lb = b.querySelector('.tab-label'); if(!sh || !lb) return;
+      if(!/^[\x00-\x7f]+$/.test(sh.textContent.trim())) return;
+      var w = lb.textContent.trim().split(/\s+/).map(function(x){ return x.replace(/^ال/, ''); }).filter(Boolean);
+      var t = w.length > 1 ? w[0].charAt(0) + w[1].charAt(0) : (w[0] || '').slice(0, 2);
+      if(t) sh.textContent = t;
+    });
+  }
+  function empty(doc){
+    [].slice.call(doc.querySelectorAll('.report-pane')).forEach(function(p){
+      if(p.classList.contains('vf35-empty')) return;
+      if(p.querySelector('iframe,table,svg,canvas') || p.textContent.length > 420) return;
+      if(p.querySelector(':scope > div > h2') && p.querySelector('.pane-desc') && p.getClientRects().length) p.classList.add('vf35-empty');
+    });
+  }
   function run(doc){
     if(!doc || !doc.body) return;
     css(doc);
@@ -15913,6 +15936,8 @@ function cols(d, color){
     try{ shares(doc); }catch(e){}
     try{ texts(doc); }catch(e){}
     try{ reveal(doc); }catch(e){}
+    try{ rail(doc); }catch(e){}
+    try{ empty(doc); }catch(e){}
   }
   function tick(){
     run(document);

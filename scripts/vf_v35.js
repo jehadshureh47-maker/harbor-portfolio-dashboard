@@ -9,6 +9,7 @@
     '.v9-hb-row{min-height:44px}' +
     '.vf35-click{cursor:pointer}.vf35-click:hover{opacity:.85}.vf35-click:focus-visible{outline:2px solid #5b8cff;outline-offset:1px}' +
     '.eb-chart.dm-pre,.eb-chart .dm-pre{opacity:1 !important}' +
+    '.vf35-empty{padding:26px 28px !important;border:1px solid rgba(120,140,200,.28);border-radius:16px;background:rgba(255,255,255,.03);margin-top:12px}' +
     '.x4-stat-delta,.ov6-foot{white-space:nowrap !important}' +
     '.la4-mix-total .la4-sub{margin-inline-start:.4em}' +
     'html[dir="rtl"] .vf35-range{direction:rtl;unicode-bidi:isolate;white-space:nowrap}';
@@ -107,6 +108,24 @@
   /* ---- 4. the daily-activity chart should not stay blank while the reveal class waits ---- */
   function reveal(doc){ [].slice.call(doc.querySelectorAll('.eb-chart.dm-pre,.eb-chart .dm-pre')).forEach(function(e){ e.classList.remove('dm-pre'); }); }
 
+  /* ---- 5. rail initials in Arabic, and the empty-portfolio card ---- */
+  function rail(doc){
+    if(!isAr(doc)) return;
+    [].slice.call(doc.querySelectorAll('.tab-btn')).forEach(function(b){
+      var sh = b.querySelector('.tab-short'), lb = b.querySelector('.tab-label'); if(!sh || !lb) return;
+      if(!/^[\x00-\x7f]+$/.test(sh.textContent.trim())) return;
+      var w = lb.textContent.trim().split(/\s+/).map(function(x){ return x.replace(/^ال/, ''); }).filter(Boolean);
+      var t = w.length > 1 ? w[0].charAt(0) + w[1].charAt(0) : (w[0] || '').slice(0, 2);
+      if(t) sh.textContent = t;
+    });
+  }
+  function empty(doc){
+    [].slice.call(doc.querySelectorAll('.report-pane')).forEach(function(p){
+      if(p.classList.contains('vf35-empty')) return;
+      if(p.querySelector('iframe,table,svg,canvas') || p.textContent.length > 420) return;
+      if(p.querySelector(':scope > div > h2') && p.querySelector('.pane-desc') && p.getClientRects().length) p.classList.add('vf35-empty');
+    });
+  }
   function run(doc){
     if(!doc || !doc.body) return;
     css(doc);
@@ -114,6 +133,8 @@
     try{ shares(doc); }catch(e){}
     try{ texts(doc); }catch(e){}
     try{ reveal(doc); }catch(e){}
+    try{ rail(doc); }catch(e){}
+    try{ empty(doc); }catch(e){}
   }
   function tick(){
     run(document);

@@ -68,6 +68,7 @@
     'credit card':'بطاقة ائتمان', 'other / unclassified':'أخرى / غير مصنّفة', 'settlement':'تسوية',
     'legal fees':'رسوم قانونية', 'government fees':'رسوم حكومية', 'security deposit':'التأمين',
     'rent installment':'قسط إيجار', 'innovation fee':'رسوم الابتكار', 'tariff':'التعرفة', 'vat rent':'ضريبة الإيجار',
+    'vending machine':'آلة بيع', 'vending machines':'آلات بيع', 'retail shop':'محل تجاري', 'kiosk':'كشك', 'atm':'صراف آلي', 'locker space':'مساحة خزائن', 'space - marine station':'مساحة – المحطة البحرية', 'jetty':'رصيف بحري', 'parking space - jetty':'موقف – الرصيف البحري', 'pta — public transport agency':'PTA — هيئة المواصلات العامة', 'ra — roads agency':'RA — هيئة الطرق', 'tra — traffic & roads agency':'TRA — هيئة المرور والطرق', 'café / restaurant':'مقهى / مطعم', 'car wash service':'خدمة غسيل السيارات', 'car wash income':'إيراد غسيل السيارات', 'additional parking':'مواقف إضافية', 'typing and photocopying services':'خدمات الطباعة والتصوير', 'typing and':'الطباعة و', 'photocopying services':'خدمات التصوير', 'included':'مشمول', 'renew':'تجديد', 'pivot dashboard':'لوحة الجدول المحوري', 'insufficient funds':'رصيد غير كافٍ', 'insufficenty funds':'رصيد غير كافٍ', 'insufficent funds':'رصيد غير كافٍ', 'signature irregular':'توقيع غير مطابق', 'closed account':'حساب مغلق', 'amount alteration':'تعديل في المبلغ', 'frozed/closed account':'حساب مجمّد / مغلق', 'amount diff words and figures':'اختلاف المبلغ بين الحروف والأرقام', 'see data-quality flag below re: al barsha':'انظر تنبيه جودة البيانات أدناه بخصوص البرشاء',
     'endowment':'وقف', 'amaf & minors':'المؤسسة – القُصّر', 'amaf & endowments':'المؤسسة – الأوقاف', 'amaf and minors-eib':'المؤسسة – القُصّر (EIB)', 'minor':'قاصر', 'share of total value (aed)':'الحصة من إجمالي القيمة (درهم)', 'share of requests (by count)':'الحصة من الطلبات (حسب العدد)', 'share of cheques (by count)':'الحصة من الشيكات (حسب العدد)', 'minors':'قُصّر',
     'renewal lease':'تجديد عقد الإيجار', 'contract transfer':'نقل العقد', 'noc':'شهادة عدم ممانعة',
     'tenant name change':'تغيير اسم المستأجر', 'non-renewal':'عدم التجديد', 'early termination':'إنهاء مبكر',
@@ -267,6 +268,9 @@
     [/(\d+) جديداً و(\d+) تجديداً/g, '$1 جديدة و$2 تجديدات'],
     [/(\d[\d,]*\.\d{2})\. د\.إ/g, '$1 د.إ.'],
     // --- v35 wording ---
+    [/No reports loaded yet for (.+?)\. Once its files come in, they['’]ll show up here with their own tabs\.?/g, 'لم يتم تحميل أي تقارير لـ $1 بعد. عند وصول ملفاتها ستظهر هنا بتبويباتها الخاصة.'],
+    [/تمامًا كما جرى مع الأوقاف والناصر كلوب/g, 'تمامًا كما جرى مع الأوقاف والناصر'],
+    [/across (\d+) propert(?:y|ies)/g, 'عبر $1 عقارات'], [/(\d+) roster rows \(unit-type blocks\)/g, '$1 صفوف قائمة (كتل أنواع الوحدات)'], [/\b(\d+) bedrooms?\b/gi, '$1 غرف نوم'],
     [/مستخدم إدارة العقارات/g, 'موظف إدارة العقارات'], [/\bcheques (\d[\d,]*)/g, '$1 شيكاً'],
     [/أماف والقاصرين\s*[-\u2013]\s*EIB/g, 'المؤسسة – القُصّر (EIB)'], [/أماف والقاصرين/g, 'المؤسسة – القُصّر'], [/أماف والقُصّر/g, 'المؤسسة – القُصّر'], [/أماف والأوقاف/g, 'المؤسسة – الأوقاف'],
     [/مستخدم إدارة الممتلكات/g, 'موظف إدارة العقارات'], [/مستخدمو إدارة الممتلكات/g, 'موظفو إدارة العقارات'],
