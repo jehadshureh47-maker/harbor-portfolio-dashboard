@@ -9,7 +9,7 @@
     '.v9-hb-row{min-height:44px}' +
     '.vf35-click{cursor:pointer}.vf35-click:hover{opacity:.85}.vf35-click:focus-visible{outline:2px solid #5b8cff;outline-offset:1px}' +
     '.eb-chart.dm-pre,.eb-chart .dm-pre{opacity:1 !important}' +
-    '.vf35-empty{padding:26px 28px !important;border:1px solid rgba(120,140,200,.28);border-radius:16px;background:rgba(255,255,255,.03);margin-top:12px}' +
+    '.vf35-empty{padding:24px 28px !important;box-sizing:border-box;border:1px solid rgba(120,140,200,.28);border-radius:16px;background:rgba(255,255,255,.03);margin-top:12px}' +
     '.x4-stat-delta,.ov6-foot{white-space:nowrap !important}' +
     '.la4-mix-total .la4-sub{margin-inline-start:.4em}' +
     'html[dir="rtl"] .vf35-range{direction:rtl;unicode-bidi:isolate;white-space:nowrap}';
@@ -123,7 +123,7 @@
     [].slice.call(doc.querySelectorAll('.report-pane')).forEach(function(p){
       if(p.classList.contains('vf35-empty')) return;
       if(p.querySelector('iframe,table,svg,canvas') || p.textContent.length > 420) return;
-      if(p.querySelector(':scope > div > h2') && p.querySelector('.pane-desc') && p.getClientRects().length) p.classList.add('vf35-empty');
+      if(p.querySelector(':scope > h2, :scope > div > h2') && p.querySelector('.pane-desc') && p.getClientRects().length) p.classList.add('vf35-empty');
     });
   }
   function run(doc){

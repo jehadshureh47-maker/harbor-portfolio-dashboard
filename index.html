@@ -15397,6 +15397,7 @@ function cols(d, color){
     'credit card':'بطاقة ائتمان', 'other / unclassified':'أخرى / غير مصنّفة', 'settlement':'تسوية',
     'legal fees':'رسوم قانونية', 'government fees':'رسوم حكومية', 'security deposit':'التأمين',
     'rent installment':'قسط إيجار', 'innovation fee':'رسوم الابتكار', 'tariff':'التعرفة', 'vat rent':'ضريبة الإيجار',
+    'above target':'أعلى من الهدف', 'within target':'ضمن الهدف', 'since last month':'منذ الشهر الماضي', 'no earlier month on record yet.':'لا يوجد شهر سابق مسجّل بعد.', 'enbd':'بنك الإمارات دبي الوطني', 'adcb':'بنك أبوظبي التجاري', 'adib':'مصرف أبوظبي الإسلامي', 'hsbc':'إتش إس بي سي', 'al hilal':'مصرف الهلال', 'mashreq':'بنك المشرق', 'janata':'جناتا',
     'vending machine':'آلة بيع', 'vending machines':'آلات بيع', 'retail shop':'محل تجاري', 'kiosk':'كشك', 'atm':'صراف آلي', 'locker space':'مساحة خزائن', 'space - marine station':'مساحة – المحطة البحرية', 'jetty':'رصيف بحري', 'parking space - jetty':'موقف – الرصيف البحري', 'pta — public transport agency':'PTA — هيئة المواصلات العامة', 'ra — roads agency':'RA — هيئة الطرق', 'tra — traffic & roads agency':'TRA — هيئة المرور والطرق', 'café / restaurant':'مقهى / مطعم', 'car wash service':'خدمة غسيل السيارات', 'car wash income':'إيراد غسيل السيارات', 'additional parking':'مواقف إضافية', 'typing and photocopying services':'خدمات الطباعة والتصوير', 'typing and':'الطباعة و', 'photocopying services':'خدمات التصوير', 'included':'مشمول', 'renew':'تجديد', 'pivot dashboard':'لوحة الجدول المحوري', 'insufficient funds':'رصيد غير كافٍ', 'insufficenty funds':'رصيد غير كافٍ', 'insufficent funds':'رصيد غير كافٍ', 'signature irregular':'توقيع غير مطابق', 'closed account':'حساب مغلق', 'amount alteration':'تعديل في المبلغ', 'frozed/closed account':'حساب مجمّد / مغلق', 'amount diff words and figures':'اختلاف المبلغ بين الحروف والأرقام', 'see data-quality flag below re: al barsha':'انظر تنبيه جودة البيانات أدناه بخصوص البرشاء',
     'endowment':'وقف', 'amaf & minors':'المؤسسة – القُصّر', 'amaf & endowments':'المؤسسة – الأوقاف', 'amaf and minors-eib':'المؤسسة – القُصّر (EIB)', 'minor':'قاصر', 'share of total value (aed)':'الحصة من إجمالي القيمة (درهم)', 'share of requests (by count)':'الحصة من الطلبات (حسب العدد)', 'share of cheques (by count)':'الحصة من الشيكات (حسب العدد)', 'minors':'قُصّر',
     'renewal lease':'تجديد عقد الإيجار', 'contract transfer':'نقل العقد', 'noc':'شهادة عدم ممانعة',
@@ -15812,7 +15813,7 @@ function cols(d, color){
     '.v9-hb-row{min-height:44px}' +
     '.vf35-click{cursor:pointer}.vf35-click:hover{opacity:.85}.vf35-click:focus-visible{outline:2px solid #5b8cff;outline-offset:1px}' +
     '.eb-chart.dm-pre,.eb-chart .dm-pre{opacity:1 !important}' +
-    '.vf35-empty{padding:26px 28px !important;border:1px solid rgba(120,140,200,.28);border-radius:16px;background:rgba(255,255,255,.03);margin-top:12px}' +
+    '.vf35-empty{padding:24px 28px !important;box-sizing:border-box;border:1px solid rgba(120,140,200,.28);border-radius:16px;background:rgba(255,255,255,.03);margin-top:12px}' +
     '.x4-stat-delta,.ov6-foot{white-space:nowrap !important}' +
     '.la4-mix-total .la4-sub{margin-inline-start:.4em}' +
     'html[dir="rtl"] .vf35-range{direction:rtl;unicode-bidi:isolate;white-space:nowrap}';
@@ -15926,7 +15927,7 @@ function cols(d, color){
     [].slice.call(doc.querySelectorAll('.report-pane')).forEach(function(p){
       if(p.classList.contains('vf35-empty')) return;
       if(p.querySelector('iframe,table,svg,canvas') || p.textContent.length > 420) return;
-      if(p.querySelector(':scope > div > h2') && p.querySelector('.pane-desc') && p.getClientRects().length) p.classList.add('vf35-empty');
+      if(p.querySelector(':scope > h2, :scope > div > h2') && p.querySelector('.pane-desc') && p.getClientRects().length) p.classList.add('vf35-empty');
     });
   }
   function run(doc){
