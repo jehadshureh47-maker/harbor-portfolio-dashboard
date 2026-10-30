@@ -15829,6 +15829,10 @@ function cols(d, color){
     '#execNarrative.exec-narrative{background:transparent !important;border:0 !important;border-top:1px solid var(--border) !important;border-bottom:1px solid var(--border) !important;border-radius:0 !important;padding:14px 2px !important}' +
     '#execNarrative.exec-narrative p{font-size:14px !important;line-height:1.7 !important}' +
     '.exec-fit #execHeroWrap .exec-card{padding:16px 20px 14px !important}' +
+    /* v42: no dead space under the non-Awqaf Executive Summary; truncated names keep their start in RTL */
+    '#pane-execsummary.exec-fit:not(.exec-has-briefing):not([style*="none"]){height:auto !important;min-height:0 !important;overflow:visible !important;grid-template-rows:auto !important}' +
+    '.cell-clip{max-width:260px !important}' +
+    'html[dir="rtl"] .cell-clip{unicode-bidi:plaintext;text-align:right}' +
     '#execHealthWrap .kpi-pill{background:var(--card) !important;border:var(--hair,1px solid var(--border)) !important;border-radius:var(--r-card,14px) !important;padding:14px 18px !important}';
   function css(doc){
     try{ if(doc.head && !doc.getElementById('vfV35Css')){ var s = doc.createElement('style'); s.id = 'vfV35Css'; s.textContent = CSS; doc.head.appendChild(s); } }catch(e){}
@@ -15915,6 +15919,7 @@ function cols(d, color){
         e.textContent = s.replace(RNG, '$1 $2 20$3 ← $4 $5 20$6'); e.classList.add('vf35-range');
       }
     });
+    [].slice.call(doc.querySelectorAll('th')).forEach(function(t){ if(t.children.length === 0 && t.textContent.trim() === 'AED') t.textContent = 'درهم'; });
     [].slice.call(doc.querySelectorAll('svg title')).forEach(function(t){
       var x = t.textContent, m;
       if((m = /^Daily activity, (.+?) \(same data behind Activity by Day\)$/.exec(x))) t.textContent = 'النشاط اليومي، ' + m[1] + ' (البيانات نفسها وراء «النشاط حسب اليوم»)';
@@ -15958,9 +15963,11 @@ function cols(d, color){
     if(!st){ st = doc.createElement('style'); st.id = 'vf40-basis'; doc.head.appendChild(st); }
     if(st.textContent !== rule) st.textContent = rule;
   }
+  function clipTitles(doc){ [].slice.call(doc.querySelectorAll('.cell-clip:not([title])')).forEach(function(e){ var t = e.textContent.trim(); if(t) e.setAttribute('title', t); }); }
   function run(doc){
     if(!doc || !doc.body) return;
     css(doc);
+    try{ clipTitles(doc); }catch(e){}
     try{ basis(doc); }catch(e){}
     try{ stacked(doc); }catch(e){}
     try{ shares(doc); }catch(e){}
