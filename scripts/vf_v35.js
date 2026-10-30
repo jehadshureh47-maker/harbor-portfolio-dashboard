@@ -111,6 +111,11 @@
         e.textContent = s.replace(RNG, '$1 $2 20$3 ← $4 $5 20$6'); e.classList.add('vf35-range');
       }
     });
+    [].slice.call(doc.querySelectorAll('svg title')).forEach(function(t){
+      var x = t.textContent, m;
+      if((m = /^Daily activity, (.+?) \(same data behind Activity by Day\)$/.exec(x))) t.textContent = 'النشاط اليومي، ' + m[1] + ' (البيانات نفسها وراء «النشاط حسب اليوم»)';
+      else if((m = /^Daily values, (.+)$/.exec(x))) t.textContent = 'القيم اليومية، ' + m[1];
+    });
     [].slice.call(doc.querySelectorAll('.la4-mix-total .la4-sub')).forEach(function(e){ if(e.textContent.trim() === 'العقود') e.textContent = 'عقداً'; });
     [].slice.call(doc.querySelectorAll('#chartStacked svg text')).forEach(function(t){
       var s = t.textContent;
