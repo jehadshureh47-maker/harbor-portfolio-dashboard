@@ -9,6 +9,14 @@
     '.v9-hb-row{min-height:44px}' +
     '.vf35-click{cursor:pointer}.vf35-click:hover{opacity:.85}.vf35-click:focus-visible{outline:2px solid #5b8cff;outline-offset:1px}' +
     '.eb-chart.dm-pre,.eb-chart .dm-pre{opacity:1 !important}' +
+    '#overviewWrap:has(.overview-card){min-height:0 !important}#overviewWrap:has(.overview-card)::after{display:none !important}' +
+    '.overview-grid{gap:16px !important;align-items:stretch !important}' +
+    '.overview-grid > .overview-card{background:var(--card) !important;border:var(--hair,1px solid var(--border)) !important;border-top:var(--hair,1px solid var(--border)) !important;border-radius:var(--r-card,14px) !important;box-shadow:none !important;padding:16px 20px !important;min-height:112px;animation:none !important}' +
+    '.overview-grid > .overview-card:hover{transform:none !important;border-color:color-mix(in srgb,var(--accent) 60%,transparent) !important}' +
+    '.overview-grid > .overview-card .oc-title{font-size:11px !important;font-weight:600 !important;letter-spacing:.6px !important}' +
+    '.overview-grid > .overview-card .oc-big{font-size:21px !important;font-weight:700 !important;line-height:1.25 !important}' +
+    '.overview-grid > .overview-card .oc-sub{font-size:12px !important}' +
+    '.overview-grid > .overview-card .oc-icon-badge{background:color-mix(in srgb,var(--accent) 14%,transparent) !important;color:var(--accent) !important}' +
     '.vf35-empty{padding:24px 28px !important;box-sizing:border-box;border:1px solid rgba(120,140,200,.28);border-radius:16px;background:rgba(255,255,255,.03);margin-top:12px}' +
     '.x4-stat-delta,.ov6-foot{white-space:nowrap !important}' +
     '.la4-mix-total .la4-sub{margin-inline-start:.4em}' +
