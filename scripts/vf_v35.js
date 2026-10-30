@@ -20,7 +20,12 @@
     '.vf35-empty{padding:24px 28px !important;box-sizing:border-box;border:1px solid rgba(120,140,200,.28);border-radius:16px;background:rgba(255,255,255,.03);margin-top:12px}' +
     '.x4-stat-delta,.ov6-foot{white-space:nowrap !important}' +
     '.la4-mix-total .la4-sub{margin-inline-start:.4em}' +
-    'html[dir="rtl"] .vf35-range{direction:rtl;unicode-bidi:isolate;white-space:nowrap}';
+    'html[dir="rtl"] .vf35-range{direction:rtl;unicode-bidi:isolate;white-space:nowrap}' +
+    /* v40: non-Awqaf Executive Summary matches Awqaf: headline sentence between rules, roomier cards */
+    '#execNarrative.exec-narrative{background:transparent !important;border:0 !important;border-top:1px solid var(--border) !important;border-bottom:1px solid var(--border) !important;border-radius:0 !important;padding:14px 2px !important}' +
+    '#execNarrative.exec-narrative p{font-size:14px !important;line-height:1.7 !important}' +
+    '.exec-fit #execHeroWrap .exec-card{padding:16px 20px 14px !important}' +
+    '#execHealthWrap .kpi-pill{background:var(--card) !important;border:var(--hair,1px solid var(--border)) !important;border-radius:var(--r-card,14px) !important;padding:14px 18px !important}';
   function css(doc){
     try{ if(doc.head && !doc.getElementById('vfV35Css')){ var s = doc.createElement('style'); s.id = 'vfV35Css'; s.textContent = CSS; doc.head.appendChild(s); } }catch(e){}
   }
@@ -134,9 +139,20 @@
       if(p.querySelector(':scope > h2, :scope > div > h2') && p.querySelector('.pane-desc') && p.getClientRects().length) p.classList.add('vf35-empty');
     });
   }
+  /* v40: the report skin labels the donut "Share of requests"; only Awqaf's Request Count reports requests */
+  function basis(doc){
+    var top = window.top, sel = top.document.getElementById('portfolioSelect');
+    if(!sel || sel.value === 'awqaf' || !doc.getElementById('chartType')) return;
+    var ar = isAr(top.document), st = doc.getElementById('vf40-basis');
+    var txt = ar ? 'حصة السجلات (بالعدد)' : 'Share of records (by count)';
+    var rule = '#chartType::before{content:"' + txt + '" !important}';
+    if(!st){ st = doc.createElement('style'); st.id = 'vf40-basis'; doc.head.appendChild(st); }
+    if(st.textContent !== rule) st.textContent = rule;
+  }
   function run(doc){
     if(!doc || !doc.body) return;
     css(doc);
+    try{ basis(doc); }catch(e){}
     try{ stacked(doc); }catch(e){}
     try{ shares(doc); }catch(e){}
     try{ texts(doc); }catch(e){}
